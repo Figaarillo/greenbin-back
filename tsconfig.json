@@ -1,0 +1,49 @@
+{
+  "include": ["src/**/*.ts"],
+  "exclude": [],
+
+  "compilerOptions": {
+    /* Projects */
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
+
+    /* Language and Environment */
+    "target": "es2021",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    /* Modules */
+    "module": "commonjs",
+    "rootDir": "src/",
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "@shared/*": ["src/shared/*"],
+      "@user/*": ["src/user/*"]
+    },
+    "resolveJsonModule": true,
+
+    /* JavaScript Support */
+    "sourceMap": true,
+    "outDir": "dist/",
+    "removeComments": true,
+
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Type Checking */
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "allowUnusedLabels": true,
+    "allowUnreachableCode": true,
+
+    /* Completeness */
+    "skipLibCheck": true
+  }
+}
