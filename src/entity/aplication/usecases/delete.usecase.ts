@@ -1,6 +1,6 @@
 import type EntityRepository from '@entity/domain/repositories/entity.repository'
 
-class DeleteEntity {
+class DeleteEntityUseCase {
   constructor(private readonly repository: EntityRepository) {
     this.repository = repository
   }
@@ -10,4 +10,4 @@ class DeleteEntity {
   }
 }
 
-export default DeleteEntity
+export default DeleteEntityUseCase
