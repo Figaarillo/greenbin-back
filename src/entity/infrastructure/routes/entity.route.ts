@@ -14,9 +14,9 @@ class EntityRoute {
     this.router.get('/api/entities/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
       await this.handler.FindByID(req, res)
     })
-    this.router.get('/api/entities/:id', async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
-      await this.handler.FindByName(req, res)
-    })
+    // this.router.get('/api/entities', async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
+    //   await this.handler.FindByName(req, res)
+    // })
     this.router.post('/api/entities', async (req, res) => {
       await this.handler.Register(req, res)
     })
