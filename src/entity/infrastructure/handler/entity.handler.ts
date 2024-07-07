@@ -2,6 +2,7 @@ import FindEntityByIDUseCase from '@entity/aplication/usecases/find-by-id.usecas
 import FindEntityByNameUseCase from '@entity/aplication/usecases/find-by-name.usecase'
 import ListEntitiesUseCase from '@entity/aplication/usecases/list.usecase'
 import RegisterEntityUseCase from '@entity/aplication/usecases/register.usecase'
+import UpdateEntityUseCase from '@entity/aplication/usecases/update.usecase'
 import type EntityPayload from '@entity/domain/payloads/entity.payload'
 import type EntityRepository from '@entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '@shared/utils/http.response'
@@ -10,6 +11,7 @@ import { type FastifyReply, type FastifyRequest } from 'fastify'
 import CheckIdDTO from '../dtos/check-id.dto'
 import CheckNameDTO from '../dtos/check-name.dto'
 import RegisterEntityDTO from '../dtos/register-entity.dto'
+import UpdateEntityDTO from '../dtos/update-entity.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class EntityHandler {
@@ -73,6 +75,26 @@ class EntityHandler {
       const entity = await registerEntity.exec(payload)
 
       HandleHTTPResponse.Created(res, 'Entity registered successfully', { id: entity.id })
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async Update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+      const payload: EntityPayload = req.body as EntityPayload
+
+      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      validateIDSchema.exec()
+
+      const schemaValidator = new SchemaValidator(UpdateEntityDTO, payload)
+      schemaValidator.exec()
+
+      const updateEntity = new UpdateEntityUseCase(this.repository)
+      await updateEntity.exec(id, payload)
+
+      HandleHTTPResponse.OK(res, 'Entity updated successfully', { id })
     } catch (error) {
       res.status(500).send(error)
     }
