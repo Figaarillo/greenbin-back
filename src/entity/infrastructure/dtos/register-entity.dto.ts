@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { cityDTO, descriptionDTO, nameDTO, passwordDTO, provinceDTO } from './dto-types/dto-types'
 
-const SaveEntityDTO = z.object({
+const RegisterEntityDTO = z.object({
   name: nameDTO,
   description: descriptionDTO,
   password: passwordDTO,
@@ -9,4 +9,4 @@ const SaveEntityDTO = z.object({
   province: provinceDTO
 })
 
-export default SaveEntityDTO
+export default RegisterEntityDTO
