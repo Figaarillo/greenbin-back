@@ -8,6 +8,7 @@ import HandleHTTPResponse from '@shared/utils/http.response'
 import { GetPaginationParams, GetURLParams, GetURLQueryParam } from '@shared/utils/http.utils'
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import CheckIdDTO from '../dtos/check-id.dto'
+import CheckNameDTO from '../dtos/check-name.dto'
 import RegisterEntityDTO from '../dtos/register-entity.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
@@ -48,6 +49,9 @@ class EntityHandler {
   async FindByName(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const name = GetURLQueryParam(req, 'name')
+
+      const validateIDSchema = new SchemaValidator(CheckNameDTO, { name })
+      validateIDSchema.exec()
 
       const findEntity = new FindEntityByNameUseCase(this.repository)
       const entity = await findEntity.exec(name)
