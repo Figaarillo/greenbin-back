@@ -2,7 +2,7 @@ import type EntityEntity from '@entity/domain/entities/entity.entity'
 import ErrorEntityNotFound from '@entity/domain/errors/entity-not-found.error'
 import type EntityRepository from '@entity/domain/repositories/entity.repository'
 
-class GetEntityByName {
+class FindEntityByNameUseCase {
   constructor(private readonly repository: EntityRepository) {
     this.repository = repository
   }
@@ -17,4 +17,4 @@ class GetEntityByName {
   }
 }
 
-export default GetEntityByName
+export default FindEntityByNameUseCase
