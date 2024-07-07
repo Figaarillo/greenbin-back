@@ -23,6 +23,9 @@ class EntityRoute {
     this.router.put('/api/entities/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
       await this.handler.Update(req, res)
     })
+    this.router.delete('/api/entities/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+      await this.handler.Delete(req, res)
+    })
   }
 }
 
