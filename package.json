@@ -66,6 +66,7 @@
   },
   "_moduleAliases": {
     "@shared": "./src/shared",
-    "@user": "./src/user"
+    "@user": "./src/user",
+    "@entity": "./src/entity/"
   }
 }

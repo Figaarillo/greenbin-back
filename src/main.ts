@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
-import 'module-alias/register' // Must be import this module first
-import * as dotenv from 'dotenv'
+import BootstrapEntity from '@entity/entity.bootstrap'
 import FastifyConifg from '@shared/config/fastify.config'
 import AppDataSource from '@shared/config/typeorm.config'
 import BootstrapUser from '@user/user.bootstrap'
+import * as dotenv from 'dotenv'
+import 'module-alias/register' // Must be import this module first
 import { type DataSource } from 'typeorm'
 
 dotenv.config()
@@ -19,6 +20,7 @@ const PORT = Number(process.env.PORT)
     const fastify = await fastifyConfig.server
 
     BootstrapUser(db, fastify)
+    BootstrapEntity(db, fastify)
 
     fastify.get('/', async () => {
       return 'Hello, World!'
