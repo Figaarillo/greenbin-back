@@ -54,9 +54,10 @@
     "uuid": "9.0.1"
   },
   "dependencies": {
+    "@mikro-orm/core": "6.2.9",
+    "@mikro-orm/postgresql": "6.2.9",
     "bcrypt": "5.1.1",
     "dotenv": "16.3.1",
-    "immutable": "5.0.0-beta.4",
     "pg": "8.12.0",
     "reflect-metadata": "0.2.2",
     "rimraf": "5.0.5",
