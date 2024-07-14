@@ -94,8 +94,8 @@ importers:
         specifier: ^2.2.3
         version: 2.2.3
       nodemon:
-        specifier: 3.0.2
-        version: 3.0.2
+        specifier: 3.1.4
+        version: 3.1.4
       prettier:
         specifier: 3.1.1
         version: 3.1.1
@@ -1683,8 +1683,8 @@ packages:
       encoding:
         optional: true
 
-  nodemon@3.0.2:
-    resolution: {integrity: sha512-9qIN2LNTrEzpOPBaWHTm4Asy1LxXLSickZStAQ4IZe7zsoIpD/A7LWxhZV3t4Zu352uBcqVnRsDXSMR2Sc3lTA==}
+  nodemon@3.1.4:
+    resolution: {integrity: sha512-wjPBbFhtpJwmIeY2yP7QF+UKzPfltVGtfce1g/bB15/8vCGZj8uxD62b/b9M9/WVgme0NZudpownKN+c0plXlQ==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -4285,7 +4285,7 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  nodemon@3.0.2:
+  nodemon@3.1.4:
     dependencies:
       chokidar: 3.5.3
       debug: 4.3.4(supports-color@5.5.0)
