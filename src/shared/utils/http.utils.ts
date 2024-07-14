@@ -1,25 +1,41 @@
 import { type FastifyRequest } from 'fastify'
 
-export interface HTTPQueryParams {
-  offset: string
-  limit: string
-}
-
-interface HTTPURLParamsReturn {
+export interface PaginationParams {
   offset: number
   limit: number
 }
 
-export function GetURLQueryParams(req: FastifyRequest<{ Querystring: HTTPQueryParams }>): HTTPURLParamsReturn {
-  const offset = parseInt(req.query.offset ?? '0')
-  const limit = parseInt(req.query.limit ?? '10')
-
-  return {
-    offset,
-    limit
+export function GetURLQueryParam(
+  req: FastifyRequest<{ Querystring: Record<string, string> }>,
+  propKey: string
+): string {
+  const propValue = req.query[propKey]
+  if (propValue === '' || propValue == null) {
+    throw new Error(`The query parameter ${propKey} is required`)
   }
+
+  return propValue
+}
+
+export function GetPaginationParams(req: FastifyRequest<{ Querystring: Record<string, string> }>): PaginationParams {
+  const offset = parseInt(GetURLQueryParam(req, 'offset'))
+  if (offset < 0) {
+    throw new Error('Offset parameter must be greater than 0')
+  }
+
+  const limit = parseInt(GetURLQueryParam(req, 'limit'))
+  if (limit < 1) {
+    throw new Error('Limit parameter must be greater than 1')
+  }
+
+  return { offset, limit }
 }
 
 export function GetURLParams(req: FastifyRequest<{ Params: Record<string, string> }>, key: string): string {
-  return req.params[key]
+  const value = req.params[key]
+  if (value === '' || value == null) {
+    throw new Error(`The URL parameter ${key} is required`)
+  }
+
+  return value
 }

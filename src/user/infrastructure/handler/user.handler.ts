@@ -1,4 +1,5 @@
-import { GetURLParams, GetURLQueryParams, type HTTPQueryParams } from '@shared/utils/http.utils'
+import HandleHTTPResponse from '@shared/utils/http.response'
+import { GetPaginationParams, GetURLParams } from '@shared/utils/http.utils'
 import DeleteUser from '@user/aplication/usecases/delete.usecase'
 import FindUserByIDUseCase from '@user/aplication/usecases/find-by-id.usecase'
 import ListUsersUseCase from '@user/aplication/usecases/list.usecase'
@@ -11,16 +12,15 @@ import IdDTO from '../dtos/id.dto'
 import SaveUserDTO from '../dtos/save-user.dto'
 import UpdateUserDTO from '../dtos/update-user.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
-import HandleHTTPResponse from '@shared/utils/http.response'
 
 class UserHandler {
   constructor(private readonly repository: UserRepository) {
     this.repository = repository
   }
 
-  async List(req: FastifyRequest<{ Querystring: HTTPQueryParams }>, res: FastifyReply): Promise<void> {
+  async List(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
-      const { offset, limit } = GetURLQueryParams(req)
+      const { offset, limit } = GetPaginationParams(req)
 
       const listUsers = new ListUsersUseCase(this.repository)
       const users = await listUsers.exec(offset, limit)
