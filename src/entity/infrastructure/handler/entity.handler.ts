@@ -1,3 +1,4 @@
+import DeleteEntityUseCase from '@entity/aplication/usecases/delete.usecase'
 import FindEntityByIDUseCase from '@entity/aplication/usecases/find-by-id.usecase'
 import FindEntityByNameUseCase from '@entity/aplication/usecases/find-by-name.usecase'
 import ListEntitiesUseCase from '@entity/aplication/usecases/list.usecase'
@@ -68,8 +69,8 @@ class EntityHandler {
     try {
       const payload: EntityPayload = req.body as EntityPayload
 
-      const validateRegisterEntitySchema = new SchemaValidator(RegisterEntityDTO, payload)
-      validateRegisterEntitySchema.exec()
+      const validateRegisterEntitiesSchema = new SchemaValidator(RegisterEntityDTO, payload)
+      validateRegisterEntitiesSchema.exec()
 
       const registerEntity = new RegisterEntityUseCase(this.repository)
       const entity = await registerEntity.exec(payload)
@@ -95,6 +96,22 @@ class EntityHandler {
       await updateEntity.exec(id, payload)
 
       HandleHTTPResponse.OK(res, 'Entity updated successfully', { id })
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async Delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+
+      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      schemaValidator.exec()
+
+      const deleteEntity = new DeleteEntityUseCase(this.repository)
+      await deleteEntity.exec(id)
+
+      HandleHTTPResponse.OK(res, 'Entity deleted successfully', { id })
     } catch (error) {
       res.status(500).send(error)
     }
