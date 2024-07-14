@@ -1,10 +1,13 @@
 /* eslint-disable no-console */
+
+// eslint-disable-next-line sort-imports
+import 'module-alias/register' // Must be import this module first
+
 import BootstrapEntity from '@entity/entity.bootstrap'
 import FastifyConifg from '@shared/config/fastify.config'
 import AppDataSource from '@shared/config/typeorm.config'
 import BootstrapUser from '@user/user.bootstrap'
 import * as dotenv from 'dotenv'
-import 'module-alias/register' // Must be import this module first
 import { type DataSource } from 'typeorm'
 
 dotenv.config()
