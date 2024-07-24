@@ -1,6 +1,5 @@
 import EntityEntity from '@entity/domain/entities/entity.entity'
-import { MikroORM, type EntityManager } from '@mikro-orm/core'
-import { type EntityRepository, type Options } from '@mikro-orm/postgresql'
+import { MikroORM, type EntityRepository, type Options, type EntityManager } from '@mikro-orm/postgresql'
 
 export interface Services {
   orm: MikroORM
