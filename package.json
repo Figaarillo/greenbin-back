@@ -55,7 +55,9 @@
   },
   "dependencies": {
     "@mikro-orm/core": "6.2.9",
+    "@mikro-orm/migrations": "6.3.0",
     "@mikro-orm/postgresql": "6.2.9",
+    "@mikro-orm/reflection": "6.3.0",
     "bcrypt": "5.1.1",
     "dotenv": "16.3.1",
     "pg": "8.12.0",
