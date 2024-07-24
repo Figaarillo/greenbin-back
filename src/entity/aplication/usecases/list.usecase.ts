@@ -8,7 +8,7 @@ class ListEntitiesUseCase {
   }
 
   async exec(offset: number, limit: number): Promise<EntityEntity[]> {
-    const entitiesFounded = await this.repository.List(offset, limit)
+    const entitiesFounded = await this.repository.list(offset, limit)
     if (entitiesFounded == null) {
       throw new ErrorEntityNotFound('Cannot find any entity when try to list all entities')
     }

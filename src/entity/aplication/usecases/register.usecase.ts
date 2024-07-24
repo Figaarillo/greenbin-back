@@ -11,12 +11,12 @@ class RegisterEntityUseCase {
   async exec(payload: EntityPayload): Promise<EntityEntity> {
     const newEntity = new EntityEntity(payload)
 
-    const Entity = await this.repository.Save(newEntity)
-    if (Entity == null) {
+    const entity = await this.repository.save(newEntity)
+    if (entity == null) {
       throw new ErrorCannotSaveEntity('Cannot save new entity')
     }
 
-    return Entity
+    return entity
   }
 }
 

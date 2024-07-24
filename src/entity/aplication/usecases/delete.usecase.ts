@@ -6,7 +6,7 @@ class DeleteEntityUseCase {
   }
 
   async exec(id: string): Promise<void> {
-    await this.repository.Delete(id)
+    await this.repository.delete(id)
   }
 }
 

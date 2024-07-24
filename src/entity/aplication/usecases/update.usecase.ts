@@ -9,7 +9,7 @@ class UpdateEntityUseCase {
   }
 
   async exec(id: string, payload: EntityPayload): Promise<EntityEntity> {
-    const entityUpdated = await this.repository.Update(id, payload)
+    const entityUpdated = await this.repository.update(id, payload.description)
     if (entityUpdated == null) {
       throw new ErrorEntityNotFound(`Cannot update entity with id: ${id}`)
     }
