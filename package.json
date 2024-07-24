@@ -34,7 +34,6 @@
     "@types/node": "20.10.5",
     "@types/uuid": "9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
-    "concurrently": "8.2.2",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-config-standard-with-typescript": "43.0.0",
@@ -60,11 +59,8 @@
     "@mikro-orm/reflection": "6.3.0",
     "bcrypt": "5.1.1",
     "dotenv": "16.3.1",
-    "pg": "8.12.0",
     "reflect-metadata": "0.2.2",
     "rimraf": "5.0.5",
-    "typeorm": "0.3.20",
-    "typeorm-naming-strategies": "4.1.0",
     "zod": "3.22.4"
   },
   "_moduleAliases": {
