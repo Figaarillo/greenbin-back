@@ -1,38 +1,51 @@
-import { CreateAt, Id, UpdateAt } from '@shared/domain/value-objects/base.value-object'
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
-import type EntityPayload from '../payloads/entity.payload'
+/* eslint-disable indent */
+import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property, t } from '@mikro-orm/core'
+import EntityPayload from '../payloads/entity.payload'
+import BaseEntity from '@shared/domain/entities/base.entity'
+import { hash, verify } from 'argon2'
 
 @Entity()
-class EntityEntity {
-  @PrimaryGeneratedColumn('uuid') id!: string
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp' }) createdAt!: Date
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' }) updatedAt!: Date
-  @Column({ unique: true }) name!: string
-  @Column() description!: string
-  @Column({ select: false }) password!: string
-  @Column() city!: string
-  @Column() province!: string
+class EntityEntity extends BaseEntity {
+  @Property({ unique: true })
+  name: string
 
-  static Create(payload: EntityPayload): EntityEntity {
-    const entity = new EntityEntity()
+  @Property({ type: t.text })
+  description: string
 
-    entity.id = new Id().value
-    entity.createdAt = new CreateAt().value
-    entity.updatedAt = new UpdateAt().value
-    entity.name = payload.description
-    entity.description = payload.description
-    entity.password = payload.password
-    entity.city = payload.city
-    entity.province = payload.province
+  @Property({ hidden: true, lazy: true })
+  password: string
 
-    return entity
+  @Property()
+  city: string
+
+  @Property()
+  province: string
+
+  constructor(payload: EntityPayload) {
+    super()
+    this.name = payload.name
+    this.description = payload.description
+    this.password = payload.password
+    this.city = payload.city
+    this.province = payload.province
   }
 
-  update(payload: EntityPayload): void {
-    this.updatedAt = new UpdateAt().value
-    if (payload.description !== undefined || payload.description !== '') {
-      this.name = payload.description
+  update(description: string): void {
+    if (description !== '' || description != null) this.description = description
+  }
+
+  @BeforeCreate()
+  @BeforeUpdate()
+  async hashPassword(args: EventArgs<EntityEntity>): Promise<void> {
+    const password = args.changeSet?.payload.password
+
+    if (password != null) {
+      this.password = await hash(password)
     }
+  }
+
+  async verifyPassword(password: string): Promise<boolean> {
+    return await verify(this.password, password)
   }
 }
 

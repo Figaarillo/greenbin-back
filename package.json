@@ -19,9 +19,9 @@
     "pre-check": "pnpm run ts-check && pnpm run prettier && pnpm run lint",
     "pre-commit": "lint-staged",
     "typeorm": "typeorm-ts-node-commonjs",
-    "migration:generate": "pnpm run typeorm migration:generate ./migrations/migration -d ./src/shared/config/typeorm.config.ts",
-    "migration:run": "pnpm run typeorm migration:run -d ./src/shared/config/typeorm.config.ts",
-    "migration:revert": "pnpm run typeorm migration:revert --config ./src/config/ormconfig.ts"
+    "migration:initial": "mikro-orm migration:create --initial",
+    "migration:create": "mikro-orm migration:create",
+    "migration:up": "mikro-orm migration:up"
   },
   "keywords": [],
   "author": "Figarillo",
@@ -57,6 +57,7 @@
     "@mikro-orm/migrations": "6.3.0",
     "@mikro-orm/postgresql": "6.2.9",
     "@mikro-orm/reflection": "6.3.0",
+    "argon2": "0.40.3",
     "bcrypt": "5.1.1",
     "dotenv": "16.3.1",
     "reflect-metadata": "0.2.2",
