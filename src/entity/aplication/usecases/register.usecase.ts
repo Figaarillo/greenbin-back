@@ -9,7 +9,7 @@ class RegisterEntityUseCase {
   }
 
   async exec(payload: EntityPayload): Promise<EntityEntity> {
-    const newEntity = EntityEntity.Create(payload)
+    const newEntity = new EntityEntity(payload)
 
     const Entity = await this.repository.Save(newEntity)
     if (Entity == null) {
