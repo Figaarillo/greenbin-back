@@ -1,7 +1,7 @@
-import EntityEntity from '@entity/domain/entities/entity.entity'
-import ErrorCannotSaveEntity from '@entity/domain/errors/cannot-save-entity.error'
-import type EntityPayload from '@entity/domain/payloads/entity.payload'
-import type EntityRepository from '@entity/domain/repositories/entity.repository'
+import EntityEntity from '../../domain/entities/entity.entity'
+import ErrorCannotSaveEntity from '../../domain/errors/cannot-save-entity.error'
+import type EntityPayload from '../../domain/payloads/entity.payload'
+import type EntityRepository from '../../domain/repositories/entity.repository'
 
 class RegisterEntityUseCase {
   constructor(private readonly repository: EntityRepository) {

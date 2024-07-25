@@ -1,8 +1,8 @@
-import EntityEntity from '@entity/domain/entities/entity.entity'
-import type EntityRepository from '@entity/domain/repositories/entity.repository'
-import { type EntityManager } from '@mikro-orm/postgresql'
-import type Nullable from '@shared/domain/types/nullable.type'
-import { type Services } from 'src/db'
+import { type EntityManager } from '@mikro-orm/core'
+import { type Services } from '../../../../db'
+import type Nullable from '../../../../shared/domain/types/nullable.type'
+import EntityEntity from '../../../domain/entities/entity.entity'
+import type EntityRepository from '../../../domain/repositories/entity.repository'
 
 class EntityMikroORMRepository implements EntityRepository {
   private readonly em: EntityManager

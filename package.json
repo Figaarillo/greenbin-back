@@ -9,8 +9,7 @@
     "test": "NODE_ENV=test pnpm run start:dev",
     "clean": "rimraf dist && rimraf .tsbuildinfo",
     "tsc": "tsc",
-    "tsc-alias": "tsc-alias",
-    "build": "pnpm run clean && pnpm run tsc && pnpm run tsc-alias",
+    "build": "pnpm run clean && pnpm run tsc",
     "lint": "eslint --ext .ts src",
     "prettier": "prettier --write \"src/**/*.ts\"",
     "lint:fix": "pnpm run lint --fix",
@@ -19,9 +18,10 @@
     "pre-check": "pnpm run ts-check && pnpm run prettier && pnpm run lint",
     "pre-commit": "lint-staged",
     "typeorm": "typeorm-ts-node-commonjs",
-    "migration:initial": "mikro-orm migration:create --initial",
-    "migration:create": "mikro-orm migration:create",
-    "migration:up": "mikro-orm migration:up"
+    "mikro-orm": "mikro-orm",
+    "migration:initial": "pnpm run mikro-orm migration:create --initial",
+    "migration:create": "pnpm run mikro-orm migration:create",
+    "migration:up": "pnpm run mikro-orm migration:up"
   },
   "keywords": [],
   "author": "Figarillo",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "@commitlint/cli": "18.4.3",
     "@commitlint/config-conventional": "18.4.3",
+    "@mikro-orm/cli": "6.3.0",
     "@types/bcrypt": "5.0.2",
     "@types/module-alias": "2.0.4",
     "@types/node": "20.10.5",
@@ -44,18 +45,16 @@
     "fastify": "4.28.0",
     "husky": "^8.0.0",
     "lint-staged": "15.2.0",
-    "module-alias": "^2.2.3",
     "nodemon": "3.1.4",
     "prettier": "3.1.1",
     "ts-node": "10.9.2",
-    "tsc-alias": "1.8.8",
     "typescript": "5.3.3",
     "uuid": "9.0.1"
   },
   "dependencies": {
-    "@mikro-orm/core": "6.2.9",
+    "@mikro-orm/core": "6.3.0",
     "@mikro-orm/migrations": "6.3.0",
-    "@mikro-orm/postgresql": "6.2.9",
+    "@mikro-orm/postgresql": "6.3.0",
     "@mikro-orm/reflection": "6.3.0",
     "argon2": "0.40.3",
     "bcrypt": "5.1.1",
@@ -64,9 +63,7 @@
     "rimraf": "5.0.5",
     "zod": "3.22.4"
   },
-  "_moduleAliases": {
-    "@shared": "./src/shared",
-    "@user": "./src/user",
-    "@entity": "./src/entity"
+  "mikro-orm": {
+    "useTsNode": true
   }
 }

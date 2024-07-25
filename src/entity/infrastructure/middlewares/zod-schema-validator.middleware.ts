@@ -1,6 +1,6 @@
-import type EntityEntity from '@entity/domain/entities/entity.entity'
-import ErrorEntitySchemaValidation from '@entity/domain/errors/entity-schema-validation.error'
 import { ZodError, type ZodType } from 'zod'
+import type EntityEntity from '../../domain/entities/entity.entity'
+import ErrorEntitySchemaValidation from '../../domain/errors/entity-schema-validation.error'
 
 class SchemaValidator<TDTOSchema> {
   private readonly schema: ZodType<TDTOSchema>

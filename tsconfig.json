@@ -1,7 +1,4 @@
 {
-  "include": ["src/**/*.ts"],
-  "exclude": [],
-
   "compilerOptions": {
     /* Projects */
     "incremental": true,
@@ -14,17 +11,11 @@
 
     /* Modules */
     "module": "commonjs",
-    "rootDir": "src/",
     "moduleResolution": "node",
-    "baseUrl": "./",
-    "paths": {
-      "@shared/*": ["src/shared/*"],
-      "@user/*": ["src/user/*"],
-      "@entity/*": ["src/entity/*"]
-    },
     "resolveJsonModule": true,
 
     /* JavaScript Support */
+    "declaration": true,
     "sourceMap": true,
     "outDir": "dist/",
     "removeComments": true,
@@ -40,11 +31,13 @@
     "strictPropertyInitialization": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "allowUnusedLabels": true,
-    "allowUnreachableCode": true,
+    "noImplicitReturns": false,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
 
     /* Completeness */
     "skipLibCheck": true
-  }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

@@ -1,8 +1,8 @@
+import { RequestContext } from '@mikro-orm/core'
 import { type FastifyInstance } from 'fastify'
 import initMikroORM, { type Services } from './db'
-import FastifyConifg from '@shared/config/fastify.config'
-import { RequestContext } from '@mikro-orm/core'
-import bootstrapEntity from '@entity/entity.bootstrap'
+import bootstrapEntity from './entity/entity.bootstrap'
+import FastifyConifg from './shared/config/fastify.config'
 
 async function bootstrapApp(port: number): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM()

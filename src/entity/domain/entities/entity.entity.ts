@@ -1,8 +1,8 @@
 /* eslint-disable indent */
 import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property, t } from '@mikro-orm/core'
-import EntityPayload from '../payloads/entity.payload'
-import BaseEntity from '@shared/domain/entities/base.entity'
 import { hash, verify } from 'argon2'
+import BaseEntity from '../../../shared/domain/entities/base.entity'
+import EntityPayload from '../payloads/entity.payload'
 
 @Entity()
 class EntityEntity extends BaseEntity {

@@ -1,5 +1,5 @@
 import { type FastifyInstance } from 'fastify'
-import { type Services } from 'src/db'
+import { type Services } from '../db'
 import type EntityRepository from './domain/repositories/entity.repository'
 import EntityHandler from './infrastructure/handler/entity.handler'
 import EntityMikroORMRepository from './infrastructure/repositories/mikro-orm/entity.mikroorm.repository'

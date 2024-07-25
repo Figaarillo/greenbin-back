@@ -1,6 +1,6 @@
-import type EntityEntity from '@entity/domain/entities/entity.entity'
-import ErrorEntityNotFound from '@entity/domain/errors/entity-not-found.error'
-import type EntityRepository from '@entity/domain/repositories/entity.repository'
+import type EntityEntity from '../../domain/entities/entity.entity'
+import ErrorEntityNotFound from '../../domain/errors/entity-not-found.error'
+import type EntityRepository from '../../domain/repositories/entity.repository'
 
 class FindEntityByIDUseCase {
   constructor(private readonly repository: EntityRepository) {

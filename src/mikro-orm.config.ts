@@ -14,5 +14,6 @@ export default defineConfig({
   entitiesTs: ['./src/**/*.entity.ts'],
   metadataProvider: TsMorphMetadataProvider,
   debug: true,
-  extensions: [Migrator]
+  extensions: [Migrator],
+  dynamicImportProvider: async id => await import(id)
 })

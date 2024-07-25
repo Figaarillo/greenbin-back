@@ -1,4 +1,4 @@
-import type EntityRepository from '@entity/domain/repositories/entity.repository'
+import type EntityRepository from '../../domain/repositories/entity.repository'
 
 class DeleteEntityUseCase {
   constructor(private readonly repository: EntityRepository) {

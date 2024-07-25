@@ -1,4 +1,4 @@
-import type Nullable from '@shared/domain/types/nullable.type'
+import type Nullable from '../../../shared/domain/types/nullable.type'
 import type EntityEntity from '../entities/entity.entity'
 
 interface EntityRepository {
