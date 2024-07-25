@@ -1,12 +1,12 @@
 import { type FastifyInstance } from 'fastify'
-import { type DataSource } from 'typeorm'
+import { type Services } from '../db'
 import type EntityRepository from './domain/repositories/entity.repository'
 import EntityHandler from './infrastructure/handler/entity.handler'
-import EntityTypeormRepository from './infrastructure/repositories/typeorm/entity.typeorm.repository'
+import EntityMikroORMRepository from './infrastructure/repositories/mikro-orm/entity.mikroorm.repository'
 import EntityRoute from './infrastructure/routes/entity.route'
 
-async function BootstrapEntity(db: DataSource, router: FastifyInstance): Promise<void> {
-  const repository: EntityRepository = new EntityTypeormRepository(db)
+async function bootstrapEntity(router: FastifyInstance, db: Services): Promise<void> {
+  const repository: EntityRepository = new EntityMikroORMRepository(db)
 
   const handler = new EntityHandler(repository)
 
@@ -14,4 +14,4 @@ async function BootstrapEntity(db: DataSource, router: FastifyInstance): Promise
   entityRoute.setupRoutes()
 }
 
-export default BootstrapEntity
+export default bootstrapEntity

@@ -1,7 +1,7 @@
-import type EntityEntity from '@entity/domain/entities/entity.entity'
-import ErrorEntityNotFound from '@entity/domain/errors/entity-not-found.error'
-import type EntityPayload from '@entity/domain/payloads/entity.payload'
-import type EntityRepository from '@entity/domain/repositories/entity.repository'
+import type EntityEntity from '../../domain/entities/entity.entity'
+import ErrorEntityNotFound from '../../domain/errors/entity-not-found.error'
+import type EntityPayload from '../../domain/payloads/entity.payload'
+import type EntityRepository from '../../domain/repositories/entity.repository'
 
 class UpdateEntityUseCase {
   constructor(private readonly repository: EntityRepository) {
@@ -9,7 +9,7 @@ class UpdateEntityUseCase {
   }
 
   async exec(id: string, payload: EntityPayload): Promise<EntityEntity> {
-    const entityUpdated = await this.repository.Update(id, payload)
+    const entityUpdated = await this.repository.update(id, payload.description)
     if (entityUpdated == null) {
       throw new ErrorEntityNotFound(`Cannot update entity with id: ${id}`)
     }

@@ -1,4 +1,4 @@
-import Fastify, { type FastifyInstance } from 'fastify'
+import Fastify from 'fastify'
 
 class FastifyConifg {
   constructor(
@@ -7,15 +7,11 @@ class FastifyConifg {
     })
   ) {}
 
-  instance(): FastifyInstance {
-    return this.server
-  }
-
-  async start(): Promise<void> {
+  async start(port: number): Promise<string> {
     try {
-      await this.server.listen({
-        host: '0.0.0.0',
-        port: parseInt(process.env.PORT ?? '5000')
+      return await this.server.listen({
+        host: '127.0.0.1',
+        port
       })
     } catch (err) {
       this.server.log.error(err)
