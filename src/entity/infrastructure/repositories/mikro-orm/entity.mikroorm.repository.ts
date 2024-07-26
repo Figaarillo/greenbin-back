@@ -1,4 +1,4 @@
-import { type EntityManager } from '@mikro-orm/core'
+import { type EntityManager } from '@mikro-orm/postgresql'
 import { type Services } from '../../../../db'
 import type Nullable from '../../../../shared/domain/types/nullable.type'
 import EntityEntity from '../../../domain/entities/entity.entity'
