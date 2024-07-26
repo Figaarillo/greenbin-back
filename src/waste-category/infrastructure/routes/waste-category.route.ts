@@ -8,19 +8,22 @@ class WasteCategoryRoute {
   ) {}
 
   setupRoutes(): void {
-    this.router.get('/api/category', async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
-      await this.handler.List(req, res)
-    })
-    this.router.get('/api/category/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+    this.router.get(
+      '/api/waste-category',
+      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
+        await this.handler.List(req, res)
+      }
+    )
+    this.router.get('/api/waste-category/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
       await this.handler.FindByID(req, res)
     })
-    this.router.post('/api/category', async (req, res) => {
+    this.router.post('/api/waste-category', async (req, res) => {
       await this.handler.Register(req, res)
     })
-    this.router.put('/api/category/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+    this.router.put('/api/waste-category/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
       await this.handler.Update(req, res)
     })
-    this.router.delete('/api/category/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+    this.router.delete('/api/waste-category/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
       await this.handler.Delete(req, res)
     })
   }
