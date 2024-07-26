@@ -1,11 +1,6 @@
-interface ResponsiblePayload {
-  firstname: string
-  lastname: string
+interface ResponsibleUpdatePayload {
   username: string
-  email: string
-  password: string
-  dni: number
   phoneNumber: number
 }
 
-export default ResponsiblePayload
+export default ResponsibleUpdatePayload

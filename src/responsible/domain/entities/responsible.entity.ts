@@ -1,10 +1,12 @@
 /* eslint-disable indent */
-import { BaseEntity, BeforeCreate, BeforeUpdate, Entity, EventArgs, Property, t } from '@mikro-orm/core'
+import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property } from '@mikro-orm/postgresql'
 import { hash, verify } from 'argon2'
+import BaseEntity from '../../../shared/domain/entities/base.entity'
 import ResponsiblePayload from '../payloads/responsible.payload'
+import type ResponsibleUpdatePayload from '../payloads/responsible.update.payload'
 
 @Entity()
-class ResponsibleResponsible extends BaseEntity {
+class ResponsibleEntity extends BaseEntity {
   @Property()
   firstname: string
 
@@ -37,18 +39,18 @@ class ResponsibleResponsible extends BaseEntity {
     this.phoneNumber = payload.phoneNumber
   }
 
-  update(username: string, phoneNumber: number): void {
-    if (username != null || username !== '') {
-      this.username = username
+  update(payload: ResponsibleUpdatePayload): void {
+    if (payload.username != null || payload.username !== '') {
+      this.username = payload.username
     }
-    if (phoneNumber != null) {
-      this.phoneNumber = phoneNumber
+    if (payload.phoneNumber != null) {
+      this.phoneNumber = payload.phoneNumber
     }
   }
 
   @BeforeCreate()
   @BeforeUpdate()
-  async hashPassword(args: EventArgs<ResponsibleResponsible>): Promise<void> {
+  async hashPassword(args: EventArgs<ResponsibleEntity>): Promise<void> {
     const password = args.changeSet?.payload.password
 
     if (password != null) {
@@ -61,4 +63,4 @@ class ResponsibleResponsible extends BaseEntity {
   }
 }
 
-export default ResponsibleResponsible
+export default ResponsibleEntity
