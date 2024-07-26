@@ -5,7 +5,7 @@ import WasteCategoryHandler from './infrastructure/handler/waste-category.handle
 import CategoryMikroORMRepository from './infrastructure/repositories/mikro-orm/waste-category.mikroorm.repository'
 import WasteCategoryRoute from './infrastructure/routes/waste-category.route'
 
-async function bootstrapCategory(router: FastifyInstance, db: Services): Promise<void> {
+async function bootstrapWasteCategory(router: FastifyInstance, db: Services): Promise<void> {
   const repository: WasteCategoryRepository = new CategoryMikroORMRepository(db)
 
   const handler = new WasteCategoryHandler(repository)
@@ -14,4 +14,4 @@ async function bootstrapCategory(router: FastifyInstance, db: Services): Promise
   routes.setupRoutes()
 }
 
-export default bootstrapCategory
+export default bootstrapWasteCategory
