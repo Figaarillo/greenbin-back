@@ -3,6 +3,7 @@ import { type FastifyInstance } from 'fastify'
 import initMikroORM, { type Services } from './db'
 import bootstrapEntity from './entity/entity.bootstrap'
 import FastifyConifg from './shared/config/fastify.config'
+import bootstrapResponsible from './responsible/responsible.bootstrap'
 
 async function bootstrapApp(port: number): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM()
@@ -23,6 +24,7 @@ async function bootstrapApp(port: number): Promise<{ app: FastifyInstance; db: S
   })
 
   bootstrapEntity(app, db)
+  bootstrapResponsible(app, db)
 
   const url: string = await fastify.start(port)
 
