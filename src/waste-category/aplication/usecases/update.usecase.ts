@@ -9,7 +9,7 @@ class UpdateCategoryUseCase {
   }
 
   async exec(id: string, payload: WasteCategoryPayload): Promise<WasteCategoryEntity> {
-    const categoryUpdated = await this.repository.update(id, payload.description)
+    const categoryUpdated = await this.repository.update(id, payload)
     if (categoryUpdated == null) {
       throw new ErrorCategoryNotFound(`Cannot update waste category with id: ${id}`)
     }
