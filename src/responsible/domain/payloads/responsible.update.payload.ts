@@ -1,6 +1,6 @@
 interface ResponsibleUpdatePayload {
   username: string
-  phoneNumber: number
+  phoneNumber: string
 }
 
 export default ResponsibleUpdatePayload

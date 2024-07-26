@@ -5,7 +5,7 @@ interface ResponsiblePayload {
   email: string
   password: string
   dni: number
-  phoneNumber: number
+  phoneNumber: string
 }
 
 export default ResponsiblePayload

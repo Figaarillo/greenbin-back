@@ -26,7 +26,7 @@ class ResponsibleEntity extends BaseEntity {
   dni: number
 
   @Property()
-  phoneNumber: number
+  phoneNumber: string
 
   constructor(payload: ResponsiblePayload) {
     super()

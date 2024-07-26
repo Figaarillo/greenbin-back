@@ -38,10 +38,10 @@ export const passwordDTO = z
 
 export const dniDTO = z
   .number()
-  .min(8, { message: 'The length of dni must be 8' })
-  .max(8, { message: 'The length of dni must be 8' })
+  .min(9999999, { message: 'The dni must be at least 8 characters' })
+  .max(99999999, { message: 'The dni must be less than 8 characters' })
 
 export const phoneNumberDTO = z
-  .number()
-  .min(8, { message: 'The length of phone number must be 8' })
-  .max(11, { message: 'The length of phone number must be 11' })
+  .string()
+  .regex(/^\d{10,15}$/, { message: 'Phone number must be between 10 and 15 digits' })
+  .refine((phoneNumber: string) => phoneNumber.trim().length > 0, { message: 'Phone number cannot be empty' })
