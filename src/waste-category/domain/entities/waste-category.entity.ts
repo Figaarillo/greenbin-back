@@ -17,8 +17,9 @@ class WasteCategoryEntity extends BaseEntity {
     this.description = payload.description
   }
 
-  update(description: string): void {
-    if (description !== '' || description != null) this.description = description
+  update(payload: WasteCategoryPayload): void {
+    if (payload.name !== '' || payload.name != null) this.name = payload.name
+    if (payload.description !== '' || payload.description != null) this.description = payload.description
   }
 }
 

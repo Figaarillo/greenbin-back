@@ -3,6 +3,7 @@ import { type Services } from '../../../../db'
 import type Nullable from '../../../../shared/domain/types/nullable.type'
 import WasteCategoryEntity from '../../../domain/entities/waste-category.entity'
 import type WasteCategoryRepository from '../../../domain/repositories/waste-category.repository'
+import type WasteCategoryPayload from '../../../domain/payloads/waste-category.payload'
 
 class CategoryMikroORMRepository implements WasteCategoryRepository {
   private readonly em: EntityManager
@@ -26,11 +27,11 @@ class CategoryMikroORMRepository implements WasteCategoryRepository {
     return newCategory
   }
 
-  async update(id: string, description: string): Promise<Nullable<WasteCategoryEntity>> {
+  async update(id: string, payload: WasteCategoryPayload): Promise<Nullable<WasteCategoryEntity>> {
     const category = this.em.getReference(WasteCategoryEntity, id)
     if (category == null) return null
 
-    category.update(description)
+    category.update(payload)
     await this.em.flush()
 
     return category
