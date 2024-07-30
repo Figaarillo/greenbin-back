@@ -9,8 +9,10 @@ const origin: OriginFunction = (origin, cb) => {
   }
 
   const hostname = new URL(origin).hostname
+
   if (allowedOrigins.includes(hostname)) {
     cb(null, true)
+    return
   }
 
   cb(new Error('Origin not allowed'), false)
