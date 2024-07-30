@@ -1,10 +1,12 @@
 import { MikroORM, type EntityManager, type EntityRepository, type Options } from '@mikro-orm/postgresql'
 import EntityEntity from './entity/domain/entities/entity.entity'
+import ResponsibleEntity from './responsible/domain/entities/responsible.entity'
 
 export interface Services {
   orm: MikroORM
   em: EntityManager
   entity: EntityRepository<EntityEntity>
+  responsible: EntityRepository<ResponsibleEntity>
 }
 
 let cache: Services
@@ -17,7 +19,8 @@ async function initMikroORM(options?: Options): Promise<Services> {
     cache = {
       orm,
       em: orm.em,
-      entity: orm.em.getRepository(EntityEntity)
+      entity: orm.em.getRepository(EntityEntity),
+      responsible: orm.em.getRepository(ResponsibleEntity)
     }
   }
 

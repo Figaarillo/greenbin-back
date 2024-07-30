@@ -7,6 +7,7 @@ import bootstrapEntity from './entity/entity.bootstrap'
 import { FastifyCorsConfig } from './shared/config/fastify-cors.config'
 import FastifyConifg from './shared/config/fastify.config'
 import bootstrapWasteCategory from './waste-category/waste-category.bootstrap'
+import bootstrapResponsible from './responsible/responsible.bootstrap'
 
 async function bootstrapApp(port: number): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM()
@@ -32,6 +33,7 @@ async function bootstrapApp(port: number): Promise<{ app: FastifyInstance; db: S
   /* Register the entities */
   bootstrapEntity(app, db)
   bootstrapWasteCategory(app, db)
+  bootstrapResponsible(app, db)
 
   /* Start the server */
   const url: string = await fastify.start(port)
