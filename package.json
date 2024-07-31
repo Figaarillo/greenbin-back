@@ -35,6 +35,8 @@
     "@types/node": "20.10.5",
     "@types/uuid": "9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@vitest/coverage-v8": "2.0.5",
+    "@vitest/ui": "2.0.5",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-config-standard-with-typescript": "43.0.0",
