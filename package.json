@@ -6,7 +6,7 @@
   "scripts": {
     "start": "pnpm run build && node dist/main.js",
     "dev": "nodemon -x ts-node ./src/main.ts",
-    "test": "NODE_ENV=test pnpm run start:dev",
+    "test": "NODE_ENV=test vitest",
     "clean": "rimraf dist && rimraf .tsbuildinfo",
     "tsc": "tsc",
     "build": "pnpm run clean && pnpm run tsc",
