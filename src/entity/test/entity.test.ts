@@ -60,4 +60,15 @@ describe('Entity API Integration Tests', () => {
     expect(body).toMatchObject({ message: 'Entity retrieved successfully' })
     expect(body.data.description).toBe('Updated description')
   })
+
+  it('should delete an existing entity successfully', async () => {
+    const response = await app.inject({
+      method: 'DELETE',
+      url: `/api/entity/${entityId}`
+    })
+
+    expect(response.statusCode).toBe(200)
+    const body = response.json()
+    expect(body).toMatchObject({ message: 'Entity deleted successfully' })
+  })
 })
