@@ -5,10 +5,12 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 const allowedOrigins: string[] = ['localhost']
+
 const isAllowed: boolean = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
 
 const origin: OriginFunction = (origin, cb) => {
   if (origin === undefined && isAllowed) {
+
     cb(null, true)
     return
   }
@@ -19,7 +21,6 @@ const origin: OriginFunction = (origin, cb) => {
   }
 
   const hostname = new URL(origin).hostname
-
   if (allowedOrigins.includes(hostname)) {
     cb(null, true)
     return
