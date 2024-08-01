@@ -1,15 +1,14 @@
 import { Migrator } from '@mikro-orm/migrations'
 import { defineConfig } from '@mikro-orm/postgresql'
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
-import * as env from 'dotenv'
-
-env.config()
+import EnvVar from './shared/config/env-var.config'
 
 export default defineConfig({
-  dbName: process.env.DATABASE_NAME,
-  user: process.env.DATABASE_USER,
-  host: process.env.DATABASE_HOST,
-  password: process.env.DATABASE_PASS,
+  dbName: EnvVar.database.name,
+  user: EnvVar.database.user,
+  host: EnvVar.database.host,
+  password: EnvVar.database.password,
+  port: EnvVar.database.port,
   entities: ['./dist/**/*.entity.js'],
   entitiesTs: ['./src/**/*.entity.ts'],
   metadataProvider: TsMorphMetadataProvider,
