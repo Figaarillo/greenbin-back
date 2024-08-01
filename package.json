@@ -6,7 +6,7 @@
   "scripts": {
     "start": "pnpm run build && node dist/main.js",
     "dev": "nodemon -x ts-node ./src/main.ts",
-    "test": "NODE_ENV=test pnpm run start:dev",
+    "test": "NODE_ENV=test vitest",
     "clean": "rimraf dist && rimraf .tsbuildinfo",
     "tsc": "tsc",
     "build": "pnpm run clean && pnpm run tsc",
@@ -35,6 +35,8 @@
     "@types/node": "20.10.5",
     "@types/uuid": "9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@vitest/coverage-v8": "2.0.5",
+    "@vitest/ui": "2.0.5",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-config-standard-with-typescript": "43.0.0",
@@ -47,7 +49,8 @@
     "nodemon": "3.1.4",
     "prettier": "3.1.1",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.3.3",
+    "vitest": "2.0.5"
   },
   "dependencies": {
     "@fastify/cors": "9.0.1",

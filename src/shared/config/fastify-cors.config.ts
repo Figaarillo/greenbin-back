@@ -1,13 +1,16 @@
+/* eslint-disable no-console */
 import { type OriginFunction } from '@fastify/cors'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
 
 const allowedOrigins: string[] = ['localhost']
-const isDevelopment: boolean = process.env.NODE_ENV === 'development'
+
+const isAllowed: boolean = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
 
 const origin: OriginFunction = (origin, cb) => {
-  if (origin === undefined && isDevelopment) {
+  if (origin === undefined && isAllowed) {
+
     cb(null, true)
     return
   }

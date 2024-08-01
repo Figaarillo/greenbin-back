@@ -1,11 +1,13 @@
-import Fastify from 'fastify'
+import { fastify, type FastifyInstance } from 'fastify'
 
 class FastifyConifg {
-  constructor(
-    readonly server = Fastify({
-      logger: true
+  readonly server: FastifyInstance
+
+  constructor(logger?: boolean) {
+    this.server = fastify({
+      logger: logger ?? false
     })
-  ) {}
+  }
 
   async start(port: number): Promise<string> {
     try {
