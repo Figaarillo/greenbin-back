@@ -1,8 +1,9 @@
 import { type MikroORM } from '@mikro-orm/postgresql'
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
 import * as dotenv from 'dotenv'
 import { type FastifyInstance } from 'fastify'
 import { afterAll, afterEach, beforeAll, beforeEach } from 'vitest'
-import bootstrapApp from '../app'
+import bootstrapApp from '../../app'
 
 dotenv.config()
 
@@ -10,14 +11,20 @@ let orm: MikroORM
 let app: FastifyInstance
 
 beforeAll(async () => {
+  // // eslint-disable-next-line no-console
+  // console.log('DATABASE NAME:', process.env.TEST_DATABASE_NAME)
   const { app: fastify, db } = await bootstrapApp(0, {
-    dbName: process.env.TEST_DB_NAME,
-    user: process.env.TEST_DB_USER,
-    password: process.env.TEST_DB_PASSWORD,
-    host: process.env.TEST_DB_HOST,
-    port: Number(process.env.TEST_DB_PORT),
-    allowGlobalContext: true,
-    debug: false
+    dbName: process.env.TEST_DATABASE_NAME,
+    user: process.env.TEST_DATABASE_USER,
+    host: process.env.TEST_DATABASE_HOST,
+    password: process.env.TEST_DATABASE_PASS,
+    entities: ['./dist/**/*.entity.js'],
+    entitiesTs: ['./src/**/*.entity.ts'],
+    port: Number(process.env.TEST_DATABASE_PORT),
+    // allowGlobalContext: true,
+    metadataProvider: TsMorphMetadataProvider,
+    debug: false,
+    dynamicImportProvider: async id => await import(id)
   })
 
   orm = db.orm
@@ -27,7 +34,6 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await orm.close(true)
   await app.close()
 })
 
@@ -41,4 +47,4 @@ afterEach(async () => {
   await generator.dropSchema()
 })
 
-export { orm, app }
+export { app, orm }
