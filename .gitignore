@@ -112,3 +112,6 @@ notes
 
 # temps
 .tsbuildinfo
+
+# MikroORM metadata files
+/temp
