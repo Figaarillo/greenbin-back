@@ -1,15 +1,13 @@
 /* eslint-disable no-console */
-import * as dotenv from 'dotenv'
 import bootstrapApp from './app'
+import EnvVar from './shared/config/env-var.config'
 
-dotenv.config()
-
-/* Main */
+/* Main function */
 ;(async () => {
-  const PORT = Number(process.env.SERVER_PORT)
+  const SERVER_PORT = EnvVar.server.port
 
   try {
-    bootstrapApp(PORT)
+    bootstrapApp(SERVER_PORT)
   } catch (err) {
     console.error(err)
     process.exit(1)
