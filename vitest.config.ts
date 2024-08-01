@@ -9,6 +9,6 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules']
     },
-    setupFiles: ['./test/test.setup.ts']
+    setupFiles: ['./src/shared/shared/test/test.setup.ts']
   }
 })
