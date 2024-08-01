@@ -1,4 +1,7 @@
+import dotenv from 'dotenv'
 import env from 'env-var'
+
+dotenv.config()
 
 interface ServerConfig {
   port: number
