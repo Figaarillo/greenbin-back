@@ -1,15 +1,23 @@
 import { type OriginFunction } from '@fastify/cors'
+import * as dotenv from 'dotenv'
+
+dotenv.config()
 
 const allowedOrigins: string[] = ['localhost']
+const isDevelopment: boolean = process.env.NODE_ENV === 'development'
 
 const origin: OriginFunction = (origin, cb) => {
+  if (origin === undefined && isDevelopment) {
+    cb(null, true)
+    return
+  }
+
   if (typeof origin !== 'string') {
     cb(new Error('Origin is undefined'), false)
     return
   }
 
   const hostname = new URL(origin).hostname
-
   if (allowedOrigins.includes(hostname)) {
     cb(null, true)
     return
