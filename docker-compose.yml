@@ -12,6 +12,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  ### TEST DATABASE ###
   database-test:
     image: postgres:16.2-alpine3.19
     restart: always
