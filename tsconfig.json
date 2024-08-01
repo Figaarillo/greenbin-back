@@ -12,6 +12,7 @@
     /* Modules */
     "module": "commonjs",
     "moduleResolution": "node",
+    "rootDir": "src/",
     "resolveJsonModule": true,
 
     /* JavaScript Support */
@@ -38,6 +39,6 @@
     /* Completeness */
     "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "vitest.config.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }
