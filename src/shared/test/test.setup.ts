@@ -11,8 +11,6 @@ let orm: MikroORM
 let app: FastifyInstance
 
 beforeAll(async () => {
-  // // eslint-disable-next-line no-console
-  // console.log('DATABASE NAME:', process.env.TEST_DATABASE_NAME)
   const { app: fastify, db } = await bootstrapApp(0, {
     dbName: process.env.TEST_DATABASE_NAME,
     user: process.env.TEST_DATABASE_USER,
@@ -21,7 +19,6 @@ beforeAll(async () => {
     entities: ['./dist/**/*.entity.js'],
     entitiesTs: ['./src/**/*.entity.ts'],
     port: Number(process.env.TEST_DATABASE_PORT),
-    // allowGlobalContext: true,
     metadataProvider: TsMorphMetadataProvider,
     debug: false,
     dynamicImportProvider: async id => await import(id)
