@@ -1,5 +1,6 @@
 // src/config/swagger.config.ts
 import { type SwaggerOptions } from '@fastify/swagger'
+import { type FastifySwaggerUiOptions } from '@fastify/swagger-ui'
 
 export const SwaggerConfig: SwaggerOptions = {
   openapi: {
@@ -35,7 +36,7 @@ export const SwaggerConfig: SwaggerOptions = {
   }
 }
 
-export const SwaggerUiConfig = {
+export const SwaggerUiConfig: FastifySwaggerUiOptions = {
   routePrefix: '/docs',
   uiConfig: {
     docExpansion: 'full',
@@ -46,6 +47,5 @@ export const SwaggerUiConfig = {
   transformSpecification: (swaggerObject: any, _request: any, _reply: any) => {
     return swaggerObject
   },
-  transformSpecificationClone: true,
-  exposeRoute: true
+  transformSpecificationClone: true
 }

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import FastifyCors from '@fastify/cors'
 import Swagger from '@fastify/swagger'
+import SwaggerUI from '@fastify/swagger-ui'
 import { RequestContext, type Options } from '@mikro-orm/postgresql'
 import { type FastifyInstance } from 'fastify'
 import initMikroORM, { type Services } from './db'
@@ -9,7 +10,7 @@ import bootstrapResponsible from './responsible/responsible.bootstrap'
 import EnvVar from './shared/config/env-var.config'
 import { FastifyCorsConfig } from './shared/config/fastify-cors.config'
 import FastifyConifg from './shared/config/fastify.config'
-import SwaggerConfig from './shared/config/swagger.config'
+import { SwaggerConfig, SwaggerUiConfig } from './shared/config/swagger.config'
 import bootstrapWasteCategory from './waste-category/waste-category.bootstrap'
 
 async function bootstrapApp(port: number, options?: Options): Promise<{ app: FastifyInstance; db: Services }> {
@@ -19,6 +20,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
 
   /* Register Swagger */
   await app.register(Swagger, SwaggerConfig)
+  await app.register(SwaggerUI, SwaggerUiConfig)
 
   /* Register CORS */
   app.register(FastifyCors, FastifyCorsConfig)
