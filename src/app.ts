@@ -1,19 +1,24 @@
 /* eslint-disable no-console */
 import FastifyCors from '@fastify/cors'
-import { type Options, RequestContext } from '@mikro-orm/postgresql'
+import Swagger from '@fastify/swagger'
+import { RequestContext, type Options } from '@mikro-orm/postgresql'
 import { type FastifyInstance } from 'fastify'
 import initMikroORM, { type Services } from './db'
 import bootstrapEntity from './entity/entity.bootstrap'
 import bootstrapResponsible from './responsible/responsible.bootstrap'
+import EnvVar from './shared/config/env-var.config'
 import { FastifyCorsConfig } from './shared/config/fastify-cors.config'
 import FastifyConifg from './shared/config/fastify.config'
+import SwaggerConfig from './shared/config/swagger.config'
 import bootstrapWasteCategory from './waste-category/waste-category.bootstrap'
-import EnvVar from './shared/config/env-var.config'
 
 async function bootstrapApp(port: number, options?: Options): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM(options)
   const fastify = new FastifyConifg(EnvVar.server.nodeEnv === 'development')
   const app = fastify.server
+
+  /* Register Swagger */
+  await app.register(Swagger, SwaggerConfig)
 
   /* Register CORS */
   app.register(FastifyCors, FastifyCorsConfig)
