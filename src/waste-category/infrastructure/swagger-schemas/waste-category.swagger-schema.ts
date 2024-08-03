@@ -138,3 +138,33 @@ export const updateSwaggerSchema = {
     }
   }
 }
+
+export const deleteSwaggerSchema = {
+  description: 'This is an endpoint that deletes a waste category by ID.',
+  tags: ['Waste Category'],
+  params: {
+    type: 'object',
+    properties: {
+      id: { type: 'string', description: 'Unique identifier for the waste category.' }
+    },
+    required: ['id']
+  },
+  response: {
+    200: {
+      description: 'Waste Category deleted successfully',
+      type: 'object',
+      properties: {
+        status: { type: 'number' },
+        message: { type: 'string' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', description: 'Unique identifier for the waste category.' }
+          },
+          required: ['id']
+        }
+      },
+      required: ['status', 'message', 'data']
+    }
+  }
+}

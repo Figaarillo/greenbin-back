@@ -1,6 +1,7 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
 import type WasteCategoryHandler from '../handler/waste-category.handler'
 import {
+  deleteSwaggerSchema,
   findByIdSwaggerSchema,
   listSwaggerSchema,
   registerSwaggerSchema,
@@ -38,9 +39,13 @@ class WasteCategoryRoute {
         await this.handler.Update(req, res)
       }
     )
-    this.router.delete('/api/waste-category/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-      await this.handler.Delete(req, res)
-    })
+    this.router.delete(
+      '/api/waste-category/:id',
+      { schema: deleteSwaggerSchema },
+      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+        await this.handler.Delete(req, res)
+      }
+    )
   }
 }
 
