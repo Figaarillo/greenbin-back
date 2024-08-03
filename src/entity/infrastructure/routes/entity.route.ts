@@ -1,5 +1,6 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
 import type EntityHandler from '../handler/entity.handler'
+import { findByIDSchema } from '../swagger-schemas/route.swagger-schema'
 
 class EntityRoute {
   constructor(
@@ -11,9 +12,13 @@ class EntityRoute {
     this.router.get('/api/entity', async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
       await this.handler.List(req, res)
     })
-    this.router.get('/api/entity/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-      await this.handler.FindByID(req, res)
-    })
+    this.router.get(
+      '/api/entity/:id',
+      { schema: findByIDSchema },
+      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+        await this.handler.FindByID(req, res)
+      }
+    )
     this.router.post('/api/entity', async (req, res) => {
       await this.handler.Register(req, res)
     })
