@@ -3,7 +3,8 @@ import type WasteCategoryHandler from '../handler/waste-category.handler'
 import {
   findByIdSwaggerSchema,
   listSwaggerSchema,
-  registerSwaggerSchema
+  registerSwaggerSchema,
+  updateSwaggerSchema
 } from '../swagger-schemas/waste-category.swagger-schema'
 
 class WasteCategoryRoute {
@@ -30,9 +31,13 @@ class WasteCategoryRoute {
     this.router.post('/api/waste-category', { schema: registerSwaggerSchema }, async (req, res) => {
       await this.handler.Register(req, res)
     })
-    this.router.put('/api/waste-category/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-      await this.handler.Update(req, res)
-    })
+    this.router.put(
+      '/api/waste-category/:id',
+      { schema: updateSwaggerSchema },
+      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+        await this.handler.Update(req, res)
+      }
+    )
     this.router.delete('/api/waste-category/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
       await this.handler.Delete(req, res)
     })
