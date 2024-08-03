@@ -1,5 +1,6 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
 import type WasteCategoryHandler from '../handler/waste-category.handler'
+import { listSwaggerSchema } from '../swagger-schemas/waste-category.swagger-schema'
 
 class WasteCategoryRoute {
   constructor(
@@ -10,6 +11,7 @@ class WasteCategoryRoute {
   setupRoutes(): void {
     this.router.get(
       '/api/waste-category',
+      { schema: listSwaggerSchema },
       async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
         await this.handler.List(req, res)
       }
