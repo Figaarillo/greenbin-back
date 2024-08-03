@@ -21,7 +21,7 @@ export const listSwaggerSchema = {
           items: {
             type: 'object',
             properties: {
-              id: { type: 'string', description: 'Unique identifier for the waste category.' },
+              id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' },
               createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
               updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
               name: { type: 'string', description: 'Name of the waste category.' },
@@ -42,7 +42,7 @@ export const findByIdSwaggerSchema = {
   params: {
     type: 'object',
     properties: {
-      id: { type: 'string', description: 'Unique identifier for the waste category.' }
+      id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' }
     },
     required: ['id']
   },
@@ -56,7 +56,7 @@ export const findByIdSwaggerSchema = {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'string', description: 'Unique identifier for the waste category.' },
+            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' },
             createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
             updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
             name: { type: 'string', description: 'Name of the waste category.' },
@@ -91,7 +91,7 @@ export const registerSwaggerSchema = {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'string', description: 'Unique identifier for the waste category.' }
+            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' }
           },
           required: ['id']
         }
@@ -107,7 +107,7 @@ export const updateSwaggerSchema = {
   params: {
     type: 'object',
     properties: {
-      id: { type: 'string', description: 'Unique identifier for the waste category.' }
+      id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' }
     },
     required: ['id']
   },
@@ -129,7 +129,7 @@ export const updateSwaggerSchema = {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'string', description: 'Unique identifier for the waste category.' }
+            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' }
           },
           required: ['id']
         }
@@ -145,7 +145,7 @@ export const deleteSwaggerSchema = {
   params: {
     type: 'object',
     properties: {
-      id: { type: 'string', description: 'Unique identifier for the waste category.' }
+      id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' }
     },
     required: ['id']
   },
@@ -159,7 +159,7 @@ export const deleteSwaggerSchema = {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'string', description: 'Unique identifier for the waste category.' }
+            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' }
           },
           required: ['id']
         }
