@@ -1,6 +1,10 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
 import type WasteCategoryHandler from '../handler/waste-category.handler'
-import { findByIdSwaggerSchema, listSwaggerSchema } from '../swagger-schemas/waste-category.swagger-schema'
+import {
+  findByIdSwaggerSchema,
+  listSwaggerSchema,
+  registerSwaggerSchema
+} from '../swagger-schemas/waste-category.swagger-schema'
 
 class WasteCategoryRoute {
   constructor(
@@ -23,7 +27,7 @@ class WasteCategoryRoute {
         await this.handler.FindByID(req, res)
       }
     )
-    this.router.post('/api/waste-category', async (req, res) => {
+    this.router.post('/api/waste-category', { schema: registerSwaggerSchema }, async (req, res) => {
       await this.handler.Register(req, res)
     })
     this.router.put('/api/waste-category/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {

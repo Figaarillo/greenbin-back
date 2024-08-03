@@ -69,3 +69,38 @@ export const findByIdSwaggerSchema = {
     }
   }
 }
+
+export const registerSwaggerSchema = {
+  description: 'This is an endpoint that creates a new waste category.',
+  tags: ['Waste Category'],
+  body: {
+    type: 'object',
+    properties: {
+      name: { type: 'string', description: 'Name of the waste category.' },
+      description: { type: 'string', description: 'Description of the waste category.' }
+    },
+    required: ['name', 'description']
+  },
+  response: {
+    201: {
+      description: 'Waste Category created successfully',
+      type: 'object',
+      properties: {
+        status: { type: 'number' },
+        message: { type: 'string' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', description: 'Unique identifier for the waste category.' },
+            createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
+            updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
+            name: { type: 'string', description: 'Name of the waste category.' },
+            description: { type: 'string', description: 'Description of the waste category.' }
+          },
+          required: ['id', 'createdAt', 'updatedAt', 'name', 'description']
+        }
+      },
+      required: ['status', 'message', 'data']
+    }
+  }
+}
