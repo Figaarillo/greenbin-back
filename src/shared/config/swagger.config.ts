@@ -94,7 +94,7 @@ export const SwaggerConfig: SwaggerOptions = {
 export const SwaggerUiConfig: FastifySwaggerUiOptions = {
   routePrefix: '/documentation',
   uiConfig: {
-    docExpansion: 'full',
+    docExpansion: 'list',
     deepLinking: false
   },
   staticCSP: true,
