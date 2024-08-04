@@ -26,7 +26,7 @@ RUN pnpm run migration:up
 RUN pnpm build
 
 # Stage 2: Production
-FROM node:20.15.0-alpine3.19 as production
+FROM node:20.16-slim as production
 
 # Set the working directory
 WORKDIR /usr/src/app
