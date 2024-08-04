@@ -2,21 +2,25 @@
 FROM node:20.15.0-alpine3.19 AS builder
 
 # Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /usr/app
 
 # Copy package.json and pnpm-lock.yaml into the container
-COPY package.json pnpm-lock.yaml ./
+COPY --chown=node:node package.json ./
+COPY --chown=node:node pnpm-lock.yaml ./
 
 # Install pnpm to install dependencies
 RUN npm install -g pnpm
 RUN pnpm install
 
 # Copy the rest of the source code
-COPY . .
+COPY --chown=node:node . .
+
+# Set the user
+USER node
 
 # Generate the migrations
-RUN pnpm run migration:initial
-RUN pnpm run migration:run
+RUN pnpm run migration:create
+RUN pnpm run migration:up
 
 # Build the project
 RUN pnpm build
