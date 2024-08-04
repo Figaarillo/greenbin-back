@@ -7,7 +7,7 @@ export const listSwaggerSchema = {
       offset: { type: 'integer', description: 'Offset for pagination' },
       limit: { type: 'integer', description: 'Limit for pagination' }
     },
-    required: ['limit']
+    required: ['offset', 'limit']
   },
   response: {
     200: {
@@ -24,10 +24,10 @@ export const listSwaggerSchema = {
               id: { type: 'string', format: 'uuid', description: 'Unique identifier for the Entity.' },
               createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
               updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
-              name: { type: 'string', description: 'Name of the Entity.' },
-              description: { type: 'string', description: 'Description of the Entity.' },
-              city: { type: 'string', description: 'City of the Entity.' },
-              province: { type: 'string', description: 'Province of the Entity.' }
+              name: { type: 'string', description: 'Name of the entity.' },
+              description: { type: 'string', description: 'Description of the entity.' },
+              city: { type: 'string', description: 'City of the entity.' },
+              province: { type: 'string', description: 'Province of the entity.' }
             },
             required: ['id', 'createdAt', 'updatedAt', 'name', 'description', 'city', 'province']
           }
@@ -58,13 +58,13 @@ export const findByIdSwaggerSchema = {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the Entity.' },
+            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the entity.' },
             createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
             updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
-            name: { type: 'string', description: 'Name of the Entity.' },
-            description: { type: 'string', description: 'Description of the Entity.' },
-            city: { type: 'string', description: 'City of the Entity.' },
-            province: { type: 'string', description: 'Province of the Entity.' }
+            name: { type: 'string', description: 'Name of the entity.' },
+            description: { type: 'string', description: 'Description of the entity.' },
+            city: { type: 'string', description: 'City of the entity.' },
+            province: { type: 'string', description: 'Province of the entity.' }
           },
           required: ['id', 'createdAt', 'updatedAt', 'name', 'description', 'city', 'province']
         }
@@ -80,11 +80,11 @@ export const registerSwaggerSchema = {
   body: {
     type: 'object',
     properties: {
-      name: { type: 'string', description: 'Name of the Entity.' },
-      description: { type: 'string', description: 'Description of the Entity.' },
-      password: { type: 'string', description: 'Password of the Entity.' },
-      city: { type: 'string', description: 'City of the Entity.' },
-      province: { type: 'string', description: 'Province of the Entity.' }
+      name: { type: 'string', description: 'Name of the entity.' },
+      description: { type: 'string', description: 'Description of the entity.' },
+      password: { type: 'string', description: 'Password of the entity.' },
+      city: { type: 'string', description: 'City of the entity.' },
+      province: { type: 'string', description: 'Province of the entity.' }
     },
     required: ['name', 'description', 'password', 'city', 'province']
   },
@@ -98,7 +98,7 @@ export const registerSwaggerSchema = {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the Entity.' }
+            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the entity.' }
           },
           required: ['id']
         }
@@ -109,19 +109,19 @@ export const registerSwaggerSchema = {
 }
 
 export const updateSwaggerSchema = {
-  description: 'This is an endpoint that updates a Entity by ID.',
+  description: 'This is an endpoint that updates a entity by ID.',
   tags: ['Entity'],
   params: {
     type: 'object',
     properties: {
-      id: { type: 'string', format: 'uuid', description: 'Unique identifier for the Entity.' }
+      id: { type: 'string', format: 'uuid', description: 'Unique identifier for the entity.' }
     },
     required: ['id']
   },
   body: {
     type: 'object',
     properties: {
-      description: { type: 'string', description: 'Description of the Entity.' }
+      description: { type: 'string', description: 'Description of the entity.' }
     },
     required: ['description']
   },
@@ -135,7 +135,7 @@ export const updateSwaggerSchema = {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the Entity.' }
+            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the entity.' }
           },
           required: ['id']
         }
@@ -151,7 +151,7 @@ export const deleteSwaggerSchema = {
   params: {
     type: 'object',
     properties: {
-      id: { type: 'string', format: 'uuid', description: 'Unique identifier for the Entity.' }
+      id: { type: 'string', format: 'uuid', description: 'Unique identifier for the entity.' }
     },
     required: ['id']
   },
@@ -165,7 +165,7 @@ export const deleteSwaggerSchema = {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the Entity.' }
+            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the entity.' }
           },
           required: ['id']
         }
