@@ -5,6 +5,7 @@ dotenv.config()
 
 interface ServerConfig {
   port: number
+  host: string
   nodeEnv: 'development' | 'production' | 'test'
 }
 
@@ -24,6 +25,7 @@ interface Config {
 
 const serverConfig: ServerConfig = {
   port: env.get('SERVER_PORT').required().default(8080).asPortNumber(),
+  host: env.get('SERVER_HOST').required().asString(),
   nodeEnv: env.get('NODE_ENV').required().asEnum(['development', 'production', 'test'])
 }
 
