@@ -14,7 +14,7 @@
     "prettier": "prettier --write \"src/**/*.ts\"",
     "lint:fix": "pnpm run lint --fix",
     "ts-check": "tsc -p tsconfig.json --noEmit",
-    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; then pnpm run build; fi && husky install",
+    "prepare": "if [ \"$NODE_ENV\" != \"production\" ]; husky install; fi",
     "pre-check": "pnpm run ts-check && pnpm run prettier && pnpm run lint",
     "pre-commit": "lint-staged",
     "typeorm": "typeorm-ts-node-commonjs",
