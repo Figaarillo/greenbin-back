@@ -34,7 +34,7 @@ docker.stop:
 
 docker.clean:
 	@echo " ╭────────────────────────────────────────╮ "
-	@echo " │       CLEANNING DOCKER CONTAINERS      │ "
+	@echo " │       CLEANING DOCKER CONTAINERS       │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	docker compose down --volumes
 
