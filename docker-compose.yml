@@ -1,5 +1,21 @@
 services:
-  ### DATABASE ###
+  # ############ API SERVER ############ #
+  apiserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      database:
+        condition: service_started
+    # restart: always
+    ports:
+      - '8080:8080'
+    environment:
+      DATABASE_HOST: database
+    networks:
+      - dev-network
+
+  # ############# DATABASE ############# #
   database:
     image: postgres:16.2-alpine3.19
     restart: always
@@ -11,8 +27,10 @@ services:
       - '${DATABASE_PORT}:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - dev-network
 
-  ### TEST DATABASE ###
+  # ########### TEST DATABASE ########## #
   database-test:
     image: postgres:16.2-alpine3.19
     restart: always
@@ -24,9 +42,15 @@ services:
       - '${TEST_DATABASE_PORT}:5432'
     volumes:
       - pgdata-test:/var/lib/postgresql/data
+    networks:
+      - dev-network
 
 volumes:
   pgdata:
     driver: local
   pgdata-test:
     driver: local
+
+networks:
+  dev-network:
+    driver: bridge
