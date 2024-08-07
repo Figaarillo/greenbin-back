@@ -1,4 +1,4 @@
-.PHONY: docker.db docker.db.test
+.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations
 
 # ############# COMMANDS ############ #
 docker: docker.clean docker.build docker.db docker.db.test
