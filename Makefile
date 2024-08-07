@@ -38,6 +38,12 @@ docker.clean:
 	@echo " ╰────────────────────────────────────────╯ "
 	docker compose down --volumes
 
+docker.restart.server:
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │          RESTARTING APISERVER          │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	docker compose stop apiserver
+	docker compose up -d apiserver
 
 run: docker.db
 	@echo " ╭────────────────────────────────────────╮ "
