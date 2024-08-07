@@ -14,6 +14,8 @@ RUN pnpm install
 
 # Copy the rest of the source code
 COPY --chown=node:node . .
+RUN chown -R node:node /usr/src/app
+RUN chmod -R +x .
 
 # Set the user
 USER node
