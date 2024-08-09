@@ -9,7 +9,7 @@ Final Project for the completion of the Systems Engineering degree at UTN FRVM
 - **[Fastify](https://fastify.dev/)**: A high-performance framework for Node.js.
 - **[MikroORM](https://mikro-orm.io/) & [PostgreSQL](https://www.postgresql.org/)**: Simplifies database interactions with an ORM.
 - **[TypeScript](https://www.typescriptlang.org/)**: Strongly typed development environment.
-- **[pnpm](https://pnpm.io/)**: Personal package manager for Node.js.
+- **[PNPM](https://pnpm.io/)**: Personal package manager for Node.js.
 - **[Vitest](https://vitest.dev/)**: Testing.
 - **[Docker](https://www.docker.com/)**: Containerization and deployment.
 - **[Docker Compose](https://www.docker.com/)**: Containerization and deployment.
@@ -76,21 +76,19 @@ make test
 
 ### Running Migrations
 
-- To generate new migrations:
-
 ```sh
 make migrations
 ```
 
 ### Linting and Formatting
 
-To lint the code:
+- To lint the code:
 
 ```sh
 pnpm run lint
 ```
 
-To format the code:
+- To format the code:
 
 ```sh
 pnpm run prettier
