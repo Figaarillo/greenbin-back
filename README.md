@@ -1,115 +1,125 @@
-# Noderplate
+[English](./README.md) | [Spanish](./README.es.md)
 
-Noderplate is a boilerplate for Node.js projects, providing a well-structured foundation for building scalable and maintainable applications. It includes a setup with TypeORM, Fastify, and other essential tools for development.
+# Greenbin Project
 
-## Features
+Final Project for the completion of the Systems Engineering degree at UTN FRVM
 
-- **[TypeORM Integration](https://typeorm.io/)**: Simplifies database interactions with a TypeScript ORM.
+## Technologies
+
 - **[Fastify](https://fastify.dev/)**: A high-performance framework for Node.js.
+- **[MikroORM](https://mikro-orm.io/) & [PostgreSQL](https://www.postgresql.org/)**: Simplifies database interactions with an ORM.
+- **[TypeScript](https://www.typescriptlang.org/)**: Strongly typed development environment.
+- **[PNPM](https://pnpm.io/)**: Personal package manager for Node.js.
+- **[Vitest](https://vitest.dev/)**: Testing.
+- **[Docker](https://www.docker.com/)**: Containerization and deployment.
+- **[Docker Compose](https://www.docker.com/)**: Containerization and deployment.
+- **[SwaggerUI](https://swagger.io/)**: Documentation.
+- **[Husky](https://github.com/typicode/husky) & [Lint-staged](https://github.com/okonet/lint-staged)**: Git hooks.
+- **[ESLint](https://eslint.org/) & [Prettier](https://prettier.io/)**: Linting and formatting.
+- **[dotenv](https://www.dotenv.org/docs/) & [env-valid](https://www.npmjs.com/package/env-valid)**: Environment configuration and validation.
 - **Modular Architecture**: Clean separation of concerns with a well-defined structure.
-- **Environment Configuration**: Managed via dotenv.
-- **TypeScript**: Strongly typed development environment.
-- **Pre-configured Tooling**: Includes ESLint, Prettier, Husky, and more for code quality and consistency.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (>= 14.x)
-- pnpm (>= 6.x)
-- Docker (for database setup)
+- [Node.js](https://nodejs.org/) (>= 20.x)
+- [PNPM](https://pnpm.io/) (>= 9.3.x)
+- [Docker](https://docs.docker.com/get-docker/) (for database setup)
 
 ### Installation
 
 1. Clone the repository:
-    ```sh
-    git clone https://github.com/Figaarillo/noderplate.git
-    cd noderplate
-    ```
 
-2. Install dependencies:
-    ```sh
-    pnpm install
-    ```
-
-3. Set up environment variables:
-    ```sh
-    cp .env.dev .env
-    # Update .env with your configuration
-    ```
-
-4. Run the database using Docker:
-    ```sh
-    docker-compose up -d
-    ```
-
-### Development
-
-To start the development server:
 ```sh
-pnpm run dev
+git clone https://github.com/Figaarillo/greenbin-back.git
+cd greenbin-back
 ```
 
-### Building
+2. Set up environment variables. Copy the `.env.example` file to `.env`:
 
-To build the project:
 ```sh
-pnpm run build
+cp .env.example .env
+```
+
+3. Install dependencies:
+
+```sh
+pnpm install
+```
+
+### How to run the project?
+
+- Run the server and database through Docker
+
+```sh
+make docker
+```
+
+> If the server is not running, you can restart it:
+
+```sh
+make docker.restart.server
+```
+
+- Run the server locally and the database with Docker
+
+```sh
+make run
+```
+
+### How to run tests?
+
+```sh
+make test
 ```
 
 ### Running Migrations
 
-To generate new migrations:
 ```sh
-pnpm run migration:generate
-```
-
-To run migrations:
-```sh
-pnpm run migration:run
+make migrations
 ```
 
 ### Linting and Formatting
 
-To lint the code:
+- To lint the code:
+
 ```sh
 pnpm run lint
 ```
 
-To format the code:
+- To format the code:
+
 ```sh
 pnpm run prettier
 ```
 
-### Testing
-
-To run tests:
-```sh
-pnpm run test
-```
-
 ## Project Structure
 
+```sh
+src
+├── entity
+│   ├── aplication
+│   │   └── usecases            # Application use cases
+│   ├── domain
+│   │   ├── entities            # Domain entity definitions
+│   │   ├── errors              # Domain error definitions
+│   │   ├── payloads            # Payloads for domain entities
+│   │   └── repositories        # Repository definition
+│   ├── infrastructure
+│   │   ├── dtos                # Data Transfer Objects for entity data
+│   │   ├── handler             # HTTP controllers / handlers for routes
+│   │   ├── middlewares         # Middleware
+│   │   ├── repositories        # Implementation of repositories
+│   │   └── routes              # HTTP routes
+│   └── test                    # End-to-end tests
+├── migrations                  # Database migrations
+└── shared                      # Shared modules and utilities
+    ├── config
+    ├── domain
+    ├── test
+    └── utils
 ```
-.
-├── src
-│   ├── main.ts                 # Application entry point
-│   ├── shared                  # Shared modules and utilities
-│   │   ├── config
-│   │   ├── domain
-│   │   └── utils
-│   └── user                    # User domain-related modules
-│       ├── aplication
-│       ├── domain
-│       └── infrastructure
-├── docker-compose.yml          # Docker configuration
-├── package.json                # Project configuration and scripts
-└── tsconfig.json               # TypeScript configuration
-```
-
-## Contributing
-
-Contributions are welcome! Please follow the [code of conduct](CODE_OF_CONDUCT.md) and submit pull requests for any enhancements or bug fixes.
 
 ## License
 
