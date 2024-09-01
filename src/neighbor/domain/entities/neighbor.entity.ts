@@ -30,6 +30,9 @@ class NeighborEntity extends BaseEntity {
   @Property()
   phoneNumber: string
 
+  @Property({ default: 0 })
+  points: number
+
   constructor(payload: NeighborPayload) {
     super()
     this.firstname = payload.firstname
@@ -40,6 +43,11 @@ class NeighborEntity extends BaseEntity {
     this.dni = payload.dni
     this.birthdate = payload.birthdate
     this.phoneNumber = payload.phoneNumber
+    this.points = 0
+  }
+
+  addPoints(points: number): void {
+    this.points += points
   }
 
   @BeforeCreate()
