@@ -6,6 +6,7 @@ interface NeighborPayload {
   password: string
   dni: number
   birthdate: Date
+  phoneNumber: string
 }
 
 export default NeighborPayload

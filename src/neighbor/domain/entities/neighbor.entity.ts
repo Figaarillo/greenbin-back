@@ -27,6 +27,9 @@ class NeighborEntity extends BaseEntity {
   @Property()
   birthdate: Date
 
+  @Property()
+  phoneNumber: string
+
   constructor(payload: NeighborPayload) {
     super()
     this.firstname = payload.firstname
@@ -36,6 +39,7 @@ class NeighborEntity extends BaseEntity {
     this.password = payload.password
     this.dni = payload.dni
     this.birthdate = payload.birthdate
+    this.phoneNumber = payload.phoneNumber
   }
 
   @BeforeCreate()
