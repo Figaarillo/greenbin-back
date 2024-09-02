@@ -3,6 +3,7 @@ import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property } from '@mikro-
 import { hash, verify } from 'argon2'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import NeighborPayload from '../payloads/neighbor.payload'
+import type NeighborUpdatePayload from '../payloads/neighbor.update.payload'
 
 @Entity()
 class NeighborEntity extends BaseEntity {
@@ -48,6 +49,24 @@ class NeighborEntity extends BaseEntity {
 
   addPoints(points: number): void {
     this.points += points
+  }
+
+  update(payload: NeighborUpdatePayload): void {
+    if (payload.firstname != null || payload.firstname !== '') {
+      this.firstname = payload.firstname
+    }
+    if (payload.lastname != null || payload.lastname !== '') {
+      this.lastname = payload.lastname
+    }
+    if (payload.username != null || payload.username !== '') {
+      this.username = payload.username
+    }
+    if (payload.email != null || payload.email !== '') {
+      this.email = payload.email
+    }
+    if (payload.phoneNumber != null) {
+      this.phoneNumber = payload.phoneNumber
+    }
   }
 
   @BeforeCreate()

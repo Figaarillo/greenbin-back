@@ -3,6 +3,7 @@ interface NeighborUpdatePayload {
   lastname: string
   username: string
   email: string
+  phoneNumber: string
 }
 
 export default NeighborUpdatePayload
