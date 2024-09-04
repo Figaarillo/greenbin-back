@@ -61,5 +61,5 @@ migrations:
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │           RUNNING MIGRATIONS           │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	pnpm run migration:create
-	pnpm run migration:run
+	DATABASE_HOST=localhost pnpm run migration:create
+	DATABASE_HOST=localhost pnpm run migration:up
