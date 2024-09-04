@@ -63,6 +63,7 @@
     "@mikro-orm/reflection": "6.3.0",
     "argon2": "0.40.3",
     "bcrypt": "5.1.1",
+    "date-fns": "3.6.0",
     "dotenv": "16.3.1",
     "env-var": "7.5.0",
     "fastify": "4.28.0",

@@ -35,6 +35,9 @@ importers:
       bcrypt:
         specifier: 5.1.1
         version: 5.1.1
+      date-fns:
+        specifier: 3.6.0
+        version: 3.6.0
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
@@ -1169,6 +1172,9 @@ packages:
 
   dataloader@2.2.2:
     resolution: {integrity: sha512-8YnDaaf7N3k/q5HnTJVuzSyLETjoZjVmHc4AeKAzOvKHEFQKcn64OKBfzHYtE9zGjctNM7V9I0MfnUVLpi7M5g==}
+
+  date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -4442,6 +4448,8 @@ snapshots:
   dargs@7.0.0: {}
 
   dataloader@2.2.2: {}
+
+  date-fns@3.6.0: {}
 
   debug@3.2.7:
     dependencies:
