@@ -42,10 +42,12 @@ export const dniDTO = z
   .max(99999999, { message: 'The dni must be less than 8 characters' })
 
 export const birthdateDTO = z
-  .date()
-  .refine((birthdate: Date) => birthdate.getTime() < Date.now(), { message: 'The birthdate cannot be in the future' })
-  .refine((birthdate: Date) => birthdate.getTime() > 0, { message: 'The birthdate cannot be empty' })
-  .refine((birthdate: Date) => birthdate.getFullYear() > 1900, { message: 'The birthdate cannot be before 1900' })
+  .string()
+  .regex(/^\d{2}\/\d{2}\/\d{4}$/, { message: 'The format of birthdate must be dd/mm/yyyy' })
+  .refine((birthdate: string) => birthdate.trim().length > 0, { message: 'The birthdate cannot be empty' })
+  .refine((birthdate: string) => birthdate.trim().length === 10, {
+    message: 'The birthdate must be in the format dd/mm/yyyy'
+  })
 
 export const phoneNumberDTO = z
   .string()
