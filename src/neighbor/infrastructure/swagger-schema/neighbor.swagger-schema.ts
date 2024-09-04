@@ -11,7 +11,7 @@ export const registerSwaggerSchema = {
       password: { type: 'string', description: 'Password of the neighbor.' },
       dni: { type: 'number', description: 'DNI of the neighbor.' },
       phoneNumber: { type: 'string', description: 'Phone number of the neighbor.' },
-      birthdate: { type: 'string', format: 'date-time', description: 'Birthdate of the neighbor.' }
+      birthdate: { type: 'string', description: 'Birthdate of the neighbor.' }
     },
     required: ['firstname', 'lastname', 'username', 'email', 'password', 'dni', 'phoneNumber', 'birthdate']
   },
@@ -25,9 +25,11 @@ export const registerSwaggerSchema = {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the neighbor.' }
+            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the neighbor.' },
+            accessToken: { type: 'string', description: 'Access token of the neighbor.' },
+            refreshToken: { type: 'string', description: 'Refresh token of the neighbor.' }
           },
-          required: ['id']
+          required: ['id', 'accessToken', 'refreshToken']
         }
       },
       required: ['status', 'message', 'data']
