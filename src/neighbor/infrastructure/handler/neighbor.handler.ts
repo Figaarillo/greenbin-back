@@ -1,4 +1,8 @@
+/* eslint-disable no-console */
 import { type FastifyReply, type FastifyRequest } from 'fastify'
+import AuthService from '../../../auth/aplicaction/service/auth.service'
+import type IJWTProvider from '../../../auth/domain/provider/jwt.interface.provider'
+import DateUtils from '../../../shared/utils/date.util'
 import HandleHTTPResponse from '../../../shared/utils/http.response'
 import { GetURLParams } from '../../../shared/utils/http.utils'
 import RegisterNeighborUseCase from '../../aplication/usecases/register.usecase'
@@ -11,21 +15,38 @@ import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class NeighborHandler {
-  constructor(private readonly repository: NeighborRepository) {
+  constructor(
+    private readonly repository: NeighborRepository,
+    private readonly jwtProvider: IJWTProvider
+  ) {
     this.repository = repository
   }
 
   async Register(req: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
-      const payload: NeighborPayload = req.body as NeighborPayload
-
-      const validateRegisterNeighborSchema = new SchemaValidator(RegisterNeighborDTO, payload)
+      const validateRegisterNeighborSchema = new SchemaValidator(RegisterNeighborDTO, req.body as NeighborPayload)
       validateRegisterNeighborSchema.exec()
+
+      const payload: NeighborPayload = {
+        ...(req.body as any),
+        birthdate: DateUtils.parseDate((req.body as any).birthdate as string)
+      }
 
       const registerNeighbor = new RegisterNeighborUseCase(this.repository)
       const neighbor = await registerNeighbor.exec(payload)
 
-      HandleHTTPResponse.Created(res, 'Neighbor registered successfully', { id: neighbor.id })
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(neighbor.id, {
+        email: neighbor.email,
+        role: 'neighbor'
+      })
+      const refreshToken = await authService.generateRefreshToken(neighbor.id, { email: neighbor.email })
+
+      HandleHTTPResponse.Created(res, 'Neighbor registered successfully', {
+        id: neighbor.id,
+        accessToken,
+        refreshToken
+      })
     } catch (error) {
       res.status(500).send(error)
     }
