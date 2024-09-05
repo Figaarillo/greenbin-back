@@ -6,6 +6,7 @@ import { RequestContext, type Options } from '@mikro-orm/postgresql'
 import { type FastifyInstance } from 'fastify'
 import initMikroORM, { type Services } from './db'
 import bootstrapEntity from './entity/entity.bootstrap'
+import bootstrapNeighbor from './neighbor/neighbor.bootstrap'
 import bootstrapResponsible from './responsible/responsible.bootstrap'
 import EnvVar from './shared/config/env-var.config'
 import { FastifyCorsConfig } from './shared/config/fastify-cors.config'
@@ -42,6 +43,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapEntity(app, db)
   bootstrapWasteCategory(app, db)
   bootstrapResponsible(app, db)
+  bootstrapNeighbor(app, db)
 
   /* Start the server */
   const url: string = await fastify.start(port)
