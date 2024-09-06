@@ -2,7 +2,7 @@
 import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property } from '@mikro-orm/postgresql'
 import { hash, verify } from 'argon2'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
-import NeighborPayload from '../payloads/reward-partner.payload'
+import RewardPartnerPayload from '../payloads/reward-partner.payload'
 import type RewardPartnerUpdatePayload from '../payloads/reward-partner.update.payload'
 
 @Entity()
@@ -14,7 +14,7 @@ class RewardPartnerEntity extends BaseEntity {
   address: string
 
   @Property({ unique: true })
-  cuit: string
+  cuit: number
 
   @Property({ unique: true })
   email: string
@@ -22,7 +22,7 @@ class RewardPartnerEntity extends BaseEntity {
   @Property({ hidden: true, lazy: true })
   password: string
 
-  constructor(payload: NeighborPayload) {
+  constructor(payload: RewardPartnerPayload) {
     super()
     this.name = payload.name
     this.address = payload.address
