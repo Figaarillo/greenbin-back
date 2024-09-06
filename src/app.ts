@@ -8,6 +8,7 @@ import initMikroORM, { type Services } from './db'
 import bootstrapEntity from './entity/entity.bootstrap'
 import bootstrapNeighbor from './neighbor/neighbor.bootstrap'
 import bootstrapResponsible from './responsible/responsible.bootstrap'
+import bootstrapRewardPartner from './reward-partner/reward-partner.bootstrap'
 import EnvVar from './shared/config/env-var.config'
 import { FastifyCorsConfig } from './shared/config/fastify-cors.config'
 import FastifyConifg from './shared/config/fastify.config'
@@ -44,6 +45,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapWasteCategory(app, db)
   bootstrapResponsible(app, db)
   bootstrapNeighbor(app, db)
+  bootstrapRewardPartner(app, db)
 
   /* Start the server */
   const url: string = await fastify.start(port)
