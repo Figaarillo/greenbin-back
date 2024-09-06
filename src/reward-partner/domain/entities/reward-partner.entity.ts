@@ -3,10 +3,10 @@ import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property } from '@mikro-
 import { hash, verify } from 'argon2'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import NeighborPayload from '../payloads/reward-partner.payload'
-import type NeighborUpdatePayload from '../payloads/reward-partner.update.payload'
+import type RewardPartnerUpdatePayload from '../payloads/reward-partner.update.payload'
 
 @Entity()
-class NeighborEntity extends BaseEntity {
+class RewardPartnerEntity extends BaseEntity {
   @Property({ unique: true })
   name: string
 
@@ -31,7 +31,7 @@ class NeighborEntity extends BaseEntity {
     this.password = payload.password
   }
 
-  update(payload: NeighborUpdatePayload): void {
+  update(payload: RewardPartnerUpdatePayload): void {
     if (payload.name != null || payload.name !== '') {
       this.name = payload.name
     }
@@ -45,7 +45,7 @@ class NeighborEntity extends BaseEntity {
 
   @BeforeCreate()
   @BeforeUpdate()
-  async hashPassword(args: EventArgs<NeighborEntity>): Promise<void> {
+  async hashPassword(args: EventArgs<RewardPartnerEntity>): Promise<void> {
     const password = args.changeSet?.payload.password
 
     if (password != null) {
@@ -58,4 +58,4 @@ class NeighborEntity extends BaseEntity {
   }
 }
 
-export default NeighborEntity
+export default RewardPartnerEntity

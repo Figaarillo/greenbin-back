@@ -1,4 +1,4 @@
-interface NeighborPayload {
+interface RewardPartnerPayload {
   name: string
   address: string
   cuit: string
@@ -6,4 +6,4 @@ interface NeighborPayload {
   password: string
 }
 
-export default NeighborPayload
+export default RewardPartnerPayload
