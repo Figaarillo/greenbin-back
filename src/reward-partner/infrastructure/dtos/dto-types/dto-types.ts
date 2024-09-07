@@ -18,9 +18,11 @@ export const addressDTO = z
 
 export const cuitDTO = z
   .string()
-  .regex(/^\d{11}$/, { message: 'The CUIT must be a valid CUIT' })
-  .min(11, { message: 'The CUIT must be at least 11 characters long' })
-  .max(11, { message: 'The CUIT must be less than 11 characters long' })
+  .regex(/^\d{11}$/, {
+    message: 'The CUIT must have only numeric characters. Do not use letters or special characters.'
+  })
+  .min(11, { message: 'The CUIT must be only 11 characters long' })
+  .max(11, { message: 'The CUIT must be only 11 characters long' })
   .refine((cuit: string) => cuit.trim().length > 0, { message: 'The CUIT cannot be empty' })
 
 export const emailDTO = z
