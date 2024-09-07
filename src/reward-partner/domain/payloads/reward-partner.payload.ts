@@ -1,7 +1,7 @@
 interface RewardPartnerPayload {
   name: string
   address: string
-  cuit: number
+  cuit: string
   email: string
   password: string
 }

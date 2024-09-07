@@ -14,7 +14,7 @@ class RewardPartnerEntity extends BaseEntity {
   address: string
 
   @Property({ unique: true })
-  cuit: number
+  cuit: string
 
   @Property({ unique: true })
   email: string

@@ -4,22 +4,24 @@ export const idDTO = z.string().uuid({ message: 'The format of ID must be a vali
 
 export const nameDTO = z
   .string()
-  .min(2, { message: 'The firstname must be at least 2 characters long' })
-  .max(100, { message: 'The length of firstname must be less than 100' })
-  .regex(/^[a-zA-Z\s]+$/, { message: 'The firstname must not contain special characters' })
-  .refine((name: string) => name.trim().length > 0, { message: 'The firstname cannot be empty' })
+  .min(2, { message: 'The name must be at least 2 characters long' })
+  .max(100, { message: 'The length of name must be less than 100' })
+  .regex(/^[a-zA-Z\s]+$/, { message: 'The name must not contain special characters' })
+  .refine((name: string) => name.trim().length > 0, { message: 'The name cannot be empty' })
 
 export const addressDTO = z
   .string()
-  .min(2, { message: 'The lastname must be at least 2 characters long' })
-  .max(500, { message: 'The length of lastname must be less than 500' })
-  .regex(/^[a-zA-Z\s]+$/, { message: 'The lastname must not contain special characters' })
-  .refine((name: string) => name.trim().length > 0, { message: 'The firstname cannot be empty' })
+  .min(2, { message: 'The address must be at least 2 characters long' })
+  .max(500, { message: 'The length of address must be less than 500' })
+  .regex(/^[a-zA-Z\s]+$/, { message: 'The address must not contain special characters' })
+  .refine((name: string) => name.trim().length > 0, { message: 'The address cannot be empty' })
 
 export const cuitDTO = z
-  .number()
-  .min(99999999999, { message: 'The cuit must be at least 11 characters' })
-  .max(999999999999, { message: 'The cuit must be less than 11 characters' })
+  .string()
+  .regex(/^\d{11}$/, { message: 'The CUIT must be a valid CUIT' })
+  .min(11, { message: 'The CUIT must be at least 11 characters long' })
+  .max(11, { message: 'The CUIT must be less than 11 characters long' })
+  .refine((cuit: string) => cuit.trim().length > 0, { message: 'The CUIT cannot be empty' })
 
 export const emailDTO = z
   .string()

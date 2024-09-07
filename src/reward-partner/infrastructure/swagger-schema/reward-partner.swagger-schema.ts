@@ -6,7 +6,7 @@ export const registerSwaggerSchema = {
     properties: {
       name: { type: 'string', description: 'Name of the reward partner.' },
       address: { type: 'string', description: 'Address of the reward partner.' },
-      cuit: { type: 'number', description: 'Cuit of the reward partner.' },
+      cuit: { type: 'string', description: 'Cuit of the reward partner.' },
       email: { type: 'string', description: 'Email of the reward partner.' },
       password: { type: 'string', description: 'Password of the reward partner.' }
     },
