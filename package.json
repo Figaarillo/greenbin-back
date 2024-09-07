@@ -21,7 +21,9 @@
     "mikro-orm": "mikro-orm",
     "migration:initial": "pnpm run mikro-orm migration:create --initial",
     "migration:create": "pnpm run mikro-orm migration:create",
-    "migration:up": "pnpm run mikro-orm migration:up"
+    "migration:up": "pnpm run mikro-orm migration:up",
+    "migration:fresh": "pnpm run mikro-orm migration:fresh"
+
   },
   "keywords": [],
   "author": "Figarillo",

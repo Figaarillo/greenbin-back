@@ -452,6 +452,16 @@
           "length": 255,
           "mappedType": "string"
         },
+        "username": {
+          "name": "username",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
         "address": {
           "name": "address",
           "type": "varchar(255)",
@@ -491,6 +501,16 @@
           "nullable": false,
           "length": 255,
           "mappedType": "string"
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
         }
       },
       "name": "reward_partner_entity",
@@ -502,6 +522,16 @@
           ],
           "composite": false,
           "keyName": "reward_partner_entity_name_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "username"
+          ],
+          "composite": false,
+          "keyName": "reward_partner_entity_username_unique",
           "constraint": true,
           "primary": false,
           "unique": true
