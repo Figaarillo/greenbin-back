@@ -9,6 +9,13 @@ export const nameDTO = z
   .regex(/^[a-zA-Z\s]+$/, { message: 'The name must not contain special characters' })
   .refine((name: string) => name.trim().length > 0, { message: 'The name cannot be empty' })
 
+export const usernameDTO = z
+  .string()
+  .min(4, { message: 'Username must be at least 4 characters long' })
+  .max(100, { message: 'Username must be less than 100 characters' })
+  .regex(/^[a-zA-Z0-9]+$/, { message: 'Username must only contain letters and numbers' })
+  .refine((username: string) => username.trim().length > 0, { message: 'Username cannot be empty' })
+
 export const addressDTO = z
   .string()
   .min(2, { message: 'The address must be at least 2 characters long' })
@@ -37,3 +44,8 @@ export const passwordDTO = z
   .regex(/(?=.*[A-Z])/, { message: 'Password must contain at least one uppercase letter' })
   .regex(/(?=.*\d)/, { message: 'Password must contain at least one digit' })
   .regex(/(?=.*[@$!%*?&])/, { message: 'Password must contain at least one special character' })
+
+export const phoneNumberDTO = z
+  .string()
+  .regex(/^\d{10,15}$/, { message: 'Phone number must be between 10 and 15 digits' })
+  .refine((phoneNumber: string) => phoneNumber.trim().length > 0, { message: 'Phone number cannot be empty' })

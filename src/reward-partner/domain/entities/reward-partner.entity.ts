@@ -10,6 +10,9 @@ class RewardPartnerEntity extends BaseEntity {
   @Property({ unique: true })
   name: string
 
+  @Property({ unique: true })
+  username: string
+
   @Property()
   address: string
 
@@ -22,13 +25,18 @@ class RewardPartnerEntity extends BaseEntity {
   @Property({ hidden: true, lazy: true })
   password: string
 
+  @Property()
+  phoneNumber: string
+
   constructor(payload: RewardPartnerPayload) {
     super()
     this.name = payload.name
+    this.username = payload.username
     this.address = payload.address
     this.cuit = payload.cuit
     this.email = payload.email
     this.password = payload.password
+    this.phoneNumber = payload.phoneNumber
   }
 
   update(payload: RewardPartnerUpdatePayload): void {
@@ -40,6 +48,9 @@ class RewardPartnerEntity extends BaseEntity {
     }
     if (payload.email != null || payload.email !== '') {
       this.email = payload.email
+    }
+    if (payload.phoneNumber != null || payload.phoneNumber !== '') {
+      this.phoneNumber = payload.phoneNumber
     }
   }
 
