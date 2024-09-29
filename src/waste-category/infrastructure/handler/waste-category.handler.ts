@@ -1,6 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import HandleHTTPResponse from '../../../shared/utils/http.response'
-import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.utils'
+import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
+import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteCategoryUseCase from '../../aplication/usecases/delete.usecase'
 import FindCategoryByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 import ListCategoriesUseCase from '../../aplication/usecases/list.usecase'

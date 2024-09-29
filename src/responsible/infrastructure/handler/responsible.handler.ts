@@ -1,6 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import HandleHTTPResponse from '../../../shared/utils/http.response'
-import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.utils'
+import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
+import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteResponsibleUseCase from '../../aplication/usecases/delete.usecase'
 import FindResponsibleByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 import ListResponsiblesUseCase from '../../aplication/usecases/list.usecase'
