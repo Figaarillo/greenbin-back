@@ -2,6 +2,7 @@
   "name": "noderplate",
   "version": "0.0.0",
   "description": "noderpalte is a boilerplate for nodejs projects",
+  "types": "types/index.d.ts",
   "main": "dist/main.js",
   "scripts": {
     "start": "pnpm run build && node dist/main.js",
