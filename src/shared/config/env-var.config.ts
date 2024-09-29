@@ -17,7 +17,15 @@ interface DatabaseConfig {
   port: number
 }
 
+interface Auth {
+  accessToken: string
+  refreshToken: string
+  accessTokenExpiresIn: string
+  refreshTokenExpiresIn: string
+}
+
 interface Config {
+  auth: Auth
   server: ServerConfig
   database: DatabaseConfig
   testDatabase: DatabaseConfig
@@ -45,7 +53,15 @@ const testDatabaseConfig: DatabaseConfig = {
   port: env.get('TEST_DATABASE_PORT').required().asPortNumber()
 }
 
+const authConfig: Auth = {
+  accessToken: env.get('ACCESS_TOKEN').required().asString(),
+  refreshToken: env.get('REFRESH_TOKEN').required().asString(),
+  accessTokenExpiresIn: env.get('ACCESS_TOKEN_EXPIRES_IN').required().asString(),
+  refreshTokenExpiresIn: env.get('REFRESH_TOKEN_EXPIRES_IN').required().asString()
+}
+
 const EnvVar: Config = {
+  auth: authConfig,
   server: serverConfig,
   database: databaseConfig,
   testDatabase: testDatabaseConfig
