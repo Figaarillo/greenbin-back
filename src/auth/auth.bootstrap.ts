@@ -8,11 +8,11 @@ function bootstrapAuth(app: FastifyInstance): void {
   const jwtProvider: IJWTProvider = new JWTProvider()
 
   app.decorate('validateAccessToken', async (req: FastifyRequest, rep: FastifyReply) => {
-    validateAccessToken(req, rep, jwtProvider)
+    await validateAccessToken(req, rep, jwtProvider)
   })
 
   app.decorate('validateRefreshToken', async (req: FastifyRequest, rep: FastifyReply) => {
-    validateRefreshToken(req, rep, jwtProvider)
+    await validateRefreshToken(req, rep, jwtProvider)
   })
 }
 
