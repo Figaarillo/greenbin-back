@@ -12,12 +12,16 @@ class NeighborMikroORMRepository implements NeighborRepository {
     this.em = this.db.em.fork()
   }
 
-  async list(_offset: number, _limit: number): Promise<Nullable<NeighborEntity[]>> {
-    throw new Error('Method not implemented.')
+  async list(offset: number, limit: number): Promise<Nullable<NeighborEntity[]>> {
+    return await this.em.find(NeighborEntity, {}, { limit, offset })
   }
 
-  async find(_property: Record<string, string>): Promise<Nullable<NeighborEntity>> {
-    throw new Error('Method not implemented.')
+  async find(property: Record<string, string>): Promise<Nullable<NeighborEntity>> {
+    return await this.em.findOne(NeighborEntity, property)
+  }
+
+  async findWithPassword(property: Partial<NeighborEntity>): Promise<NeighborEntity | null> {
+    return await this.em.findOne(NeighborEntity, property, { populate: ['password'] })
   }
 
   async save(neighbor: NeighborEntity): Promise<Nullable<NeighborEntity>> {
