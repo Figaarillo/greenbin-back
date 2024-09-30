@@ -101,28 +101,32 @@ class NeighborHandler {
   }
 
   async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const paylaod = req.body as NeighborPayload
+    try {
+      const paylaod = req.body as NeighborPayload
 
-    const usecase = new LoginNeighborUseCase(this.repository)
-    const neighbor = await usecase.exec(paylaod)
+      const usecase = new LoginNeighborUseCase(this.repository)
+      const neighbor = await usecase.exec(paylaod)
 
-    const authService = new AuthService(this.jwtProvider)
-    const accessToken = await authService.generateAccessToken(neighbor.id, {
-      username: neighbor.username,
-      email: neighbor.email,
-      role: neighbor.role
-    })
-    const refreshToken = await authService.generateRefreshToken(neighbor.id, {
-      username: neighbor.username,
-      email: neighbor.email,
-      role: neighbor.role
-    })
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(neighbor.id, {
+        username: neighbor.username,
+        email: neighbor.email,
+        role: neighbor.role
+      })
+      const refreshToken = await authService.generateRefreshToken(neighbor.id, {
+        username: neighbor.username,
+        email: neighbor.email,
+        role: neighbor.role
+      })
 
-    HandleHTTPResponse.OK(rep, 'Login successfully', {
-      id: neighbor.id,
-      accessToken,
-      refreshToken
-    })
+      HandleHTTPResponse.OK(rep, 'Login successfully', {
+        id: neighbor.id,
+        accessToken,
+        refreshToken
+      })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
   }
 }
 
