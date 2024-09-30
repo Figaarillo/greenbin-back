@@ -1,4 +1,5 @@
 import EnvVar from '../../../shared/config/env-var.config'
+import ErrorGeneratingToken from '../../domain/errors/error-generating-token.error'
 import type IJWTProvider from '../../domain/providers/jwt.interface.provider'
 
 class AuthService {
@@ -16,7 +17,7 @@ class AuthService {
       this.ACCESS_TOKEN_EXPIRES_IN,
       this.ACCESS_TOKEN
     )
-    if (jwt === '') throw new Error('Error generating access token')
+    if (jwt === '') throw new ErrorGeneratingToken('access')
     return jwt
   }
 
@@ -27,7 +28,7 @@ class AuthService {
       this.REFRESH_TOKEN_EXPIRES_IN,
       this.REFRESH_TOKEN
     )
-    if (jwt === '') throw new Error('Error generating refresh token')
+    if (jwt === '') throw new ErrorGeneratingToken('refresh')
     return jwt
   }
 
