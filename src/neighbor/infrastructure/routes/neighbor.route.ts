@@ -14,18 +14,18 @@ class NeighborRoute {
     })
     this.router.get('/api/neighbor/auth/refresh-token', {
       preHandler: this.router.auth([this.router.validateRefreshToken]),
-      handler: async (req: FastifyRequest, res: FastifyReply) => {
-        await this.handler.refreshToken(req, res)
+      handler: async (req: FastifyRequest, rep: FastifyReply) => {
+        await this.handler.refreshToken(req, rep)
       }
     })
-    this.router.post('/api/neighbor', { schema: registerSwaggerSchema }, async (req, res) => {
-      await this.handler.register(req, res)
+    this.router.post('/api/neighbor', { schema: registerSwaggerSchema }, async (req, rep) => {
+      await this.handler.register(req, rep)
     })
     this.router.put(
       '/api/neighbor/:id',
       { schema: updateSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.update(req, res)
+      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.update(req, rep)
       }
     )
   }

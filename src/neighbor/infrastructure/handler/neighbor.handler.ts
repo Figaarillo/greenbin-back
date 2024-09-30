@@ -1,10 +1,11 @@
-/* eslint-disable no-console */
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/aplicaction/service/auth.service'
-import type IJWTProvider from '../../../auth/domain/provider/jwt.interface.provider'
+import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import DateUtils from '../../../shared/utils/date.util'
-import HandleHTTPResponse from '../../../shared/utils/http.response'
-import { GetURLParams } from '../../../shared/utils/http.utils'
+import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
+import { GetURLParams } from '../../../shared/utils/http.request.util'
+import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
+import LoginNeighborUseCase from '../../aplication/usecases/login.usecase'
 import RegisterNeighborUseCase from '../../aplication/usecases/register.usecase'
 import UpdateNeighborUseCase from '../../aplication/usecases/update.usecase'
 import type NeighborPayload from '../../domain/payloads/neighbor.payload'
@@ -22,7 +23,7 @@ class NeighborHandler {
     this.repository = repository
   }
 
-  async Register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
       const validateRegisterNeighborSchema = new SchemaValidator(RegisterNeighborDTO, req.body as NeighborPayload)
       validateRegisterNeighborSchema.exec()
@@ -37,22 +38,27 @@ class NeighborHandler {
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(neighbor.id, {
+        username: neighbor.username,
         email: neighbor.email,
-        role: 'neighbor'
+        role: neighbor.role
       })
-      const refreshToken = await authService.generateRefreshToken(neighbor.id, { email: neighbor.email })
+      const refreshToken = await authService.generateRefreshToken(neighbor.id, {
+        username: neighbor.username,
+        email: neighbor.email,
+        role: neighbor.role
+      })
 
-      HandleHTTPResponse.Created(res, 'Neighbor registered successfully', {
+      HandleHTTPResponse.Created(rep, 'Neighbor registered successfully', {
         id: neighbor.id,
         accessToken,
         refreshToken
       })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async Update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
       const payload: NeighborPayload = req.body as NeighborPayload
@@ -66,10 +72,57 @@ class NeighborHandler {
       const updateNeighbor = new UpdateNeighborUseCase(this.repository)
       await updateNeighbor.exec(id, payload)
 
-      HandleHTTPResponse.OK(res, 'Neighbor updated successfully', { id })
+      HandleHTTPResponse.OK(rep, 'Neighbor updated successfully', { id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
+  }
+
+  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
+
+      const usecase = new FindByEmailUseCase(this.repository)
+      const neighbor = await usecase.exec(tokenNeighbor.email)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(req.neighbor.id, {
+        username: neighbor.username,
+        email: neighbor.email,
+        role: neighbor.role
+      })
+
+      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
+        accessToken
+      })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    const paylaod = req.body as NeighborPayload
+
+    const usecase = new LoginNeighborUseCase(this.repository)
+    const neighbor = await usecase.exec(paylaod)
+
+    const authService = new AuthService(this.jwtProvider)
+    const accessToken = await authService.generateAccessToken(neighbor.id, {
+      username: neighbor.username,
+      email: neighbor.email,
+      role: neighbor.role
+    })
+    const refreshToken = await authService.generateRefreshToken(neighbor.id, {
+      username: neighbor.username,
+      email: neighbor.email,
+      role: neighbor.role
+    })
+
+    HandleHTTPResponse.OK(rep, 'Login successfully', {
+      id: neighbor.id,
+      accessToken,
+      refreshToken
+    })
   }
 }
 
