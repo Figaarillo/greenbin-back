@@ -1,9 +1,11 @@
 /* eslint-disable no-console */
+import fastifyAuth from '@fastify/auth'
 import FastifyCors from '@fastify/cors'
 import Swagger from '@fastify/swagger'
 import SwaggerUI from '@fastify/swagger-ui'
 import { RequestContext, type Options } from '@mikro-orm/postgresql'
 import { type FastifyInstance } from 'fastify'
+import bootstrapAuth from './auth/auth.bootstrap'
 import initMikroORM, { type Services } from './db'
 import bootstrapEntity from './entity/entity.bootstrap'
 import bootstrapNeighbor from './neighbor/neighbor.bootstrap'
@@ -27,6 +29,9 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   /* Register CORS */
   app.register(FastifyCors, FastifyCorsConfig)
 
+  /* Register plugins */
+  await app.register(fastifyAuth)
+
   /* Add hooks */
   app.addHook('onRequest', (_req, _rep, done) => {
     RequestContext.create(db.em, done)
@@ -41,6 +46,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   })
 
   /* Register the entities */
+  bootstrapAuth(app)
   bootstrapEntity(app, db)
   bootstrapWasteCategory(app, db)
   bootstrapResponsible(app, db)
