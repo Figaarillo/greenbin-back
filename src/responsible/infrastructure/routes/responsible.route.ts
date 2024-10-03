@@ -1,4 +1,4 @@
-import { type FastifyInstance, type FastifyRequest } from 'fastify'
+import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
 import type ResponsibleHandler from '../handler/responsible.handler'
 import {
   deleteSwaggerSchema,
@@ -46,8 +46,14 @@ class ResponsibleRoute {
         await this.handler.delete(req, res)
       }
     )
-    this.router.post('/api/responsible/login', async (req, res) => {
+    this.router.post('/api/responsible/auth/login', async (req, res) => {
       await this.handler.login(req, res)
+    })
+    this.router.post('/api/responsible/auth/refresh-token', {
+      preHandler: this.router.auth([this.router.validateRefreshToken]),
+      handler: async (req: FastifyRequest, res: FastifyReply) => {
+        await this.handler.refreshToken(req, res)
+      }
     })
   }
 }
