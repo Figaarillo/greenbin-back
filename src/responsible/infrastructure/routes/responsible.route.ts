@@ -49,7 +49,7 @@ class ResponsibleRoute {
     this.router.post('/api/responsible/auth/login', async (req, res) => {
       await this.handler.login(req, res)
     })
-    this.router.post('/api/responsible/auth/refresh-token', {
+    this.router.get('/api/responsible/auth/refresh-token', {
       preHandler: this.router.auth([this.router.validateRefreshToken]),
       handler: async (req: FastifyRequest, res: FastifyReply) => {
         await this.handler.refreshToken(req, res)
