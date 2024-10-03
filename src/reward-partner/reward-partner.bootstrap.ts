@@ -1,5 +1,5 @@
 import { type FastifyInstance } from 'fastify'
-import type IJWTProvider from '../auth/domain/provider/jwt.interface.provider'
+import type IJWTProvider from '../auth/domain/providers/jwt.interface.provider'
 import JWTProvider from '../auth/infrastructure/provider/jwt.provider'
 import { type Services } from '../db'
 import type RewardPartnerRepository from './domain/repositories/reward-partner.repository'

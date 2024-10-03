@@ -232,6 +232,22 @@
           "nullable": false,
           "default": "0",
           "mappedType": "integer"
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "enumItems": [
+            "entity",
+            "neighbor",
+            "responsible",
+            "rewardPartner",
+            "admin"
+          ],
+          "mappedType": "enum"
         }
       },
       "name": "neighbor_entity",

@@ -1,6 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import HandleHTTPResponse from '../../../shared/utils/http.response'
-import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.utils'
+import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
+import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteEntityUseCase from '../../aplication/usecases/delete.usecase'
 import FindEntityByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 import ListEntitiesUseCase from '../../aplication/usecases/list.usecase'

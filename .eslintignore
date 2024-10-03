@@ -13,3 +13,6 @@ specific-file.js
 
 # Ignore all files in a specific directory
 notes/
+
+# Ignore all files in the migrations directory
+src/migrations/

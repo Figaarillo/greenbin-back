@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/aplicaction/service/auth.service'
-import type IJWTProvider from '../../../auth/domain/provider/jwt.interface.provider'
-import HandleHTTPResponse from '../../../shared/utils/http.response'
-import { GetURLParams } from '../../../shared/utils/http.utils'
+import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
+import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
+import { GetURLParams } from '../../../shared/utils/http.request.util'
 import RegisterRewardPartnerUseCase from '../../aplication/usecases/register.usecase'
 import UpdateRewardPartnerUseCase from '../../aplication/usecases/update.usecase'
 import type RewardPartnerPayload from '../../domain/payloads/reward-partner.payload'

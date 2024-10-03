@@ -1,9 +1,10 @@
 /* eslint-disable indent */
-import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property } from '@mikro-orm/postgresql'
+import { BeforeCreate, BeforeUpdate, Entity, Enum, EventArgs, Property } from '@mikro-orm/postgresql'
 import { hash, verify } from 'argon2'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import NeighborPayload from '../payloads/neighbor.payload'
 import type NeighborUpdatePayload from '../payloads/neighbor.update.payload'
+import { Roles } from '../../../auth/domain/entities/role'
 
 @Entity()
 class NeighborEntity extends BaseEntity {
@@ -34,6 +35,9 @@ class NeighborEntity extends BaseEntity {
   @Property({ default: 0 })
   points: number
 
+  @Enum({ items: () => Roles })
+  role: Roles
+
   constructor(payload: NeighborPayload) {
     super()
     this.firstname = payload.firstname
@@ -45,6 +49,7 @@ class NeighborEntity extends BaseEntity {
     this.birthdate = payload.birthdate
     this.phoneNumber = payload.phoneNumber
     this.points = 0
+    this.role = Roles.NEIGHBOR
   }
 
   addPoints(points: number): void {

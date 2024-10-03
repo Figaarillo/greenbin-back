@@ -39,3 +39,16 @@ export function GetURLParams(req: FastifyRequest<{ Params: Record<string, string
 
   return value
 }
+
+export function GetHeader(req: FastifyRequest, key: string): string {
+  const value = req.headers[key]
+  if (value === '' || value == null || value === undefined) {
+    throw new Error(`The header ${key} is required`)
+  }
+
+  if (typeof value === 'object') {
+    return value.toString()
+  }
+
+  return value
+}

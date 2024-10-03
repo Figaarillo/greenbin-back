@@ -1,4 +1,4 @@
-import type IJWTProvider from '../../domain/provider/jwt.interface.provider'
+import type IJWTProvider from '../../domain/providers/jwt.interface.provider'
 import jwt from 'jsonwebtoken'
 
 class JWTProvider implements IJWTProvider {
@@ -18,9 +18,8 @@ class JWTProvider implements IJWTProvider {
    * @param key - key used to sign the JWT
    * @returns payload
    */
-  async verifyToken(token: string, key: string): Promise<any> {
-    key = Buffer.from(key, 'base64').toString('ascii')
-    jwt.verify(token, key)
+  async verifyToken(token: string, key: string): Promise<Record<string, string>> {
+    return jwt.verify(token, key) as Record<string, string>
   }
 }
 

@@ -1,4 +1,4 @@
-import { type FastifyInstance, type FastifyRequest } from 'fastify'
+import { type FastifyReply, type FastifyInstance, type FastifyRequest } from 'fastify'
 import type NeighborHandler from '../handler/neighbor.handler'
 import { registerSwaggerSchema, updateSwaggerSchema } from '../swagger-schema/neighbor.swagger-schema'
 
@@ -9,14 +9,23 @@ class NeighborRoute {
   ) {}
 
   setupRoutes(): void {
-    this.router.post('/api/neighbor', { schema: registerSwaggerSchema }, async (req, res) => {
-      await this.handler.Register(req, res)
+    this.router.post('/api/neighbor/auth/login', async (req, rep) => {
+      await this.handler.login(req, rep)
+    })
+    this.router.get('/api/neighbor/auth/refresh-token', {
+      preHandler: this.router.auth([this.router.validateRefreshToken]),
+      handler: async (req: FastifyRequest, rep: FastifyReply) => {
+        await this.handler.refreshToken(req, rep)
+      }
+    })
+    this.router.post('/api/neighbor', { schema: registerSwaggerSchema }, async (req, rep) => {
+      await this.handler.register(req, rep)
     })
     this.router.put(
       '/api/neighbor/:id',
       { schema: updateSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.Update(req, res)
+      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.update(req, rep)
       }
     )
   }
