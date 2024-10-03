@@ -15,6 +15,7 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterResponsibleDTO from '../dtos/register-responsible.dto'
 import UpdateResponsibleDTO from '../dtos/update-responsible.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 
 class ResponsibleHandler {
   constructor(
@@ -132,6 +133,28 @@ class ResponsibleHandler {
       })
     } catch (error) {
       res.status(500).send(error)
+    }
+  }
+
+  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenResponsible = req.responsible as { username: string; email: string; role: string }
+
+      const usecase = new FindByEmailUseCase(this.repository)
+      const responsible = await usecase.exec(tokenResponsible.email)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(req.responsible.id, {
+        username: responsible.username,
+        email: responsible.email,
+        role: responsible.role
+      })
+
+      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
+        accessToken
+      })
+    } catch (error) {
+      rep.status(500).send(error)
     }
   }
 }
