@@ -24,7 +24,7 @@ class EntityHandler {
     this.repository = repository
   }
 
-  async List(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
@@ -37,7 +37,7 @@ class EntityHandler {
     }
   }
 
-  async FindByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -53,7 +53,7 @@ class EntityHandler {
     }
   }
 
-  async Register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
       const payload: EntityPayload = req.body as EntityPayload
 
@@ -69,7 +69,7 @@ class EntityHandler {
     }
   }
 
-  async Update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
       const payload: EntityPayload = req.body as EntityPayload
@@ -89,7 +89,7 @@ class EntityHandler {
     }
   }
 
-  async Delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
