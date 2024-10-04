@@ -130,7 +130,9 @@ class EntityHandler {
         accessToken,
         refreshToken
       })
-    } catch (error) {}
+    } catch (error) {
+      rep.status(500).send(error)
+    }
   }
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
