@@ -15,6 +15,7 @@ import RegisterEntityDTO from '../dtos/register-entity.dto'
 import UpdateEntityDTO from '../dtos/update-entity.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
+import LoginEntityUseCase from '../../aplication/usecases/login.usecase'
 
 class EntityHandler {
   constructor(
@@ -103,6 +104,33 @@ class EntityHandler {
     } catch (error) {
       res.status(500).send(error)
     }
+  }
+
+  async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const payload = req.body as EntityPayload
+
+      const usecase = new LoginEntityUseCase(this.repository)
+      const entity = await usecase.exec(payload)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(entity.id, {
+        name: entity.name,
+        email: entity.email,
+        role: entity.role
+      })
+      const refreshToken = await authService.generateRefreshToken(entity.id, {
+        name: entity.name,
+        email: entity.email,
+        role: entity.role
+      })
+
+      HandleHTTPResponse.Created(rep, 'Entity logged in successfully', {
+        id: entity.id,
+        accessToken,
+        refreshToken
+      })
+    } catch (error) {}
   }
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
