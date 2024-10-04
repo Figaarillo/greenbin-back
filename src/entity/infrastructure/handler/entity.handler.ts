@@ -1,4 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
+import AuthService from '../../../auth/aplicaction/service/auth.service'
+import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteEntityUseCase from '../../aplication/usecases/delete.usecase'
@@ -12,9 +14,13 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterEntityDTO from '../dtos/register-entity.dto'
 import UpdateEntityDTO from '../dtos/update-entity.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 
 class EntityHandler {
-  constructor(private readonly repository: EntityRepository) {
+  constructor(
+    private readonly repository: EntityRepository,
+    private readonly jwtProvider: IJWTProvider
+  ) {
     this.repository = repository
   }
 
@@ -96,6 +102,26 @@ class EntityHandler {
       HandleHTTPResponse.OK(res, 'Entity deleted successfully', { id })
     } catch (error) {
       res.status(500).send(error)
+    }
+  }
+
+  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenEntity = req.entity as { username: string; email: string; role: string }
+
+      const usecase = new FindByEmailUseCase(this.repository)
+      const entity = await usecase.exec(tokenEntity.email)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(req.entity.id, {
+        name: entity.name,
+        email: entity.email,
+        role: entity.role
+      })
+
+      HandleHTTPResponse.OK(rep, 'Token refreshed successfully', { accessToken })
+    } catch (error) {
+      rep.status(500).send(error)
     }
   }
 }
