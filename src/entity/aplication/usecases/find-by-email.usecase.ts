@@ -2,7 +2,7 @@ import type EntityEntity from '../../domain/entities/entity.entity'
 import ErrorEntityNotFound from '../../domain/errors/entity-not-found.error'
 import type EntityRepository from '../../domain/repositories/entity.repository'
 
-class FindBydEmailUseCase {
+class FindByEmailUseCase {
   constructor(private readonly repository: EntityRepository) {}
 
   async exec(email: string): Promise<EntityEntity> {
@@ -12,4 +12,4 @@ class FindBydEmailUseCase {
   }
 }
 
-export default FindBydEmailUseCase
+export default FindByEmailUseCase
