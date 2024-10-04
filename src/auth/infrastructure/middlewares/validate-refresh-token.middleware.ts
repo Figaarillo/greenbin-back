@@ -30,6 +30,9 @@ const validateRefreshToken = async (
       case 'neighbor':
         req.neighbor = token
         break
+      case 'entity':
+        req.entity = token
+        break
       default:
         HandleHTTPResponse.Unauthorized(rep, 'Invalid token. Invalid role')
     }
