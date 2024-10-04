@@ -46,6 +46,9 @@ class EntityRoute {
         await this.handler.delete(req, res)
       }
     )
+    this.router.post('/api/entity/auth/login', async (req, rep) => {
+      await this.handler.login(req, rep)
+    })
     this.router.get('/api/entity/auth/refresh-token', {
       preHandler: this.router.auth([this.router.validateRefreshToken]),
       handler: async (req, rep) => {
