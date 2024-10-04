@@ -9,6 +9,9 @@ class EntityEntity extends BaseEntity {
   @Property({ unique: true })
   name: string
 
+  @Property({ unique: true })
+  email: string
+
   @Property({ type: t.text })
   description: string
 
@@ -24,6 +27,7 @@ class EntityEntity extends BaseEntity {
   constructor(payload: EntityPayload) {
     super()
     this.name = payload.name
+    this.email = payload.email
     this.description = payload.description
     this.password = payload.password
     this.city = payload.city
