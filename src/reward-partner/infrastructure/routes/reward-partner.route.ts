@@ -22,7 +22,7 @@ class RewardPartnerRoute {
     this.router.post('/api/reward-partner/auth/login', async (req, res) => {
       await this.handler.login(req, res)
     })
-    this.router.post('/api/reward-partner/auth/refresh-token', {
+    this.router.get('/api/reward-partner/auth/refresh-token', {
       preHandler: this.router.auth([this.router.validateRefreshToken]),
       handler: async (req, res) => {
         await this.handler.refreshToken(req, res)
