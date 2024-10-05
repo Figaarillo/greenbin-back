@@ -5,6 +5,7 @@ import type ResponsibleUpdatePayload from '../payloads/responsible.update.payloa
 interface ResponsibleRepository {
   list: (offset: number, limit: number) => Promise<Nullable<ResponsibleEntity[]>>
   find: (property: Record<string, string>) => Promise<Nullable<ResponsibleEntity>>
+  findWithPassword: (property: Record<string, string>) => Promise<Nullable<ResponsibleEntity>>
   save: (responsible: ResponsibleEntity) => Promise<Nullable<ResponsibleEntity>>
   update: (id: string, payload: ResponsibleUpdatePayload) => Promise<Nullable<ResponsibleEntity>>
   delete: (id: string) => Promise<void>
