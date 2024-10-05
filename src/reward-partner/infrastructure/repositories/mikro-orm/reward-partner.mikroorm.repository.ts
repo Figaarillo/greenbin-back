@@ -12,12 +12,16 @@ class RewardPartnerMikroORMRepository implements RewardPartnerRepository {
     this.em = this.db.em.fork()
   }
 
-  async list(_offset: number, _limit: number): Promise<Nullable<RewardPartnerEntity[]>> {
-    throw new Error('Method not implemented.')
+  async list(offset: number, limit: number): Promise<Nullable<RewardPartnerEntity[]>> {
+    return await this.em.find(RewardPartnerEntity, {}, { limit, offset })
   }
 
-  async find(_property: Record<string, string>): Promise<Nullable<RewardPartnerEntity>> {
-    throw new Error('Method not implemented.')
+  async find(property: Record<string, string>): Promise<Nullable<RewardPartnerEntity>> {
+    return await this.em.findOne(RewardPartnerEntity, property)
+  }
+
+  async findWithPassword(property: Record<string, string>): Promise<Nullable<RewardPartnerEntity>> {
+    return await this.em.findOne(RewardPartnerEntity, property, { populate: ['password'] })
   }
 
   async save(rewardPartner: RewardPartnerEntity): Promise<Nullable<RewardPartnerEntity>> {
@@ -37,8 +41,8 @@ class RewardPartnerMikroORMRepository implements RewardPartnerRepository {
     return rewardPartner
   }
 
-  async delete(_id: string): Promise<void> {
-    throw new Error('Method not implemented.')
+  async delete(id: string): Promise<void> {
+    await this.em.removeAndFlush(this.em.getReference(RewardPartnerEntity, id))
   }
 }
 
