@@ -20,6 +20,10 @@ class ResponsibleMikroORMRepository implements ResponsibleRepository {
     return await this.em.findOne(ResponsibleEntity, property)
   }
 
+  async findWithPassword(property: Record<string, string>): Promise<Nullable<ResponsibleEntity>> {
+    return await this.em.findOne(ResponsibleEntity, property, { populate: ['password'] })
+  }
+
   async save(responsible: ResponsibleEntity): Promise<Nullable<ResponsibleEntity>> {
     const newResponsible = this.em.create(ResponsibleEntity, responsible)
     await this.em.persist(newResponsible).flush()

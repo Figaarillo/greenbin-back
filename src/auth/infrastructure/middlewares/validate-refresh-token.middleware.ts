@@ -33,6 +33,9 @@ const validateRefreshToken = async (
       case 'entity':
         req.entity = token
         break
+      case 'responsible':
+        req.responsible = token
+        break
       default:
         HandleHTTPResponse.Unauthorized(rep, 'Invalid token. Invalid role')
     }

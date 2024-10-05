@@ -26,12 +26,16 @@ const validateAccessToken = async (
       return
     }
 
+
     switch (token.role) {
       case 'neighbor':
         req.neighbor = token
         break
       case 'entity':
         req.entity = token
+        break
+      case 'responsible':
+        req.responsible = token
         break
       default:
         HandleHTTPResponse.Unauthorized(rep, 'Invalid token. Invalid role')

@@ -59,7 +59,14 @@ run.dev: docker.db
 
 migrations:
 	@echo " ╭────────────────────────────────────────╮ "
-	@echo " │           RUNNING MIGRATIONS           │ "
+	@echo " │    CRAEATING AND RUNNING MIGRATIONS    │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=localhost pnpm run migration:create
+	DATABASE_HOST=localhost pnpm run migration:up
+
+
+migrations.up:
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │           RUNNING MIGRATIONS           │ "
+	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=localhost pnpm run migration:up

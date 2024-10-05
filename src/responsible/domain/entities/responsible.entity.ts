@@ -1,9 +1,10 @@
 /* eslint-disable indent */
-import { BeforeCreate, BeforeUpdate, Entity, EventArgs, Property } from '@mikro-orm/postgresql'
+import { BeforeCreate, BeforeUpdate, Entity, Enum, EventArgs, Property } from '@mikro-orm/postgresql'
 import { hash, verify } from 'argon2'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import ResponsiblePayload from '../payloads/responsible.payload'
 import type ResponsibleUpdatePayload from '../payloads/responsible.update.payload'
+import { Roles } from '../../../auth/domain/entities/role'
 
 @Entity()
 class ResponsibleEntity extends BaseEntity {
@@ -28,6 +29,9 @@ class ResponsibleEntity extends BaseEntity {
   @Property()
   phoneNumber: string
 
+  @Enum({ items: () => Roles })
+  role: Roles
+
   constructor(payload: ResponsiblePayload) {
     super()
     this.firstname = payload.firstname
@@ -37,6 +41,7 @@ class ResponsibleEntity extends BaseEntity {
     this.password = payload.password
     this.dni = payload.dni
     this.phoneNumber = payload.phoneNumber
+    this.role = Roles.RESPONSIBLE
   }
 
   update(payload: ResponsibleUpdatePayload): void {
