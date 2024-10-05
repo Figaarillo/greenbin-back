@@ -24,7 +24,7 @@ class RewardPartnerHandler {
     this.repository = repository
   }
 
-  async Register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
       const payload: RewardPartnerPayload = req.body as RewardPartnerPayload
 
@@ -51,7 +51,7 @@ class RewardPartnerHandler {
     }
   }
 
-  async Update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
       const payload: RewardPartnerPayload = req.body as RewardPartnerPayload
