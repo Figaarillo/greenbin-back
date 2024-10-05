@@ -12,6 +12,9 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterRewardPartnerDTO from '../dtos/register-reward-partner.dto'
 import UpdateRewardPartnerDTO from '../dtos/update-reward-partner.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import type RewardPartnerLoginPayload from '../../domain/payloads/reward-partner.login.payload'
+import LoginRewardPartnerUseCase from '../../aplication/usecases/login.usecase'
+import LoginRewardPartnerDTO from '../dtos/login-reward-partner.dto'
 
 class RewardPartnerHandler {
   constructor(
@@ -63,6 +66,38 @@ class RewardPartnerHandler {
       await updateRewardPartner.exec(id, payload)
 
       HandleHTTPResponse.OK(res, 'Reward partner updated successfully', { id })
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async login(req: FastifyRequest, res: FastifyReply): Promise<void> {
+    try {
+      const payload = req.body as RewardPartnerLoginPayload
+
+      const schemaValidator = new SchemaValidator(LoginRewardPartnerDTO, payload)
+      schemaValidator.exec()
+
+      const usecase = new LoginRewardPartnerUseCase(this.repository)
+      const rewardPartner = await usecase.exec(payload)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(rewardPartner.id, {
+        username: rewardPartner.username,
+        email: rewardPartner.email,
+        role: rewardPartner.role
+      })
+      const refreshToken = await authService.generateRefreshToken(rewardPartner.id, {
+        username: rewardPartner.username,
+        email: rewardPartner.email,
+        role: rewardPartner.role
+      })
+
+      HandleHTTPResponse.OK(res, 'Reward partner logged in successfully', {
+        id: rewardPartner.id,
+        accessToken,
+        refreshToken
+      })
     } catch (error) {
       res.status(500).send(error)
     }
