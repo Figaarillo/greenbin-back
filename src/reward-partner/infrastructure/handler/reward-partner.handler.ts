@@ -12,6 +12,10 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterRewardPartnerDTO from '../dtos/register-reward-partner.dto'
 import UpdateRewardPartnerDTO from '../dtos/update-reward-partner.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import type RewardPartnerLoginPayload from '../../domain/payloads/reward-partner.login.payload'
+import LoginRewardPartnerUseCase from '../../aplication/usecases/login.usecase'
+import LoginRewardPartnerDTO from '../dtos/login-reward-partner.dto'
+import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 
 class RewardPartnerHandler {
   constructor(
@@ -21,7 +25,7 @@ class RewardPartnerHandler {
     this.repository = repository
   }
 
-  async Register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
       const payload: RewardPartnerPayload = req.body as RewardPartnerPayload
 
@@ -48,7 +52,7 @@ class RewardPartnerHandler {
     }
   }
 
-  async Update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
       const payload: RewardPartnerPayload = req.body as RewardPartnerPayload
@@ -65,6 +69,60 @@ class RewardPartnerHandler {
       HandleHTTPResponse.OK(res, 'Reward partner updated successfully', { id })
     } catch (error) {
       res.status(500).send(error)
+    }
+  }
+
+  async login(req: FastifyRequest, res: FastifyReply): Promise<void> {
+    try {
+      const payload = req.body as RewardPartnerLoginPayload
+
+      const schemaValidator = new SchemaValidator(LoginRewardPartnerDTO, payload)
+      schemaValidator.exec()
+
+      const usecase = new LoginRewardPartnerUseCase(this.repository)
+      const rewardPartner = await usecase.exec(payload)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(rewardPartner.id, {
+        username: rewardPartner.username,
+        email: rewardPartner.email,
+        role: rewardPartner.role
+      })
+      const refreshToken = await authService.generateRefreshToken(rewardPartner.id, {
+        username: rewardPartner.username,
+        email: rewardPartner.email,
+        role: rewardPartner.role
+      })
+
+      HandleHTTPResponse.OK(res, 'Reward partner logged in successfully', {
+        id: rewardPartner.id,
+        accessToken,
+        refreshToken
+      })
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenRewardPartner = req.rewardPartner as { username: string; email: string; role: string }
+
+      const usecase = new FindByEmailUseCase(this.repository)
+      const rewardPartner = await usecase.exec(tokenRewardPartner.email)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(req.rewardPartner.id, {
+        username: rewardPartner.username,
+        email: rewardPartner.email,
+        role: rewardPartner.role
+      })
+
+      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
+        accessToken
+      })
+    } catch (error) {
+      rep.status(500).send(error)
     }
   }
 }

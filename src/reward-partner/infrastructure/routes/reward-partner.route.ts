@@ -10,15 +10,24 @@ class RewardPartnerRoute {
 
   setupRoutes(): void {
     this.router.post('/api/reward-partner', { schema: registerSwaggerSchema }, async (req, res) => {
-      await this.handler.Register(req, res)
+      await this.handler.register(req, res)
     })
     this.router.put(
       '/api/reward-partner/:id',
       { schema: updateSwaggerSchema },
       async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.Update(req, res)
+        await this.handler.update(req, res)
       }
     )
+    this.router.post('/api/reward-partner/auth/login', async (req, res) => {
+      await this.handler.login(req, res)
+    })
+    this.router.get('/api/reward-partner/auth/refresh-token', {
+      preHandler: this.router.auth([this.router.validateRefreshToken]),
+      handler: async (req, res) => {
+        await this.handler.refreshToken(req, res)
+      }
+    })
   }
 }
 

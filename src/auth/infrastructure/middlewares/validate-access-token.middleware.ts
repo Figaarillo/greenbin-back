@@ -37,6 +37,9 @@ const validateAccessToken = async (
       case 'responsible':
         req.responsible = token
         break
+      case 'rewardPartner':
+        req.rewardPartner = token
+        break
       default:
         HandleHTTPResponse.Unauthorized(rep, 'Invalid token. Invalid role')
     }
