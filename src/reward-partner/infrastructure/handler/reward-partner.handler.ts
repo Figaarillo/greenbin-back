@@ -15,6 +15,7 @@ import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 import type RewardPartnerLoginPayload from '../../domain/payloads/reward-partner.login.payload'
 import LoginRewardPartnerUseCase from '../../aplication/usecases/login.usecase'
 import LoginRewardPartnerDTO from '../dtos/login-reward-partner.dto'
+import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 
 class RewardPartnerHandler {
   constructor(
@@ -100,6 +101,28 @@ class RewardPartnerHandler {
       })
     } catch (error) {
       res.status(500).send(error)
+    }
+  }
+
+  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenRewardPartner = req.rewardPartner as { username: string; email: string; role: string }
+
+      const usecase = new FindByEmailUseCase(this.repository)
+      const rewardPartner = await usecase.exec(tokenRewardPartner.email)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(req.rewardPartner.id, {
+        username: rewardPartner.username,
+        email: rewardPartner.email,
+        role: rewardPartner.role
+      })
+
+      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
+        accessToken
+      })
+    } catch (error) {
+      rep.status(500).send(error)
     }
   }
 }
