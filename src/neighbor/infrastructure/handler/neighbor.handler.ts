@@ -14,6 +14,8 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import type NeighborLoginPayload from '../../domain/payloads/neighbor.login.payload'
+import LoginNeighborDTO from '../dtos/login-neighbor.dto'
 
 class NeighborHandler {
   constructor(
@@ -78,31 +80,12 @@ class NeighborHandler {
     }
   }
 
-  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    try {
-      const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
-
-      const usecase = new FindByEmailUseCase(this.repository)
-      const neighbor = await usecase.exec(tokenNeighbor.email)
-
-      const authService = new AuthService(this.jwtProvider)
-      const accessToken = await authService.generateAccessToken(req.neighbor.id, {
-        username: neighbor.username,
-        email: neighbor.email,
-        role: neighbor.role
-      })
-
-      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
-        accessToken
-      })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
-  }
-
   async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
-      const paylaod = req.body as NeighborPayload
+      const paylaod = req.body as NeighborLoginPayload
+
+      const schemaValidator = new SchemaValidator(LoginNeighborDTO, paylaod)
+      schemaValidator.exec()
 
       const usecase = new LoginNeighborUseCase(this.repository)
       const neighbor = await usecase.exec(paylaod)
@@ -123,6 +106,28 @@ class NeighborHandler {
         id: neighbor.id,
         accessToken,
         refreshToken
+      })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
+
+      const usecase = new FindByEmailUseCase(this.repository)
+      const neighbor = await usecase.exec(tokenNeighbor.email)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(req.neighbor.id, {
+        username: neighbor.username,
+        email: neighbor.email,
+        role: neighbor.role
+      })
+
+      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
+        accessToken
       })
     } catch (error) {
       rep.status(500).send(error)
