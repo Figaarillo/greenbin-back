@@ -19,6 +19,10 @@ class EntityMikroORMRepository implements EntityRepository {
     return await this.em.findOne(EntityEntity, property)
   }
 
+  async findWithPassword(property: Record<string, string>): Promise<Nullable<EntityEntity>> {
+    return await this.em.findOne(EntityEntity, property, { populate: ['password'] })
+  }
+
   async save(entity: EntityEntity): Promise<Nullable<EntityEntity>> {
     const newEntity = this.em.create(EntityEntity, entity)
     await this.em.persist(newEntity).flush()

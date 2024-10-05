@@ -1,4 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
+import AuthService from '../../../auth/aplicaction/service/auth.service'
+import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteEntityUseCase from '../../aplication/usecases/delete.usecase'
@@ -12,13 +14,18 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterEntityDTO from '../dtos/register-entity.dto'
 import UpdateEntityDTO from '../dtos/update-entity.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
+import LoginEntityUseCase from '../../aplication/usecases/login.usecase'
 
 class EntityHandler {
-  constructor(private readonly repository: EntityRepository) {
+  constructor(
+    private readonly repository: EntityRepository,
+    private readonly jwtProvider: IJWTProvider
+  ) {
     this.repository = repository
   }
 
-  async List(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
@@ -31,7 +38,7 @@ class EntityHandler {
     }
   }
 
-  async FindByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -47,7 +54,7 @@ class EntityHandler {
     }
   }
 
-  async Register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
       const payload: EntityPayload = req.body as EntityPayload
 
@@ -63,7 +70,7 @@ class EntityHandler {
     }
   }
 
-  async Update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
       const payload: EntityPayload = req.body as EntityPayload
@@ -83,7 +90,7 @@ class EntityHandler {
     }
   }
 
-  async Delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -96,6 +103,55 @@ class EntityHandler {
       HandleHTTPResponse.OK(res, 'Entity deleted successfully', { id })
     } catch (error) {
       res.status(500).send(error)
+    }
+  }
+
+  async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const payload = req.body as EntityPayload
+
+      const usecase = new LoginEntityUseCase(this.repository)
+      const entity = await usecase.exec(payload)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(entity.id, {
+        name: entity.name,
+        email: entity.email,
+        role: entity.role
+      })
+      const refreshToken = await authService.generateRefreshToken(entity.id, {
+        name: entity.name,
+        email: entity.email,
+        role: entity.role
+      })
+
+      HandleHTTPResponse.Created(rep, 'Entity logged in successfully', {
+        id: entity.id,
+        accessToken,
+        refreshToken
+      })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenEntity = req.entity as { username: string; email: string; role: string }
+
+      const usecase = new FindByEmailUseCase(this.repository)
+      const entity = await usecase.exec(tokenEntity.email)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(req.entity.id, {
+        name: entity.name,
+        email: entity.email,
+        role: entity.role
+      })
+
+      HandleHTTPResponse.OK(rep, 'Token refreshed successfully', { accessToken })
+    } catch (error) {
+      rep.status(500).send(error)
     }
   }
 }

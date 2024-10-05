@@ -30,6 +30,9 @@ const validateRefreshToken = async (
       case 'neighbor':
         req.neighbor = token
         break
+      case 'entity':
+        req.entity = token
+        break
       case 'responsible':
         req.responsible = token
         break
