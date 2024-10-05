@@ -30,6 +30,9 @@ const validateAccessToken = async (
       case 'neighbor':
         req.neighbor = token
         break
+      case 'rewardPartner':
+        req.rewardPartner = token
+        break
       default:
         HandleHTTPResponse.Unauthorized(rep, 'Invalid token. Invalid role')
     }
