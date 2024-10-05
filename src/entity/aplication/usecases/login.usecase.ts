@@ -11,9 +11,6 @@ class LoginEntityUseCase {
 
   async exec(payload: EntityLoginPayload): Promise<EntityEntity> {
     const entity = await this.findEntity(payload)
-    if (entity == null) {
-      throw new ErrorEntityNotFound(undefined, payload.email, payload.name)
-    }
 
     const passwordValid = await entity.verifyPassword(payload.password)
     if (!passwordValid) {
@@ -23,16 +20,32 @@ class LoginEntityUseCase {
     return entity
   }
 
-  private async findEntity(payload: EntityLoginPayload): Promise<EntityEntity | null> {
-    if (payload.email !== undefined && payload.email !== '') {
-      return await this.repository.findWithPassword({ email: payload.email })
+  private async findEntity(payload: EntityLoginPayload): Promise<EntityEntity> {
+    let entityByEmail: EntityEntity | null = null
+    let entityByName: EntityEntity | null = null
+
+    if (payload.email != null) {
+      entityByEmail = await this.repository.findWithPassword({ email: payload.email })
     }
 
-    if (payload.name !== undefined && payload.name !== '') {
-      return await this.repository.findWithPassword({ name: payload.name })
+    if (payload.name != null) {
+      entityByName = await this.repository.findWithPassword({ name: payload.name })
     }
 
-    throw new Error('Email or name is required')
+    if (payload.email != null && entityByEmail == null) {
+      throw new ErrorEntityNotFound(undefined, payload.email, undefined)
+    }
+
+    if (payload.name != null && entityByName == null) {
+      throw new ErrorEntityNotFound(undefined, undefined, payload.name)
+    }
+
+    if (entityByEmail != null && entityByName != null && entityByEmail.id !== entityByName.id) {
+      throw new ErrorEntityNotFound(undefined, undefined, undefined)
+    }
+
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-non-null-assertion
+    return entityByEmail ?? entityByName!
   }
 }
 
