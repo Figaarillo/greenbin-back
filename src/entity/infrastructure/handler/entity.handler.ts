@@ -4,18 +4,19 @@ import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.prov
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteEntityUseCase from '../../aplication/usecases/delete.usecase'
+import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 import FindEntityByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 import ListEntitiesUseCase from '../../aplication/usecases/list.usecase'
+import LoginEntityUseCase from '../../aplication/usecases/login.usecase'
 import RegisterEntityUseCase from '../../aplication/usecases/register.usecase'
 import UpdateEntityUseCase from '../../aplication/usecases/update.usecase'
+import type EntityLoginPayload from '../../domain/payloads/entity.login.payload'
 import type EntityPayload from '../../domain/payloads/entity.payload'
 import type EntityRepository from '../../domain/repositories/entity.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterEntityDTO from '../dtos/register-entity.dto'
 import UpdateEntityDTO from '../dtos/update-entity.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
-import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
-import LoginEntityUseCase from '../../aplication/usecases/login.usecase'
 
 class EntityHandler {
   constructor(
@@ -108,7 +109,7 @@ class EntityHandler {
 
   async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
-      const payload = req.body as EntityPayload
+      const payload = req.body as EntityLoginPayload
 
       const usecase = new LoginEntityUseCase(this.repository)
       const entity = await usecase.exec(payload)
@@ -137,7 +138,7 @@ class EntityHandler {
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
-      const tokenEntity = req.entity as { username: string; email: string; role: string }
+      const tokenEntity = req.entity as { name: string; email: string; role: string }
 
       const usecase = new FindByEmailUseCase(this.repository)
       const entity = await usecase.exec(tokenEntity.email)
