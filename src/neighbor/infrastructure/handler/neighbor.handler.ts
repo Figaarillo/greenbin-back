@@ -1,5 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/aplicaction/service/auth.service'
+import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import DateUtils from '../../../shared/utils/date.util'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
@@ -124,6 +125,18 @@ class NeighborHandler {
         accessToken,
         refreshToken
       })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenEntity = req.tokenRole
+      if (tokenEntity !== Roles.ENTITY) {
+        throw new Error('Invalid role')
+      }
+      HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
     } catch (error) {
       rep.status(500).send(error)
     }
