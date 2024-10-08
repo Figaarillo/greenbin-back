@@ -55,6 +55,12 @@ class ResponsibleRoute {
         await this.handler.refreshToken(req, res)
       }
     })
+    this.router.get('/api/responsible/auth/validate-token', {
+      preHandler: this.router.auth([this.router.getTokenRole]),
+      handler: async (req, res) => {
+        await this.handler.validateRole(req, res)
+      }
+    })
   }
 }
 
