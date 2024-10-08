@@ -16,6 +16,7 @@ import type RewardPartnerLoginPayload from '../../domain/payloads/reward-partner
 import LoginRewardPartnerUseCase from '../../aplication/usecases/login.usecase'
 import LoginRewardPartnerDTO from '../dtos/login-reward-partner.dto'
 import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
+import { Roles } from '../../../auth/domain/entities/role'
 
 class RewardPartnerHandler {
   constructor(
@@ -121,6 +122,18 @@ class RewardPartnerHandler {
       HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
         accessToken
       })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenEntity = req.tokenRole
+      if (tokenEntity !== Roles.REWARD_PARTNER) {
+        throw new Error('Invalid role')
+      }
+      HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
     } catch (error) {
       rep.status(500).send(error)
     }
