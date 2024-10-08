@@ -23,6 +23,22 @@ class NeighborHandler {
     this.repository = repository
   }
 
+  async findById(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+
+      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      validateIDSchema.exec()
+
+      const findNeighbor = new FindByEmailUseCase(this.repository)
+      const neighbor = await findNeighbor.exec(id)
+
+      HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
   async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
       const validateRegisterNeighborSchema = new SchemaValidator(RegisterNeighborDTO, req.body as NeighborPayload)
