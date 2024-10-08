@@ -1,4 +1,4 @@
-.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations
+.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations migrations.up db
 
 # ############# COMMANDS ############ #
 docker: docker.clean docker.build docker.db docker.db.test
@@ -57,7 +57,7 @@ run.dev: docker.db
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=localhost pnpm dev
 
-migrations:
+migrations: db.rm.volumes
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │    CRAEATING AND RUNNING MIGRATIONS    │ "
 	@echo " ╰────────────────────────────────────────╯ "
@@ -70,3 +70,10 @@ migrations.up:
 	@echo " │           RUNNING MIGRATIONS           │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=localhost pnpm run migration:up
+
+db.rm.volumes:
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │            DELETING DATABASE           │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=lolcalhost rm greenbin-back_pgdata
+
