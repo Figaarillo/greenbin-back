@@ -1,9 +1,11 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/aplicaction/service/auth.service'
+import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteResponsibleUseCase from '../../aplication/usecases/delete.usecase'
+import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 import FindResponsibleByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 import ListResponsiblesUseCase from '../../aplication/usecases/list.usecase'
 import LoginResponsibleUseCase from '../../aplication/usecases/login.usecase'
@@ -15,7 +17,6 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterResponsibleDTO from '../dtos/register-responsible.dto'
 import UpdateResponsibleDTO from '../dtos/update-responsible.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
-import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 
 class ResponsibleHandler {
   constructor(
@@ -153,6 +154,18 @@ class ResponsibleHandler {
       HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
         accessToken
       })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenEntity = req.tokenRole
+      if (tokenEntity !== Roles.RESPONSIBLE) {
+        throw new Error('Invalid role')
+      }
+      HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
     } catch (error) {
       rep.status(500).send(error)
     }
