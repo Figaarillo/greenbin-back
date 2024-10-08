@@ -133,7 +133,7 @@ class NeighborHandler {
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
       const tokenEntity = req.tokenRole
-      if (tokenEntity !== Roles.ENTITY) {
+      if (tokenEntity !== Roles.NEIGHBOR) {
         throw new Error('Invalid role')
       }
       HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
