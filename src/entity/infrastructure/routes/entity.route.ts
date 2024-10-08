@@ -55,6 +55,12 @@ class EntityRoute {
         await this.handler.refreshToken(req, rep)
       }
     })
+    this.router.get('/api/entity/auth/validate-role', {
+      preHandler: this.router.auth([this.router.getTokenRole]),
+      handler: async (req, rep) => {
+        await this.handler.validateRole(req, rep)
+      }
+    })
   }
 }
 
