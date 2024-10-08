@@ -28,7 +28,7 @@ class RewardPartnerRoute {
         await this.handler.refreshToken(req, res)
       }
     })
-    this.router.get('/api/reward-partner/auth/validate-token', {
+    this.router.get('/api/reward-partner/auth/validate-role', {
       preHandler: this.router.auth([this.router.getTokenRole]),
       handler: async (req, res) => {
         await this.handler.validateRole(req, res)
