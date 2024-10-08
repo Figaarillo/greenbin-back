@@ -5,6 +5,7 @@ import DateUtils from '../../../shared/utils/date.util'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
+import ListNeighborsUseCase from '../../aplication/usecases/list.usecase'
 import LoginNeighborUseCase from '../../aplication/usecases/login.usecase'
 import RegisterNeighborUseCase from '../../aplication/usecases/register.usecase'
 import UpdateNeighborUseCase from '../../aplication/usecases/update.usecase'
@@ -14,7 +15,7 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
-import ListNeighborsUseCase from '../../aplication/usecases/list.usecase'
+import FindNeighborByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 
 class NeighborHandler {
   constructor(
@@ -42,7 +43,7 @@ class NeighborHandler {
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const findNeighbor = new FindByEmailUseCase(this.repository)
+      const findNeighbor = new FindNeighborByIDUseCase(this.repository)
       const neighbor = await findNeighbor.exec(id)
 
       HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
