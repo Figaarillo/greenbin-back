@@ -3,7 +3,7 @@ import AuthService from '../../../auth/aplicaction/service/auth.service'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import DateUtils from '../../../shared/utils/date.util'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetURLParams } from '../../../shared/utils/http.request.util'
+import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 import LoginNeighborUseCase from '../../aplication/usecases/login.usecase'
 import RegisterNeighborUseCase from '../../aplication/usecases/register.usecase'
@@ -14,6 +14,7 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import ListNeighborsUseCase from '../../aplication/usecases/list.usecase'
 
 class NeighborHandler {
   constructor(
@@ -21,6 +22,17 @@ class NeighborHandler {
     private readonly jwtProvider: IJWTProvider
   ) {
     this.repository = repository
+  }
+
+  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const { offset, limit } = GetPaginationParams(req)
+
+      const usecase = new ListNeighborsUseCase(this.repository)
+      const neighbors = await usecase.exec(offset, limit)
+
+      HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
+    } catch (error) {}
   }
 
   async findById(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
