@@ -11,7 +11,7 @@ export enum HTTPStatus {
   INTERNAL_SERVER_ERROR = 500
 }
 
-export default class HandleHTTPrepponse {
+export default class HandleHTTPResponse {
   static OK(rep: FastifyReply, message: string, data?: any): void {
     rep.status(HTTPStatus.OK).send({
       status: HTTPStatus.OK,
