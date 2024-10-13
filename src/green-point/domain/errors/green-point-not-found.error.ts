@@ -4,7 +4,7 @@ class ErrorGreenPointNotFound extends Error {
 
     const message =
       fields.length > 0
-        ? `Cannot find entity with ${fields.join(', ')}`
+        ? `Cannot find green point with ${fields.join(', ')}`
         : 'Cannot find any green point when try to list all entities find entity'
 
     super(message)
