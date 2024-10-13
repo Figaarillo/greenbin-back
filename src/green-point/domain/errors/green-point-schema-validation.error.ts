@@ -1,8 +1,8 @@
-class ErrorEntitySchemaValidation extends Error {
+class ErrorGreenPointSchemaValidation extends Error {
   constructor(message: string) {
     super(message)
-    this.name = ErrorEntitySchemaValidation.name
+    this.name = ErrorGreenPointSchemaValidation.name
   }
 }
 
-export default ErrorEntitySchemaValidation
+export default ErrorGreenPointSchemaValidation
