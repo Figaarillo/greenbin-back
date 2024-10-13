@@ -26,7 +26,6 @@ const validateAccessToken = async (
       return
     }
 
-
     switch (token.role) {
       case 'neighbor':
         req.neighbor = token
