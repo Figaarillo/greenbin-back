@@ -1,15 +1,10 @@
-/* eslint-disable indent */
-import { type FastifyReply, type FastifyRequest } from 'fastify'
-import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
+import { type FastifyRequest, type FastifyReply } from 'fastify'
 import { GetHeader } from '../../../shared/utils/http.request.util'
-import type IJWTProvider from '../../domain/providers/jwt.interface.provider'
 import AuthService from '../../aplicaction/service/auth.service'
+import type IJWTProvider from '../../domain/providers/jwt.interface.provider'
+import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 
-const validateAccessToken = async (
-  req: FastifyRequest,
-  rep: FastifyReply,
-  jwtProvider: IJWTProvider
-): Promise<void> => {
+const getTokenRole = async (req: FastifyRequest, rep: FastifyReply, jwtProvider: IJWTProvider): Promise<void> => {
   const authService = new AuthService(jwtProvider)
   const headerToken = GetHeader(req, 'authorization').split(' ')[1]
 
@@ -26,22 +21,7 @@ const validateAccessToken = async (
       return
     }
 
-    switch (token.role) {
-      case 'neighbor':
-        req.neighbor = token
-        break
-      case 'entity':
-        req.entity = token
-        break
-      case 'responsible':
-        req.responsible = token
-        break
-      case 'rewardPartner':
-        req.rewardPartner = token
-        break
-      default:
-        HandleHTTPResponse.Unauthorized(rep, 'Invalid token. Invalid role')
-    }
+    req.tokenRole = token.role
   } catch (error) {
     if (typeof error === 'object' && error != null) {
       // eslint-disable-next-line @typescript-eslint/no-base-to-string
@@ -51,4 +31,4 @@ const validateAccessToken = async (
   }
 }
 
-export default validateAccessToken
+export default getTokenRole

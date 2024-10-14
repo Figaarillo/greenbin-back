@@ -28,6 +28,12 @@ class NeighborRoute {
         await this.handler.update(req, rep)
       }
     )
+    this.router.get('/api/neighbor/auth/validate-role', {
+      preHandler: this.router.auth([this.router.getTokenRole]),
+      handler: async (req, rep) => {
+        await this.handler.validateRole(req, rep)
+      }
+    })
   }
 }
 

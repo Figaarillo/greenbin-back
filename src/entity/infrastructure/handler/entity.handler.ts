@@ -1,11 +1,14 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/aplicaction/service/auth.service'
+import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteEntityUseCase from '../../aplication/usecases/delete.usecase'
+import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 import FindEntityByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 import ListEntitiesUseCase from '../../aplication/usecases/list.usecase'
+import LoginEntityUseCase from '../../aplication/usecases/login.usecase'
 import RegisterEntityUseCase from '../../aplication/usecases/register.usecase'
 import UpdateEntityUseCase from '../../aplication/usecases/update.usecase'
 import type EntityPayload from '../../domain/payloads/entity.payload'
@@ -14,8 +17,6 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterEntityDTO from '../dtos/register-entity.dto'
 import UpdateEntityDTO from '../dtos/update-entity.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
-import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
-import LoginEntityUseCase from '../../aplication/usecases/login.usecase'
 
 class EntityHandler {
   constructor(
@@ -150,6 +151,18 @@ class EntityHandler {
       })
 
       HandleHTTPResponse.OK(rep, 'Token refreshed successfully', { accessToken })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenEntity = req.tokenRole
+      if (tokenEntity !== Roles.ENTITY) {
+        throw new Error('Invalid role')
+      }
+      HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
     } catch (error) {
       rep.status(500).send(error)
     }
