@@ -6,12 +6,16 @@ class ListGreenPointsUseCase {
   constructor(private readonly repository: GreenPointRepository) {}
 
   async exec(offset: number, limit: number): Promise<GreenPointEntity[]> {
-    const entitiesFounded = await this.repository.list(offset, limit)
-    if (entitiesFounded == null || entitiesFounded.length === 0) {
+    const greenPointsFounded = await this.repository.list(offset, limit)
+    if (greenPointsFounded == null || greenPointsFounded.length === 0) {
       throw new ErrorGreenPointNotFound(undefined, undefined)
     }
 
-    return entitiesFounded
+    greenPointsFounded.forEach(greenPoint => {
+      greenPoint.coordinates = JSON.parse(greenPoint.coordinates as unknown as string)
+    })
+
+    return greenPointsFounded
   }
 }
 
