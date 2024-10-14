@@ -21,9 +21,9 @@ class GreenPointHandler {
       const { offset, limit } = GetPaginationParams(req)
 
       const listGreenPoints = new ListGreenPointsUseCase(this.repository)
-      const GreenPoints = await listGreenPoints.exec(offset, limit)
+      const greenPoints = await listGreenPoints.exec(offset, limit)
 
-      HandleHTTPResponse.OK(res, 'Green points retrieved successfully', GreenPoints)
+      HandleHTTPResponse.OK(res, 'Green points retrieved successfully', greenPoints)
     } catch (error) {
       res.status(500).send(error)
     }
@@ -37,9 +37,9 @@ class GreenPointHandler {
       validateIDSchema.exec()
 
       const findGreenPoint = new FindGreenPointByIDUseCase(this.repository)
-      const GreenPoint = await findGreenPoint.exec(id)
+      const greenPoint = await findGreenPoint.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Green point retrieved successfully', GreenPoint)
+      HandleHTTPResponse.OK(res, 'Green point retrieved successfully', greenPoint)
     } catch (error) {
       res.status(500).send(error)
     }
@@ -53,9 +53,9 @@ class GreenPointHandler {
       validateRegisterGreenPointSchema.exec()
 
       const registerGreenPoint = new RegisterGreenPointUseCase(this.repository)
-      const GreenPoint = await registerGreenPoint.exec(payload)
+      const greenPoint = await registerGreenPoint.exec(payload)
 
-      HandleHTTPResponse.Created(res, 'Green point registered successfully', { id: GreenPoint.id })
+      HandleHTTPResponse.Created(res, 'Green point registered successfully', { id: greenPoint.id })
     } catch (error) {
       res.status(500).send(error)
     }
