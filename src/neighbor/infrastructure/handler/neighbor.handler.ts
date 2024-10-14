@@ -4,8 +4,10 @@ import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import DateUtils from '../../../shared/utils/date.util'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetURLParams } from '../../../shared/utils/http.request.util'
+import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
+import FindNeighborByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
+import ListNeighborsUseCase from '../../aplication/usecases/list.usecase'
 import LoginNeighborUseCase from '../../aplication/usecases/login.usecase'
 import RegisterNeighborUseCase from '../../aplication/usecases/register.usecase'
 import UpdateNeighborUseCase from '../../aplication/usecases/update.usecase'
@@ -22,6 +24,33 @@ class NeighborHandler {
     private readonly jwtProvider: IJWTProvider
   ) {
     this.repository = repository
+  }
+
+  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const { offset, limit } = GetPaginationParams(req)
+
+      const usecase = new ListNeighborsUseCase(this.repository)
+      const neighbors = await usecase.exec(offset, limit)
+
+      HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
+    } catch (error) {}
+  }
+
+  async findById(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+
+      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      validateIDSchema.exec()
+
+      const findNeighbor = new FindNeighborByIDUseCase(this.repository)
+      const neighbor = await findNeighbor.exec(id)
+
+      HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
+    } catch (error) {
+      rep.status(500).send(error)
+    }
   }
 
   async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {

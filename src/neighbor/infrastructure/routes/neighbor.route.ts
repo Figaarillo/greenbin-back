@@ -9,6 +9,12 @@ class NeighborRoute {
   ) {}
 
   setupRoutes(): void {
+    this.router.get('/api/neighbor', async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
+      await this.handler.list(req, rep)
+    })
+    this.router.get('/api/neighbor/:id', async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+      await this.handler.findById(req, rep)
+    })
     this.router.post('/api/neighbor/auth/login', async (req, rep) => {
       await this.handler.login(req, rep)
     })
