@@ -15,7 +15,7 @@ class GreenPointEntity extends BaseGreenPoint {
   @Property()
   address: string
 
-  @Property({ unique: true })
+  @Property({ unique: true, type: t.json })
   coordinates: {
     latitude: number
     longitude: number
