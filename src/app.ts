@@ -8,6 +8,7 @@ import { type FastifyInstance } from 'fastify'
 import bootstrapAuth from './auth/auth.bootstrap'
 import initMikroORM, { type Services } from './db'
 import bootstrapEntity from './entity/entity.bootstrap'
+import bootstrapGreenPoint from './green-point/green-point.bootstrap'
 import bootstrapNeighbor from './neighbor/neighbor.bootstrap'
 import bootstrapResponsible from './responsible/responsible.bootstrap'
 import bootstrapRewardPartner from './reward-partner/reward-partner.bootstrap'
@@ -52,6 +53,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapResponsible(app, db)
   bootstrapNeighbor(app, db)
   bootstrapRewardPartner(app, db)
+  bootstrapGreenPoint(app)
 
   /* Start the server */
   const url: string = await fastify.start(port)
