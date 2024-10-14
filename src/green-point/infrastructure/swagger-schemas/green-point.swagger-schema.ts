@@ -106,7 +106,7 @@ export const registerSwaggerSchema = {
         required: ['latitude', 'longitude']
       }
     },
-    required: ['id', 'createdAt', 'updatedAt', 'name', 'description', 'address', 'coordinates']
+    required: ['name', 'description', 'address', 'coordinates']
   },
   response: {
     201: {
