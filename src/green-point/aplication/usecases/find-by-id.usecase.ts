@@ -6,12 +6,14 @@ class FindGreenPointByIDUseCase {
   constructor(private readonly repository: GreenPointRepository) {}
 
   async exec(id: string): Promise<GreenPointEntity> {
-    const GreenPointFound = await this.repository.find({ id })
-    if (GreenPointFound == null) {
+    const greenPoint = await this.repository.find({ id })
+    if (greenPoint == null) {
       throw new ErrorGreenPointNotFound(undefined, undefined)
     }
 
-    return GreenPointFound
+    greenPoint.coordinates = JSON.parse(greenPoint.coordinates as unknown as string)
+
+    return greenPoint
   }
 }
 
