@@ -57,6 +57,12 @@ run.dev: docker.db
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=localhost pnpm dev
 
+test: docker.db.test
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │             RUNNING TESTS              │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=localhost pnpm test
+
 migrations:
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │    CRAEATING AND RUNNING MIGRATIONS    │ "
