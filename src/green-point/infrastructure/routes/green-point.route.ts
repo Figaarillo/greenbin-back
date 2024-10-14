@@ -23,7 +23,7 @@ class GreenPointRoute {
       }
     )
     this.server.get(
-      '/api/green-point',
+      '/api/green-point/:id',
       { schema: findByIdSwaggerSchema },
       async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.findByID(req, res)
