@@ -1,5 +1,5 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
-import type WasteCategoryHandler from '../handler/waste-category.handler'
+import type WasteCategoryHandler from '../handlers/waste-category.handler'
 import {
   deleteSwaggerSchema,
   findByIdSwaggerSchema,

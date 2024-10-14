@@ -1,6 +1,6 @@
 import { type FastifyReply, type FastifyInstance, type FastifyRequest } from 'fastify'
-import type NeighborHandler from '../handler/neighbor.handler'
-import { registerSwaggerSchema, updateSwaggerSchema } from '../swagger-schema/neighbor.swagger-schema'
+import type NeighborHandler from '../handlers/neighbor.handler'
+import { registerSwaggerSchema, updateSwaggerSchema } from '../swagger-schemas/neighbor.swagger-schema'
 
 class NeighborRoute {
   constructor(

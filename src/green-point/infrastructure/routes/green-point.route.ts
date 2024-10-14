@@ -1,5 +1,5 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
-import type GreenPointHandler from '../handler/green-point.handler'
+import type GreenPointHandler from '../handlers/green-point.handler'
 import {
   deleteSwaggerSchema,
   findByIdSwaggerSchema,

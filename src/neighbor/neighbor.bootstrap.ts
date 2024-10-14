@@ -3,7 +3,7 @@ import type IJWTProvider from '../auth/domain/providers/jwt.interface.provider'
 import JWTProvider from '../auth/infrastructure/provider/jwt.provider'
 import { type Services } from '../db'
 import type NeighborRepository from './domain/repositories/neighbor.repository'
-import NeighborHandler from './infrastructure/handler/neighbor.handler'
+import NeighborHandler from './infrastructure/handlers/neighbor.handler'
 import NeighborMikroORMRepository from './infrastructure/repositories/mikro-orm/neighbor.mikroorm.repository'
 import NeighborRoute from './infrastructure/routes/neighbor.route'
 

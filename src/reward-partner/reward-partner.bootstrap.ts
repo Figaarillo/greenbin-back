@@ -3,7 +3,7 @@ import type IJWTProvider from '../auth/domain/providers/jwt.interface.provider'
 import JWTProvider from '../auth/infrastructure/provider/jwt.provider'
 import { type Services } from '../db'
 import type RewardPartnerRepository from './domain/repositories/reward-partner.repository'
-import RewardPartnerHandler from './infrastructure/handler/reward-partner.handler'
+import RewardPartnerHandler from './infrastructure/handlers/reward-partner.handler'
 import RewardPartnerMikroORMRepository from './infrastructure/repositories/mikro-orm/reward-partner.mikroorm.repository'
 import RewardPartnerRoute from './infrastructure/routes/reward-partner.route'
 

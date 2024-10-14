@@ -1,7 +1,7 @@
 import { type FastifyInstance } from 'fastify'
 import { type Services } from '../db'
 import type EntityRepository from './domain/repositories/entity.repository'
-import EntityHandler from './infrastructure/handler/entity.handler'
+import EntityHandler from './infrastructure/handlers/entity.handler'
 import EntityMikroORMRepository from './infrastructure/repositories/mikro-orm/entity.mikroorm.repository'
 import EntityRoute from './infrastructure/routes/entity.route'
 import type IJWTProvider from '../auth/domain/providers/jwt.interface.provider'

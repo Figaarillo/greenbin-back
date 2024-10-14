@@ -1,7 +1,7 @@
 import { type FastifyInstance } from 'fastify'
 import { type Services } from '../db'
 import type ResponsibleRepository from './domain/repositories/responsible.repository'
-import ResponsibleHandler from './infrastructure/handler/responsible.handler'
+import ResponsibleHandler from './infrastructure/handlers/responsible.handler'
 import ResponsibleMikroORMRepository from './infrastructure/repositories/mikro-orm/responsible.mikroorm.repository'
 import ResponsibleRoute from './infrastructure/routes/responsible.route'
 import type IJWTProvider from '../auth/domain/providers/jwt.interface.provider'

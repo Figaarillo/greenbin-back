@@ -1,6 +1,6 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
-import { registerSwaggerSchema, updateSwaggerSchema } from '../swagger-schema/reward-partner.swagger-schema'
-import type RewardPartnerHandler from '../handler/reward-partner.handler'
+import { registerSwaggerSchema, updateSwaggerSchema } from '../swagger-schemas/reward-partner.swagger-schema'
+import type RewardPartnerHandler from '../handlers/reward-partner.handler'
 
 class RewardPartnerRoute {
   constructor(

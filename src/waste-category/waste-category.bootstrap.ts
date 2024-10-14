@@ -1,7 +1,7 @@
 import { type FastifyInstance } from 'fastify'
 import { type Services } from '../db'
 import type WasteCategoryRepository from './domain/repositories/waste-category.repository'
-import WasteCategoryHandler from './infrastructure/handler/waste-category.handler'
+import WasteCategoryHandler from './infrastructure/handlers/waste-category.handler'
 import CategoryMikroORMRepository from './infrastructure/repositories/mikro-orm/waste-category.mikroorm.repository'
 import WasteCategoryRoute from './infrastructure/routes/waste-category.route'
 

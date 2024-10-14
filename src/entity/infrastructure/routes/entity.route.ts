@@ -1,5 +1,5 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
-import type EntityHandler from '../handler/entity.handler'
+import type EntityHandler from '../handlers/entity.handler'
 import {
   deleteSwaggerSchema,
   findByIdSwaggerSchema,

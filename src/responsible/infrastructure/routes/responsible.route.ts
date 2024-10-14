@@ -1,12 +1,12 @@
 import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
-import type ResponsibleHandler from '../handler/responsible.handler'
+import type ResponsibleHandler from '../handlers/responsible.handler'
 import {
   deleteSwaggerSchema,
   findByIdSwaggerSchema,
   listSwaggerSchema,
   registerSwaggerSchema,
   updateSwaggerSchema
-} from '../swagger-schema/responsible.swagger-schema'
+} from '../swagger-schemas/responsible.swagger-schema'
 
 class ResponsibleRoute {
   constructor(
