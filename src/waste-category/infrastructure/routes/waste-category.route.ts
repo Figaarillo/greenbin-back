@@ -10,36 +10,36 @@ import {
 
 class WasteCategoryRoute {
   constructor(
-    private readonly router: FastifyInstance,
+    private readonly server: FastifyInstance,
     private readonly handler: WasteCategoryHandler
   ) {}
 
   setupRoutes(): void {
-    this.router.get(
+    this.server.get(
       '/api/waste-category',
       { schema: listSwaggerSchema },
       async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
         await this.handler.List(req, res)
       }
     )
-    this.router.get(
+    this.server.get(
       '/api/waste-category/:id',
       { schema: findByIdSwaggerSchema },
       async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.FindByID(req, res)
       }
     )
-    this.router.post('/api/waste-category', { schema: registerSwaggerSchema }, async (req, res) => {
+    this.server.post('/api/waste-category', { schema: registerSwaggerSchema }, async (req, res) => {
       await this.handler.Register(req, res)
     })
-    this.router.put(
+    this.server.put(
       '/api/waste-category/:id',
       { schema: updateSwaggerSchema },
       async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.Update(req, res)
       }
     )
-    this.router.delete(
+    this.server.delete(
       '/api/waste-category/:id',
       { schema: deleteSwaggerSchema },
       async (req: FastifyRequest<{ Params: { id: string } }>, res) => {

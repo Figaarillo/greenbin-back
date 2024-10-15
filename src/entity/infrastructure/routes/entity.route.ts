@@ -10,53 +10,53 @@ import {
 
 class EntityRoute {
   constructor(
-    private readonly router: FastifyInstance,
+    private readonly server: FastifyInstance,
     private readonly handler: EntityHandler
   ) {}
 
   setupRoutes(): void {
-    this.router.get(
+    this.server.get(
       '/api/entity',
       { schema: listSwaggerSchema },
       async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
         await this.handler.list(req, res)
       }
     )
-    this.router.get(
+    this.server.get(
       '/api/entity/:id',
       { schema: findByIdSwaggerSchema },
       async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.findByID(req, res)
       }
     )
-    this.router.post('/api/entity', { schema: registerSwaggerSchema }, async (req, res) => {
+    this.server.post('/api/entity', { schema: registerSwaggerSchema }, async (req, res) => {
       await this.handler.register(req, res)
     })
-    this.router.put(
+    this.server.put(
       '/api/entity/:id',
       { schema: updateSwaggerSchema },
       async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.update(req, res)
       }
     )
-    this.router.delete(
+    this.server.delete(
       '/api/entity/:id',
       { schema: deleteSwaggerSchema },
       async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.delete(req, res)
       }
     )
-    this.router.post('/api/entity/auth/login', async (req, rep) => {
+    this.server.post('/api/entity/auth/login', async (req, rep) => {
       await this.handler.login(req, rep)
     })
-    this.router.get('/api/entity/auth/refresh-token', {
-      preHandler: this.router.auth([this.router.validateRefreshToken]),
+    this.server.get('/api/entity/auth/refresh-token', {
+      preHandler: this.server.auth([this.server.validateRefreshToken]),
       handler: async (req, rep) => {
         await this.handler.refreshToken(req, rep)
       }
     })
-    this.router.get('/api/entity/auth/validate-role', {
-      preHandler: this.router.auth([this.router.getTokenRole]),
+    this.server.get('/api/entity/auth/validate-role', {
+      preHandler: this.server.auth([this.server.getTokenRole]),
       handler: async (req, rep) => {
         await this.handler.validateRole(req, rep)
       }
