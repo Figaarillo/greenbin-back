@@ -2,6 +2,7 @@ import { RequestContext } from '@mikro-orm/core'
 import type Nullable from '../../../../shared/domain/types/nullable.type'
 import EntityEntity from '../../../domain/entities/entity.entity'
 import type EntityRepository from '../../../domain/repositories/entity.repository'
+import ErrorEntityNotFound from '../../../domain/errors/entity-not-found.error'
 
 class EntityMikroORMRepository implements EntityRepository {
   async list(offset: number, limit: number): Promise<Nullable<EntityEntity[]>> {
@@ -65,7 +66,7 @@ class EntityMikroORMRepository implements EntityRepository {
 
     const entity = em.getReference(EntityEntity, id)
     if (entity == null) {
-      throw new Error('Entity not found')
+      throw new ErrorEntityNotFound(id, undefined, undefined)
     }
 
     await em.remove(entity).flush()
