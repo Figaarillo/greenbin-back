@@ -49,7 +49,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   /* Register the entities */
   bootstrapAuth(app)
   bootstrapEntity(app)
-  bootstrapWasteCategory(app, db)
+  bootstrapWasteCategory(app)
   bootstrapResponsible(app)
   bootstrapNeighbor(app)
   bootstrapRewardPartner(app)
