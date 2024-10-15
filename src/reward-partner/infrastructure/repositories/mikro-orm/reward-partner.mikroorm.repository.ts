@@ -24,9 +24,7 @@ class RewardPartnerMikroORMRepository implements RewardPartnerRepository {
 
   async save(newRewardPartner: RewardPartnerEntity): Promise<Nullable<RewardPartnerEntity>> {
     const em = this.getEntityManager()
-
     await em.persist(newRewardPartner).flush()
-
     return newRewardPartner
   }
 

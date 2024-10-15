@@ -1,9 +1,10 @@
 import { RequestContext } from '@mikro-orm/core'
+import ErrorEntityManagerNotFound from '../../../../shared/domain/errors/entity-manager-not-found.error'
 import type Nullable from '../../../../shared/domain/types/nullable.type'
 import GreenPointEntity from '../../../domain/entities/green-point.entity'
+import ErrorGreenPointNotFound from '../../../domain/errors/green-point-not-found.error'
 import type GreenPointUpdatePayload from '../../../domain/payloads/green-point.update.payload'
 import type GreenPointRepository from '../../../domain/repositories/green-point.repository'
-import ErrorEntityManagerNotFound from '../../../../shared/domain/errors/entity-manager-not-found.error'
 
 class GreenPointMikroORMRepository implements GreenPointRepository {
   async list(offset: number, limit: number): Promise<Nullable<GreenPointEntity[]>> {
@@ -41,7 +42,7 @@ class GreenPointMikroORMRepository implements GreenPointRepository {
 
     const greenPoint = em.getReference(GreenPointEntity, id)
     if (greenPoint == null) {
-      throw new Error('Green point not found')
+      throw new ErrorGreenPointNotFound(id, undefined)
     }
 
     await em.remove(greenPoint).flush()

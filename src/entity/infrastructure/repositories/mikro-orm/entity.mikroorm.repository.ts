@@ -23,9 +23,7 @@ class EntityMikroORMRepository implements EntityRepository {
 
   async save(entity: EntityEntity): Promise<Nullable<EntityEntity>> {
     const em = this.getEntityManager()
-
     await em.persist(entity).flush()
-
     return entity
   }
 
