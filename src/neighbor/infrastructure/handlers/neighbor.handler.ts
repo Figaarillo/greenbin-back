@@ -1,5 +1,5 @@
-import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/aplicaction/service/auth.service'
+import { type FastifyReply, type FastifyRequest } from 'fastify'
 import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import DateUtils from '../../../shared/utils/date.util'
@@ -17,6 +17,7 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import DeleteNeighborUseCase from '../../aplication/usecases/delete.usecase'
 
 class NeighborHandler {
   constructor(
@@ -125,6 +126,22 @@ class NeighborHandler {
       HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
         accessToken
       })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+
+      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      schemaValidator.exec()
+
+      const deleteNeighbor = new DeleteNeighborUseCase(this.repository)
+      await deleteNeighbor.exec(id)
+
+      HandleHTTPResponse.OK(rep, 'Neighbor deleted successfully', { id })
     } catch (error) {
       rep.status(500).send(error)
     }
