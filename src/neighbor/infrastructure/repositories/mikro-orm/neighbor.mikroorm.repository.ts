@@ -3,6 +3,7 @@ import type Nullable from '../../../../shared/domain/types/nullable.type'
 import NeighborEntity from '../../../domain/entities/neighbor.entity'
 import type NeighborUpdatePayload from '../../../domain/payloads/neighbor.update.payload'
 import type NeighborRepository from '../../../domain/repositories/neighbor.repository'
+import ErrorNeighborNotFound from '../../../domain/errors/neighbor-not-found.error'
 
 class NeighborMikroORMRepository implements NeighborRepository {
   async list(offset: number, limit: number): Promise<Nullable<NeighborEntity[]>> {
@@ -66,7 +67,7 @@ class NeighborMikroORMRepository implements NeighborRepository {
 
     const neighbor = em.getReference(NeighborEntity, id)
     if (neighbor == null) {
-      throw new Error('Neighbor not found')
+      throw new ErrorNeighborNotFound(id, undefined, undefined)
     }
 
     await em.remove(neighbor).flush()
