@@ -38,6 +38,12 @@ docker.clean:
 	@echo " ╰────────────────────────────────────────╯ "
 	docker compose down --volumes
 
+docker.db.rm.volumes:
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │            DELETING DATABASE           │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=lolcalhost docker rm greenbin-back_pgdata
+
 docker.restart.server:
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │          RESTARTING APISERVER          │ "
@@ -63,13 +69,12 @@ test: docker.db.test
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=localhost pnpm test
 
-migrations:
+migrations: docker.db.rm.volumes
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │    CRAEATING AND RUNNING MIGRATIONS    │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=localhost pnpm run migration:create
 	DATABASE_HOST=localhost pnpm run migration:up
-
 
 migrations.up:
 	@echo " ╭────────────────────────────────────────╮ "
