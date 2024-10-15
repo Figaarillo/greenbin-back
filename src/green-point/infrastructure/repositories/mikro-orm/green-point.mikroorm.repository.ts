@@ -41,10 +41,7 @@ class GreenPointMikroORMRepository implements GreenPointRepository {
     }
 
     const greenPoint = em.getReference(GreenPointEntity, id)
-
-    if (greenPoint == null) {
-      throw new Error('Green point not found')
-    }
+    if (greenPoint == null) return null
 
     greenPoint.update(payload)
     await em.flush()
@@ -59,7 +56,6 @@ class GreenPointMikroORMRepository implements GreenPointRepository {
     }
 
     const greenPoint = em.getReference(GreenPointEntity, id)
-
     if (greenPoint == null) {
       throw new Error('Green point not found')
     }
