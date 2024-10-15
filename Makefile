@@ -1,5 +1,8 @@
 .PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations
 
+# ############ VARIABLES ############ #
+DB_HOST=localhost
+
 # ############# COMMANDS ############ #
 docker: docker.clean docker.build docker.db docker.db.test
 	@echo " ╭────────────────────────────────────────╮ "
@@ -38,12 +41,6 @@ docker.clean:
 	@echo " ╰────────────────────────────────────────╯ "
 	docker compose down --volumes
 
-docker.db.rm.volumes:
-	@echo " ╭────────────────────────────────────────╮ "
-	@echo " │            DELETING DATABASE           │ "
-	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=lolcalhost docker rm greenbin-back_pgdata
-
 docker.restart.server:
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │          RESTARTING APISERVER          │ "
@@ -55,29 +52,28 @@ run: docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │             RUNNING SERVER             │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=localhost pnpm start
+	DATABASE_HOST=$(DB_HOST) pnpm start
 
 run.dev: docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │      RUNNING SERVER IN WATCH MODE      │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=localhost pnpm dev
+	DATABASE_HOST=$(DB_HOST) pnpm dev
 
 test: docker.db.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │             RUNNING TESTS              │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=localhost pnpm test
+	DATABASE_HOST=$(DB_HOST) pnpm test
 
-migrations: docker.db.rm.volumes
+migrations: docker.clean docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │    CRAEATING AND RUNNING MIGRATIONS    │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=localhost pnpm run migration:create
-	DATABASE_HOST=localhost pnpm run migration:up
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:create && pnpm run migrations:up
 
 migrations.up:
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │           RUNNING MIGRATIONS           │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=localhost pnpm run migration:up
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:up
