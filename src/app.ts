@@ -52,7 +52,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapWasteCategory(app, db)
   bootstrapResponsible(app)
   bootstrapNeighbor(app)
-  bootstrapRewardPartner(app, db)
+  bootstrapRewardPartner(app)
   bootstrapGreenPoint(app)
 
   /* Start the server */
