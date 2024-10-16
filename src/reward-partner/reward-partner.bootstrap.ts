@@ -8,9 +8,9 @@ import RewardPartnerRoute from './infrastructure/routes/reward-partner.route'
 
 async function bootstrapRewardPartner(router: FastifyInstance): Promise<void> {
   const repository: RewardPartnerRepository = new RewardPartnerMikroORMRepository()
-  const provider: IJWTProvider = new JWTProvider()
+  const jwtProvider: IJWTProvider = new JWTProvider()
 
-  const handler = new RewardPartnerHandler(repository, provider)
+  const handler = new RewardPartnerHandler(repository, jwtProvider)
 
   const routes = new RewardPartnerRoute(router, handler)
   routes.setupRoutes()

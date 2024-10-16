@@ -112,8 +112,8 @@ class ResponsibleHandler {
     try {
       const payload = req.body as ResponsiblePayload
 
-      const usecase = new LoginResponsibleUseCase(this.repository)
-      const responsible = await usecase.exec(payload)
+      const login = new LoginResponsibleUseCase(this.repository)
+      const responsible = await login.exec(payload)
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(responsible.id, {
@@ -141,8 +141,8 @@ class ResponsibleHandler {
     try {
       const tokenResponsible = req.responsible as { username: string; email: string; role: string }
 
-      const usecase = new FindByEmailUseCase(this.repository)
-      const responsible = await usecase.exec(tokenResponsible.email)
+      const findByEmail = new FindByEmailUseCase(this.repository)
+      const responsible = await findByEmail.exec(tokenResponsible.email)
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(req.responsible.id, {

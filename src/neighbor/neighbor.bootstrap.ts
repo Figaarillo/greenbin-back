@@ -8,9 +8,9 @@ import NeighborRoute from './infrastructure/routes/neighbor.route'
 
 async function bootstrapNeighbor(router: FastifyInstance): Promise<void> {
   const repository: NeighborRepository = new NeighborMikroORMRepository()
-  const provider: IJWTProvider = new JWTProvider()
+  const jetProvider: IJWTProvider = new JWTProvider()
 
-  const handler = new NeighborHandler(repository, provider)
+  const handler = new NeighborHandler(repository, jetProvider)
 
   const routes = new NeighborRoute(router, handler)
   routes.setupRoutes()

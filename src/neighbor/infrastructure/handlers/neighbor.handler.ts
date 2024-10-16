@@ -31,8 +31,8 @@ class NeighborHandler {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
-      const usecase = new ListNeighborsUseCase(this.repository)
-      const neighbors = await usecase.exec(offset, limit)
+      const listNeighbor = new ListNeighborsUseCase(this.repository)
+      const neighbors = await listNeighbor.exec(offset, limit)
 
       HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
     } catch (error) {}
@@ -109,28 +109,6 @@ class NeighborHandler {
     }
   }
 
-  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    try {
-      const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
-
-      const usecase = new FindByEmailUseCase(this.repository)
-      const neighbor = await usecase.exec(tokenNeighbor.email)
-
-      const authService = new AuthService(this.jwtProvider)
-      const accessToken = await authService.generateAccessToken(req.neighbor.id, {
-        username: neighbor.username,
-        email: neighbor.email,
-        role: neighbor.role
-      })
-
-      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
-        accessToken
-      })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
-  }
-
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
@@ -151,8 +129,8 @@ class NeighborHandler {
     try {
       const paylaod = req.body as NeighborPayload
 
-      const usecase = new LoginNeighborUseCase(this.repository)
-      const neighbor = await usecase.exec(paylaod)
+      const login = new LoginNeighborUseCase(this.repository)
+      const neighbor = await login.exec(paylaod)
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(neighbor.id, {
@@ -170,6 +148,28 @@ class NeighborHandler {
         id: neighbor.id,
         accessToken,
         refreshToken
+      })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
+
+      const findByEmail = new FindByEmailUseCase(this.repository)
+      const neighbor = await findByEmail.exec(tokenNeighbor.email)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(req.neighbor.id, {
+        username: neighbor.username,
+        email: neighbor.email,
+        role: neighbor.role
+      })
+
+      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
+        accessToken
       })
     } catch (error) {
       rep.status(500).send(error)

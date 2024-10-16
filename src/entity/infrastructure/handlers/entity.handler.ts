@@ -110,8 +110,8 @@ class EntityHandler {
     try {
       const payload = req.body as EntityLoginPayload
 
-      const usecase = new LoginEntityUseCase(this.repository)
-      const entity = await usecase.exec(payload)
+      const login = new LoginEntityUseCase(this.repository)
+      const entity = await login.exec(payload)
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(entity.id, {
@@ -139,8 +139,8 @@ class EntityHandler {
     try {
       const tokenEntity = req.entity as { username: string; email: string; role: string }
 
-      const usecase = new FindByEmailUseCase(this.repository)
-      const entity = await usecase.exec(tokenEntity.email)
+      const findByEmail = new FindByEmailUseCase(this.repository)
+      const entity = await findByEmail.exec(tokenEntity.email)
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(req.entity.id, {
