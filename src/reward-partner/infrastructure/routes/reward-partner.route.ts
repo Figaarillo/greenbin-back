@@ -12,13 +12,13 @@ class RewardPartnerRoute {
     this.server.post('/api/reward-partner', { schema: registerSwaggerSchema }, async (req, res) => {
       await this.handler.register(req, res)
     })
-    this.server.put(
-      '/api/reward-partner/:id',
-      { schema: updateSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+    this.server.put('/api/reward-partner/:id', {
+      schema: updateSwaggerSchema,
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.update(req, res)
       }
-    )
+    })
     this.server.post('/api/reward-partner/auth/login', async (req, res) => {
       await this.handler.login(req, res)
     })
