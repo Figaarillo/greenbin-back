@@ -211,13 +211,12 @@
         },
         "coordinates": {
           "name": "coordinates",
-          "type": "varchar(255)",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "length": 255,
-          "mappedType": "string"
+          "mappedType": "json"
         }
       },
       "name": "green_point_entity",
