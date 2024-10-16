@@ -15,20 +15,20 @@ class ResponsibleRoute {
   ) {}
 
   setupRoutes(): void {
-    this.server.get(
-      '/api/responsible',
-      { schema: listSwaggerSchema },
-      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
+    this.server.get('/api/responsible', {
+      schema: listSwaggerSchema,
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
         await this.handler.list(req, res)
       }
-    )
-    this.server.get(
-      '/api/responsible/:id',
-      { schema: findByIdSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+    })
+    this.server.get('/api/responsible/:id', {
+      schema: findByIdSwaggerSchema,
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.findByID(req, res)
       }
-    )
+    })
     this.server.post('/api/responsible', { schema: registerSwaggerSchema }, async (req, res) => {
       await this.handler.register(req, res)
     })
