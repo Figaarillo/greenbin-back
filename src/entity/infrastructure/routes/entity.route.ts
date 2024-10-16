@@ -15,37 +15,37 @@ class EntityRoute {
   ) {}
 
   setupRoutes(): void {
-    this.server.get(
-      '/api/entity',
-      { schema: listSwaggerSchema },
-      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
+    this.server.get('/api/entity', {
+      schema: listSwaggerSchema,
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
         await this.handler.list(req, res)
       }
-    )
-    this.server.get(
-      '/api/entity/:id',
-      { schema: findByIdSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+    })
+    this.server.get('/api/entity/:id', {
+      schema: findByIdSwaggerSchema,
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.findByID(req, res)
       }
-    )
+    })
     this.server.post('/api/entity', { schema: registerSwaggerSchema }, async (req, res) => {
       await this.handler.register(req, res)
     })
-    this.server.put(
-      '/api/entity/:id',
-      { schema: updateSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+    this.server.put('/api/entity/:id', {
+      schema: updateSwaggerSchema,
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.update(req, res)
       }
-    )
-    this.server.delete(
-      '/api/entity/:id',
-      { schema: deleteSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+    })
+    this.server.delete('/api/entity/:id', {
+      schema: deleteSwaggerSchema,
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.delete(req, res)
       }
-    )
+    })
     this.server.post('/api/entity/auth/login', async (req, rep) => {
       await this.handler.login(req, rep)
     })
