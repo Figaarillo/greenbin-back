@@ -9,16 +9,16 @@ import UpdateCategoryUseCase from '../../aplication/usecases/update.usecase'
 import type WasteCategoryPayload from '../../domain/payloads/waste-category.payload'
 import type WasteCategoryRepository from '../../domain/repositories/waste-category.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
-import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 import RegisterWasteCategoryDTO from '../dtos/register-waste-category.dto'
 import UpdateWasteCategoryDTO from '../dtos/update-waste-category.dto'
+import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class WasteCategoryHandler {
   constructor(private readonly repository: WasteCategoryRepository) {
     this.repository = repository
   }
 
-  async List(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
@@ -31,7 +31,7 @@ class WasteCategoryHandler {
     }
   }
 
-  async FindByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -47,7 +47,7 @@ class WasteCategoryHandler {
     }
   }
 
-  async Register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
       const payload: WasteCategoryPayload = req.body as WasteCategoryPayload
 
@@ -63,7 +63,7 @@ class WasteCategoryHandler {
     }
   }
 
-  async Update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
       const payload: WasteCategoryPayload = req.body as WasteCategoryPayload
@@ -83,7 +83,7 @@ class WasteCategoryHandler {
     }
   }
 
-  async Delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 

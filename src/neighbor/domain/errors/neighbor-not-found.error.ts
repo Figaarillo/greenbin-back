@@ -6,7 +6,12 @@ class ErrorNeighborNotFound extends Error {
       email != null ? `email: ${email}` : null
     ].filter(Boolean)
 
-    super(`cannot find neighbor with ${fields.join(', ')}`)
+    const message =
+      fields.length > 0
+        ? `Cannot find neighbor with ${fields.join(', ')}`
+        : 'Cannot find any neighbor when try to list all neighbors'
+
+    super(message)
     this.name = ErrorNeighborNotFound.name
   }
 }

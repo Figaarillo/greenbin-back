@@ -1,6 +1,5 @@
 import type EntityEntity from '../../domain/entities/entity.entity'
 import ErrorEntityNotFound from '../../domain/errors/entity-not-found.error'
-import type EntityPayload from '../../domain/payloads/entity.payload'
 import type EntityRepository from '../../domain/repositories/entity.repository'
 
 class UpdateEntityUseCase {
@@ -8,7 +7,7 @@ class UpdateEntityUseCase {
     this.repository = repository
   }
 
-  async exec(id: string, payload: EntityPayload): Promise<EntityEntity> {
+  async exec(id: string, payload: { description: string }): Promise<EntityEntity> {
     const entityUpdated = await this.repository.update(id, payload.description)
     if (entityUpdated == null) {
       throw new ErrorEntityNotFound(`Cannot update entity with id: ${id}`)

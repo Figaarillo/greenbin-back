@@ -11,6 +11,7 @@ import ListEntitiesUseCase from '../../aplication/usecases/list.usecase'
 import LoginEntityUseCase from '../../aplication/usecases/login.usecase'
 import RegisterEntityUseCase from '../../aplication/usecases/register.usecase'
 import UpdateEntityUseCase from '../../aplication/usecases/update.usecase'
+import type EntityLoginPayload from '../../domain/payloads/entity.login.payload'
 import type EntityPayload from '../../domain/payloads/entity.payload'
 import type EntityRepository from '../../domain/repositories/entity.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
@@ -22,9 +23,7 @@ class EntityHandler {
   constructor(
     private readonly repository: EntityRepository,
     private readonly jwtProvider: IJWTProvider
-  ) {
-    this.repository = repository
-  }
+  ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
@@ -74,7 +73,7 @@ class EntityHandler {
   async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
-      const payload: EntityPayload = req.body as EntityPayload
+      const payload: { description: string } = req.body as { description: string }
 
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
@@ -109,10 +108,10 @@ class EntityHandler {
 
   async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
-      const payload = req.body as EntityPayload
+      const payload = req.body as EntityLoginPayload
 
-      const usecase = new LoginEntityUseCase(this.repository)
-      const entity = await usecase.exec(payload)
+      const login = new LoginEntityUseCase(this.repository)
+      const entity = await login.exec(payload)
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(entity.id, {
@@ -140,8 +139,8 @@ class EntityHandler {
     try {
       const tokenEntity = req.entity as { username: string; email: string; role: string }
 
-      const usecase = new FindByEmailUseCase(this.repository)
-      const entity = await usecase.exec(tokenEntity.email)
+      const findByEmail = new FindByEmailUseCase(this.repository)
+      const entity = await findByEmail.exec(tokenEntity.email)
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(req.entity.id, {
