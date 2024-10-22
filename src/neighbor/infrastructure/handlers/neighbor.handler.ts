@@ -18,6 +18,7 @@ import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 import DeleteNeighborUseCase from '../../aplication/usecases/delete.usecase'
+import FindNeighborByDNIUseCase from '../../aplication/usecases/find-by-dni.usecase'
 
 class NeighborHandler {
   constructor(
@@ -47,6 +48,19 @@ class NeighborHandler {
 
       const findNeighbor = new FindNeighborByIDUseCase(this.repository)
       const neighbor = await findNeighbor.exec(id)
+
+      HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async findByDni(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const dni = GetURLParams(req, 'dni')
+
+      const findByDNI = new FindNeighborByDNIUseCase(this.repository)
+      const neighbor = await findByDNI.exec(dni)
 
       HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
     } catch (error) {
