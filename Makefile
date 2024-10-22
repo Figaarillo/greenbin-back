@@ -70,7 +70,8 @@ migrations: docker.clean docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │    CRAEATING AND RUNNING MIGRATIONS    │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm run migration:create && pnpm run migrations:up
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:create
+	$(MAKE) migrations.up
 
 migrations.up:
 	@echo " ╭────────────────────────────────────────╮ "
