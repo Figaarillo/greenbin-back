@@ -80,8 +80,8 @@ class RewardPartnerHandler {
       const schemaValidator = new SchemaValidator(LoginRewardPartnerDTO, payload)
       schemaValidator.exec()
 
-      const usecase = new LoginRewardPartnerUseCase(this.repository)
-      const rewardPartner = await usecase.exec(payload)
+      const login = new LoginRewardPartnerUseCase(this.repository)
+      const rewardPartner = await login.exec(payload)
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(rewardPartner.id, {
@@ -109,8 +109,8 @@ class RewardPartnerHandler {
     try {
       const tokenRewardPartner = req.rewardPartner as { username: string; email: string; role: string }
 
-      const usecase = new FindByEmailUseCase(this.repository)
-      const rewardPartner = await usecase.exec(tokenRewardPartner.email)
+      const findByEmail = new FindByEmailUseCase(this.repository)
+      const rewardPartner = await findByEmail.exec(tokenRewardPartner.email)
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(req.rewardPartner.id, {

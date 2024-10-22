@@ -1,5 +1,5 @@
-import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/aplicaction/service/auth.service'
+import { type FastifyReply, type FastifyRequest } from 'fastify'
 import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import DateUtils from '../../../shared/utils/date.util'
@@ -17,6 +17,7 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import DeleteNeighborUseCase from '../../aplication/usecases/delete.usecase'
 
 class NeighborHandler {
   constructor(
@@ -30,8 +31,8 @@ class NeighborHandler {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
-      const usecase = new ListNeighborsUseCase(this.repository)
-      const neighbors = await usecase.exec(offset, limit)
+      const listNeighbor = new ListNeighborsUseCase(this.repository)
+      const neighbors = await listNeighbor.exec(offset, limit)
 
       HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
     } catch (error) {}
@@ -108,23 +109,17 @@ class NeighborHandler {
     }
   }
 
-  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
     try {
-      const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
+      const id = GetURLParams(req, 'id')
 
-      const usecase = new FindByEmailUseCase(this.repository)
-      const neighbor = await usecase.exec(tokenNeighbor.email)
+      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      schemaValidator.exec()
 
-      const authService = new AuthService(this.jwtProvider)
-      const accessToken = await authService.generateAccessToken(req.neighbor.id, {
-        username: neighbor.username,
-        email: neighbor.email,
-        role: neighbor.role
-      })
+      const deleteNeighbor = new DeleteNeighborUseCase(this.repository)
+      await deleteNeighbor.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
-        accessToken
-      })
+      HandleHTTPResponse.OK(rep, 'Neighbor deleted successfully', { id })
     } catch (error) {
       rep.status(500).send(error)
     }
@@ -134,8 +129,8 @@ class NeighborHandler {
     try {
       const paylaod = req.body as NeighborPayload
 
-      const usecase = new LoginNeighborUseCase(this.repository)
-      const neighbor = await usecase.exec(paylaod)
+      const login = new LoginNeighborUseCase(this.repository)
+      const neighbor = await login.exec(paylaod)
 
       const authService = new AuthService(this.jwtProvider)
       const accessToken = await authService.generateAccessToken(neighbor.id, {
@@ -153,6 +148,28 @@ class NeighborHandler {
         id: neighbor.id,
         accessToken,
         refreshToken
+      })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
+
+      const findByEmail = new FindByEmailUseCase(this.repository)
+      const neighbor = await findByEmail.exec(tokenNeighbor.email)
+
+      const authService = new AuthService(this.jwtProvider)
+      const accessToken = await authService.generateAccessToken(req.neighbor.id, {
+        username: neighbor.username,
+        email: neighbor.email,
+        role: neighbor.role
+      })
+
+      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
+        accessToken
       })
     } catch (error) {
       rep.status(500).send(error)

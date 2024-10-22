@@ -10,7 +10,7 @@ class FindCategoryByIDUseCase {
   async exec(id: string): Promise<WasteCategoryEntity> {
     const categoryFound = await this.repository.find({ id })
     if (categoryFound == null) {
-      throw new ErrorCategoryNotFound(`Cannont find category with id: ${id} when try to get category by id`)
+      throw new ErrorCategoryNotFound(id)
     }
 
     return categoryFound
