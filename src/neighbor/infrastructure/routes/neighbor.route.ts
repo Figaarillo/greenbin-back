@@ -21,6 +21,12 @@ class NeighborRoute {
         await this.handler.findById(req, rep)
       }
     })
+    this.server.get('/api/neighbor/dni/:dni', {
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply) => {
+        await this.handler.findByDni(req, rep)
+      }
+    })
     this.server.post('/api/neighbor', { schema: registerSwaggerSchema }, async (req, rep) => {
       await this.handler.register(req, rep)
     })
