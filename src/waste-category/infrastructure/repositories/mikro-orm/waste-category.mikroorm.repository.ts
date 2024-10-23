@@ -6,8 +6,10 @@ import type WasteCategoryPayload from '../../../domain/payloads/waste-category.p
 import type WasteCategoryRepository from '../../../domain/repositories/waste-category.repository'
 
 class CategoryMikroORMRepository implements WasteCategoryRepository {
-  async list(offset: number, limit: number): Promise<Nullable<WasteCategoryEntity[]>> {
+  async list(offset?: number, limit?: number): Promise<Nullable<WasteCategoryEntity[]>> {
     const em = this.getEntityManager()
+    if (limit == null) return await em.find(WasteCategoryEntity, {})
+    if (offset == null) return await em.find(WasteCategoryEntity, {}, { limit })
     return await em.find(WasteCategoryEntity, {}, { limit, offset })
   }
 
