@@ -6,8 +6,7 @@ export const listSwaggerSchema = {
     properties: {
       offset: { type: 'integer', description: 'Offset for pagination' },
       limit: { type: 'integer', description: 'Limit for pagination' }
-    },
-    required: ['offset', 'limit']
+    }
   },
   response: {
     200: {
