@@ -11,10 +11,6 @@ class ListGreenPointsUseCase {
       throw new ErrorGreenPointNotFound(undefined, undefined)
     }
 
-    greenPointsFounded.forEach(greenPoint => {
-      greenPoint.coordinates = JSON.parse(greenPoint.coordinates as unknown as string)
-    })
-
     return greenPointsFounded
   }
 }

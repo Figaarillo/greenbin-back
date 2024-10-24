@@ -11,8 +11,6 @@ class FindGreenPointByIDUseCase {
       throw new ErrorGreenPointNotFound(undefined, undefined)
     }
 
-    greenPoint.coordinates = JSON.parse(greenPoint.coordinates as unknown as string)
-
     return greenPoint
   }
 }
