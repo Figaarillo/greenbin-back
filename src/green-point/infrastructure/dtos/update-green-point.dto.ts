@@ -1,8 +1,10 @@
 import { z } from 'zod'
-import { descriptionDTO, nameDTO } from './dto-types/dto-types'
+import { descriptionDTO, emailDTO, nameDTO, phoneNumberDTO } from './dto-types/dto-types'
 
 const UpdateGreenPointDTO = z.object({
   name: nameDTO.optional(),
+  email: emailDTO,
+  phoneNumber: phoneNumberDTO,
   description: descriptionDTO.optional()
 })
 

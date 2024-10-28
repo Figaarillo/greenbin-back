@@ -9,6 +9,12 @@ class GreenPointEntity extends BaseGreenPoint {
   @Property()
   name: string
 
+  @Property()
+  mail: string
+
+  @Property()
+  phoneNumber: string
+
   @Property({ type: t.text })
   description: string
 
@@ -24,14 +30,18 @@ class GreenPointEntity extends BaseGreenPoint {
   constructor(payload: GreenPointPayload) {
     super()
     this.name = payload.name
+    this.mail = payload.mail
+    this.phoneNumber = payload.phoneNumber
     this.description = payload.description
     this.address = payload.address
     this.coordinates = payload.coordinates
   }
 
   update(payload: GreenPointUpdatePayload): void {
-    if (payload.description !== '' || payload.description != null) this.description = payload.description
     if (payload.name !== '' || payload.name != null) this.name = payload.name
+    if (payload.mail !== '' || payload.mail != null) this.mail = payload.mail
+    if (payload.phoneNumber !== '' || payload.phoneNumber != null) this.phoneNumber = payload.phoneNumber
+    if (payload.description !== '' || payload.description != null) this.description = payload.description
   }
 }
 

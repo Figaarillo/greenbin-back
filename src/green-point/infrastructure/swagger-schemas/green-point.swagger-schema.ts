@@ -24,7 +24,9 @@ export const listSwaggerSchema = {
               id: { type: 'string', format: 'uuid', description: 'Unique identifier for the green point.' },
               createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
               updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
-              name: { type: 'string', description: 'Name of the GreenPoint.' },
+              name: { type: 'string', description: 'Name of the green point.' },
+              email: { type: 'string', description: 'Email of the green point.' },
+              phoneNumber: { type: 'string', description: 'Phone number of the green point.' },
               description: { type: 'string', description: 'Description of the green point.' },
               address: { type: 'string', description: 'Address of the green point.' },
               coordinates: {
@@ -68,8 +70,10 @@ export const findByIdSwaggerSchema = {
             id: { type: 'string', format: 'uuid', description: 'Unique identifier for the green point.' },
             createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
             updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
-            name: { type: 'string', description: 'Name of the GreenPoint.' },
-            description: { type: 'string', description: 'Description of the GreenPoint.' },
+            name: { type: 'string', description: 'Name of the green point.' },
+            email: { type: 'string', description: 'Email of the green point.' },
+            phoneNumber: { type: 'string', description: 'Phone number of the green point.' },
+            description: { type: 'string', description: 'Description of the green point.' },
             address: { type: 'string', description: 'Address of the green point.' },
             coordinates: {
               type: 'object',
@@ -95,6 +99,8 @@ export const registerSwaggerSchema = {
     type: 'object',
     properties: {
       name: { type: 'string', description: 'Name of the green point.' },
+      email: { type: 'string', description: 'Email of the green point.' },
+      phoneNumber: { type: 'string', description: 'Phone number of the green point.' },
       description: { type: 'string', description: 'Description of the green point.' },
       address: { type: 'string', description: 'Address of the green point.' },
       coordinates: {
@@ -142,9 +148,10 @@ export const updateSwaggerSchema = {
     type: 'object',
     properties: {
       name: { type: 'string', description: 'Name of the green point.' },
+      email: { type: 'string', description: 'Email of the green point.' },
+      phoneNumber: { type: 'string', description: 'Phone number of the green point.' },
       description: { type: 'string', description: 'Description of the green point.' }
-    },
-    required: ['name', 'description']
+    }
   },
   response: {
     200: {
