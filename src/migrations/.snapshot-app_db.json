@@ -190,8 +190,8 @@
           "length": 255,
           "mappedType": "string"
         },
-        "mail": {
-          "name": "mail",
+        "email": {
+          "name": "email",
           "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
