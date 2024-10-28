@@ -1,6 +1,6 @@
 interface GreenPointUpdatePayload {
   name: string
-  mail: string
+  email: string
   phoneNumber: string
   description: string
 }
