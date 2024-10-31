@@ -1,10 +1,12 @@
-import AuthService from '../../../auth/aplicaction/service/auth.service'
 import { type FastifyReply, type FastifyRequest } from 'fastify'
+import AuthService from '../../../auth/aplicaction/service/auth.service'
 import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
 import DateUtils from '../../../shared/utils/date.util'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import DeleteNeighborUseCase from '../../aplication/usecases/delete.usecase'
+import FindNeighborByDniUseCase from '../../aplication/usecases/find-by-dni.usecase'
 import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 import FindNeighborByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 import ListNeighborsUseCase from '../../aplication/usecases/list.usecase'
@@ -17,7 +19,6 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
-import DeleteNeighborUseCase from '../../aplication/usecases/delete.usecase'
 
 class NeighborHandler {
   constructor(
@@ -47,6 +48,19 @@ class NeighborHandler {
 
       const findNeighbor = new FindNeighborByIDUseCase(this.repository)
       const neighbor = await findNeighbor.exec(id)
+
+      HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async findByDNI(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const dni = GetURLParams(req, 'dni')
+
+      const findByDNI = new FindNeighborByDniUseCase(this.repository)
+      const neighbor = await findByDNI.exec(dni)
 
       HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
     } catch (error) {
