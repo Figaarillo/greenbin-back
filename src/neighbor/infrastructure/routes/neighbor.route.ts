@@ -15,15 +15,25 @@ class NeighborRoute {
         await this.handler.list(req, rep)
       }
     })
+
     this.server.get('/api/neighbor/:id', {
       preHandler: this.server.auth([this.server.validateAccessToken]),
       handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply) => {
         await this.handler.findById(req, rep)
       }
     })
+
+    this.server.get('/api/neighbor/dni/:dni', {
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply) => {
+        await this.handler.findByDNI(req, rep)
+      }
+    })
+
     this.server.post('/api/neighbor', { schema: registerSwaggerSchema }, async (req, rep) => {
       await this.handler.register(req, rep)
     })
+
     this.server.put('/api/neighbor/:id', {
       schema: updateSwaggerSchema,
       preHandler: this.server.auth([this.server.validateAccessToken]),
@@ -31,15 +41,18 @@ class NeighborRoute {
         await this.handler.update(req, rep)
       }
     })
+
     this.server.post('/api/neighbor/auth/login', async (req, rep) => {
       await this.handler.login(req, rep)
     })
+
     this.server.get('/api/neighbor/auth/refresh-token', {
       preHandler: this.server.auth([this.server.validateRefreshToken]),
       handler: async (req: FastifyRequest, rep: FastifyReply) => {
         await this.handler.refreshToken(req, rep)
       }
     })
+
     this.server.get('/api/neighbor/auth/validate-role', {
       preHandler: this.server.auth([this.server.getTokenRole]),
       handler: async (req, rep) => {
