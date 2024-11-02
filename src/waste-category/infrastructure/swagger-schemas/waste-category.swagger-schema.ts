@@ -1,3 +1,16 @@
+const wasteCategorySchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' },
+    createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
+    updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
+    name: { type: 'string', description: 'Name of the waste category.' },
+    pointsPerWeight: { type: 'number', description: 'Points per weight of the waste category.' },
+    description: { type: 'string', description: 'Description of the waste category.' }
+  },
+  required: ['id', 'createdAt', 'updatedAt', 'name', 'description']
+}
+
 export const listSwaggerSchema = {
   description: 'This is an endpoint that retrieves a list of waste categories by pagination.',
   tags: ['Waste Category'],
@@ -17,17 +30,7 @@ export const listSwaggerSchema = {
         message: { type: 'string' },
         data: {
           type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' },
-              createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
-              updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
-              name: { type: 'string', description: 'Name of the waste category.' },
-              description: { type: 'string', description: 'Description of the waste category.' }
-            },
-            required: ['id', 'createdAt', 'updatedAt', 'name', 'description']
-          }
+          items: wasteCategorySchema
         }
       },
       required: ['status', 'message', 'data']
@@ -52,17 +55,7 @@ export const findByIdSwaggerSchema = {
       properties: {
         status: { type: 'number' },
         message: { type: 'string' },
-        data: {
-          type: 'object',
-          properties: {
-            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the waste category.' },
-            createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
-            updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
-            name: { type: 'string', description: 'Name of the waste category.' },
-            description: { type: 'string', description: 'Description of the waste category.' }
-          },
-          required: ['id', 'createdAt', 'updatedAt', 'name', 'description']
-        }
+        data: wasteCategorySchema
       },
       required: ['status', 'message', 'data']
     }
@@ -76,9 +69,10 @@ export const registerSwaggerSchema = {
     type: 'object',
     properties: {
       name: { type: 'string', description: 'Name of the waste category.' },
+      pointsPerWeight: { type: 'number', description: 'Points per weight of the waste category.' },
       description: { type: 'string', description: 'Description of the waste category.' }
     },
-    required: ['name', 'description']
+    required: ['name', 'pointsPerWeight', 'description']
   },
   response: {
     201: {
@@ -114,9 +108,9 @@ export const updateSwaggerSchema = {
     type: 'object',
     properties: {
       name: { type: 'string', description: 'Name of the waste category.' },
+      pointsPerWeight: { type: 'number', description: 'Points per weight of the waste category.' },
       description: { type: 'string', description: 'Description of the waste category.' }
-    },
-    required: ['description']
+    }
   },
   response: {
     200: {
