@@ -3,7 +3,7 @@ import ErrorCannotSaveWasteTransactionDetail from '../../domain/errors/cannot-sa
 import type WasteTransactionDetailPayload from '../../domain/payloads/waste-transaction-detail.payload'
 import type WasteTransactionDetailRepository from '../../domain/repositories/waste-transaction-detail.repository'
 
-class RegisrterWasteTransactionDetailUseCase {
+class RegisterWasteTransactionDetailUseCase {
   constructor(private readonly repository: WasteTransactionDetailRepository) {}
 
   async exec(paylaod: WasteTransactionDetailPayload): Promise<WasteTransactionDetailEntity> {
@@ -18,4 +18,4 @@ class RegisrterWasteTransactionDetailUseCase {
   }
 }
 
-export default RegisrterWasteTransactionDetailUseCase
+export default RegisterWasteTransactionDetailUseCase
