@@ -3,7 +3,7 @@ class ErrorWasteTransactionNotFound extends Error {
     const message =
       id != null
         ? `Cannot find waste transaction with id: ${id}`
-        : 'Cannot find any waste transaction when try to list all wastes'
+        : 'Cannot find any waste transaction when try to list all transactions'
 
     super(message)
     this.name = ErrorWasteTransactionNotFound.name
