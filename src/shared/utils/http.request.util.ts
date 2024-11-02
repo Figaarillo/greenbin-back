@@ -19,8 +19,8 @@ export function GetURLQueryParam(
 
 export function GetPaginationParams(req: FastifyRequest<{ Querystring: Record<string, string> }>): PaginationParams {
   const offset = parseInt(GetURLQueryParam(req, 'offset'))
-  if (!Number.isNaN(offset) && offset <= 0) {
-    throw new Error('Offset parameter must be greater than 0')
+  if (!Number.isNaN(offset) && offset < 0) {
+    throw new Error('Offset parameter must be greater than or equal to 0')
   }
 
   const limit = parseInt(GetURLQueryParam(req, 'limit'))
