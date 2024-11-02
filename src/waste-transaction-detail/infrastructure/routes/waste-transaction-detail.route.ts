@@ -1,5 +1,5 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
-import type WasteTransactionDetailHandler from '../handlers/waste-transaction.handler'
+import type WasteTransactionDetailHandler from '../handlers/waste-transaction-detail.handler'
 
 class WasteTransactionDetailRoute {
   constructor(
