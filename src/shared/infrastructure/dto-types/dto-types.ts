@@ -84,6 +84,12 @@ export const phoneNumberDTO = z
   .regex(/^\d{10,15}$/, { message: 'Phone number must be between 10 and 15 digits' })
   .refine((phoneNumber: string) => phoneNumber.trim().length > 0, { message: 'Phone number cannot be empty' })
 
+export const pointsPerWeightDTO = z
+  .number()
+  .min(1, { message: 'Points per weight must be at least 1' })
+  .positive()
+  .refine(pointsPerWeight => pointsPerWeight !== 0, { message: 'Points per weight cannot be 0' })
+
 export const provinceDTO = z
   .string()
   .min(2, { message: 'Province name must be at least 2 characters long' })
