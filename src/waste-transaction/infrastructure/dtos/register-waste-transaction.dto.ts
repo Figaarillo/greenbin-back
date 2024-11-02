@@ -1,11 +1,11 @@
 import { z } from 'zod'
-import { nameDTO } from '../../../shared/infrastructure/dto-types/dto-types'
+import { idDTO } from '../../../shared/infrastructure/dto-types/dto-types'
 
 const RegisterWasteTransactionDTO = z.object({
-  responsible: nameDTO,
-  neighbor: nameDTO,
-  greenPointd: nameDTO,
-  transactionDetails: nameDTO
+  responsible: idDTO,
+  neighbor: idDTO,
+  greenPointd: idDTO,
+  transactionDetails: idDTO
 })
 
 export default RegisterWasteTransactionDTO
