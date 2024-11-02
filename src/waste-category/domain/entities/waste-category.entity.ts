@@ -1,6 +1,7 @@
 /* eslint-disable indent */
-import { Entity, Property, t } from '@mikro-orm/postgresql'
+import { Collection, Entity, OneToMany, Property, t } from '@mikro-orm/postgresql'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
+import WasteEntity from '../../../waste/domain/entities/waste.entity'
 import WasteCategoryPayload from '../payloads/waste-category.payload'
 
 @Entity()
@@ -8,12 +9,19 @@ class WasteCategoryEntity extends BaseEntity {
   @Property({ unique: true })
   name: string
 
+  @Property()
+  pointsPerWeight: number
+
   @Property({ type: t.text })
   description: string
+
+  @OneToMany(() => WasteEntity, waste => waste.category)
+  wastes = new Collection<WasteEntity>(this)
 
   constructor(payload: WasteCategoryPayload) {
     super()
     this.name = payload.name
+    this.pointsPerWeight = payload.pointsPerWeight
     this.description = payload.description
   }
 
