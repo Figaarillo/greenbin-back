@@ -8,10 +8,10 @@ class WasteTransactionRoute {
   ) {}
 
   setupRoutes(): void {
-    this.server.get('/api/waste-transaction/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+    this.server.get('/api/waste/transaction/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
       await this.handler.findByID(req, res)
     })
-    this.server.post('/api/waste-transaction', async (req, res) => {
+    this.server.post('/api/waste/transaction', async (req, res) => {
       await this.handler.register(req, res)
     })
   }
