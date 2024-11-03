@@ -10,8 +10,6 @@ class RegisterWasteTransactionUseCase {
   constructor(private readonly repository: WasteTransactionRepository) {}
 
   async exec(payload: WasteTransactionPayload): Promise<any> {
-    console.log({ payload })
-
     const idResponsible: string = payload.responsible as unknown as string
     const idNeighbor: string = payload.neighbor as unknown as string
     const idGreenPoint: string = payload.greenPoint as unknown as string
@@ -32,8 +30,6 @@ class RegisterWasteTransactionUseCase {
     }
 
     const newTransaction = new WasteTransactionEntity(payload)
-
-    console.log({ newTransaction })
 
     const wasteTransaction = await this.repository.save(newTransaction)
     if (wasteTransaction == null) {
