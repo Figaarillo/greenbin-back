@@ -3,6 +3,7 @@ import ErrorEntityManagerNotFound from '../../../../shared/domain/errors/entity-
 import type Nullable from '../../../../shared/domain/types/nullable.type'
 import WasteTransactionDetailEntity from '../../../domain/entities/waste-transaction-detail.entity'
 import type WasteTransactionDetailRepository from '../../../domain/repositories/waste-transaction-detail.repository'
+import WasteTransactionEntity from '../../../../waste-transaction/domain/entities/waste-transaction.entity'
 
 class WasteTransactionDetailMikroORMRepository implements WasteTransactionDetailRepository {
   list!: (offset?: number | undefined, limit?: number | undefined) => Promise<Nullable<WasteTransactionDetailEntity[]>>
@@ -10,6 +11,11 @@ class WasteTransactionDetailMikroORMRepository implements WasteTransactionDetail
   async find(property: Record<string, string>): Promise<Nullable<WasteTransactionDetailEntity>> {
     const em = this.getEntityManager()
     return await em.findOne(WasteTransactionDetailEntity, property)
+  }
+
+  async findWasteTransaction(property: Record<string, string>): Promise<Nullable<WasteTransactionEntity>> {
+    const em = this.getEntityManager()
+    return await em.findOne(WasteTransactionEntity, property)
   }
 
   async save(TransactionDetail: WasteTransactionDetailEntity): Promise<Nullable<WasteTransactionDetailEntity>> {
