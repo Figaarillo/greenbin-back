@@ -7,7 +7,6 @@ import RegisterWasteTransactionUseCase from '../../application/usecases/register
 import type WasteTransactionPayload from '../../domain/payloads/waste-transaction.payload'
 import type WasteTransactionRepository from '../../domain/repositories/waste-transaction.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
-import RegisterWasteTransactionDTO from '../dtos/register-waste-transaction.dto'
 
 class WasteTransactionHandler {
   constructor(private readonly repository: WasteTransactionRepository) {
@@ -24,7 +23,7 @@ class WasteTransactionHandler {
       const findWasteTransaction = new FindByIdWasteTransactionByIDUseCase(this.repository)
       const wasteTransaction = await findWasteTransaction.exec(id)
 
-      HandleHTTPResponse.OK(res, 'WasteTransactionTransaction retrieved successfully', wasteTransaction)
+      HandleHTTPResponse.OK(res, 'Waste transaction retrieved successfully', wasteTransaction)
     } catch (error) {
       res.status(500).send(error)
     }
@@ -34,13 +33,13 @@ class WasteTransactionHandler {
     try {
       const payload: WasteTransactionPayload = req.body as WasteTransactionPayload
 
-      const validateRegisterSchema = new SchemaValidator(RegisterWasteTransactionDTO, payload)
-      validateRegisterSchema.exec()
-
+      // const validateRegisterSchema = new SchemaValidator(RegisterWasteTransactionDTO, payload)
+      // validateRegisterSchema.exec()
+      //
       const registerWasteTransaction = new RegisterWasteTransactionUseCase(this.repository)
       const WasteTransaction = await registerWasteTransaction.exec(payload)
 
-      HandleHTTPResponse.Created(res, 'WasteTransaction registered successfully', { id: WasteTransaction.id })
+      HandleHTTPResponse.Created(res, 'Waste transaction registered successfully', { id: WasteTransaction.id })
     } catch (error) {
       res.status(500).send(error)
     }
