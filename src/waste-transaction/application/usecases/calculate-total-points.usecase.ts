@@ -1,8 +1,10 @@
 import type WasteTransactionEntity from '../../domain/entities/waste-transaction.entity'
 
 class CalculateTotalPointsUseCase {
-  exec(WasteTransaction: WasteTransactionEntity): void {
-    WasteTransaction.caculateTotalPoints()
+  constructor(private readonly transaction: WasteTransactionEntity) {}
+
+  exec(): number {
+    return this.transaction.calculateTotalPoints()
   }
 }
 
