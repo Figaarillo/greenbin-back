@@ -46,7 +46,7 @@ class NeighborEntity extends BaseEntity {
   points: number
 
   @Enum({ items: () => Roles })
-  role: Roles
+  role: Roles = Roles.NEIGHBOR
 
   @ManyToMany()
   wastes = new Collection<WasteEntity>(this)
@@ -62,7 +62,6 @@ class NeighborEntity extends BaseEntity {
     this.birthdate = payload.birthdate
     this.phoneNumber = payload.phoneNumber
     this.points = 0
-    this.role = Roles.NEIGHBOR
   }
 
   addPoints(points: number): void {
