@@ -5,25 +5,24 @@ import WasteEntity from '../../../waste/domain/entities/waste.entity'
 import WasteTransactionDetailPayload from '../payloads/waste-transaction-detail.payload'
 import WasteTransactionEntity from '../../../waste-transaction/domain/entities/waste-transaction.entity'
 
-@Entity()
+@Entity({ tableName: 'wastes_transactions_details' })
 class WasteTransactionDetailEntity extends BaseEntity {
   @ManyToOne(() => WasteEntity)
   waste: WasteEntity
 
   @Property()
-  pointsPerWeight: number
+  pointsPerWeight: number = 0
 
   @Property()
-  points: number
+  points: number = 0
 
   @ManyToOne(() => WasteTransactionEntity)
-  transaction!: WasteTransactionEntity
+  transaction: WasteTransactionEntity
 
   constructor(payload: WasteTransactionDetailPayload) {
     super()
     this.waste = payload.waste
-    this.pointsPerWeight = 0
-    this.points = 0
+    this.transaction = payload.transaction
   }
 
   setPointsPerWeight(): void {
