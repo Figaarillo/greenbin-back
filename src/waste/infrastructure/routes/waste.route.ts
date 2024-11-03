@@ -1,5 +1,4 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
-import { findByIdSwaggerSchema } from '../../../entity/infrastructure/swagger-schemas/entity.swagger-schema'
 import type WasteHandler from '../handlers/waste.handler'
 
 class WasteRoute {
@@ -9,13 +8,9 @@ class WasteRoute {
   ) {}
 
   setupRoutes(): void {
-    this.server.get(
-      '/api/waste/:id',
-      { schema: findByIdSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.findByID(req, res)
-      }
-    )
+    this.server.get('/api/waste/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+      await this.handler.findByID(req, res)
+    })
     this.server.post('/api/waste', async (req, res) => {
       await this.handler.register(req, res)
     })
