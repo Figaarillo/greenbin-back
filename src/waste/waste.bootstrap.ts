@@ -4,7 +4,7 @@ import WasteHandler from './infrastructure/handlers/waste.handler'
 import WasteMikroORMRepository from './infrastructure/repositories/mikro-orm/waste.mikroorm.repository'
 import WasteRoute from './infrastructure/routes/waste.route'
 
-async function bootstrapWasteC(router: FastifyInstance): Promise<void> {
+async function bootstrapWaste(router: FastifyInstance): Promise<void> {
   const repository: WasteRepository = new WasteMikroORMRepository()
 
   const handler = new WasteHandler(repository)
@@ -13,4 +13,4 @@ async function bootstrapWasteC(router: FastifyInstance): Promise<void> {
   routes.setupRoutes()
 }
 
-export default bootstrapWasteC
+export default bootstrapWaste
