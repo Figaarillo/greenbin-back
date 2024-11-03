@@ -19,7 +19,7 @@ class WasteEntity extends BaseEntity {
   @Property()
   pointsPerWeight: number
 
-  @ManyToMany({})
+  @ManyToMany()
   neighbors = new Collection<NeighborEntity>(this)
 
   constructor(payload: WastePayload) {
