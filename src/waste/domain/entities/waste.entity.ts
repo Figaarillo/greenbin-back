@@ -5,7 +5,7 @@ import WasteCategoryEntity from '../../../waste-category/domain/entities/waste-c
 import WastePayload from '../payloads/waste.payload'
 import type NeighborEntity from '../../../neighbor/domain/entities/neighbor.entity'
 
-@Entity()
+@Entity({ tableName: 'wastes' })
 class WasteEntity extends BaseEntity {
   @ManyToOne()
   category: WasteCategoryEntity
@@ -27,7 +27,7 @@ class WasteEntity extends BaseEntity {
     this.category = payload.category
     this.weight = payload.weight
     this.points = 0
-    this.pointsPerWeight = this.category.pointsPerWeight
+    this.pointsPerWeight = payload.pointsPerWeight
   }
 
   calculatePoints(): number {

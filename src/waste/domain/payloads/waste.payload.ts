@@ -3,6 +3,7 @@ import type WasteCategoryEntity from '../../../waste-category/domain/entities/wa
 interface WastePayload {
   category: WasteCategoryEntity
   weight: number
+  pointsPerWeight: number
 }
 
 export default WastePayload
