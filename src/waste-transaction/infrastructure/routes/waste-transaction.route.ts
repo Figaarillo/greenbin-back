@@ -14,6 +14,9 @@ class WasteTransactionRoute {
     this.server.post('/api/waste/transaction', async (req, res) => {
       await this.handler.register(req, res)
     })
+    this.server.post('/api/waste/transaction/delivery', async (req, res) => {
+      await this.handler.registerWasteDelivery(req, res)
+    })
   }
 }
 
