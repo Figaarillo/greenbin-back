@@ -36,6 +36,12 @@ class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
     return transaction
   }
 
+  async update(transaction: WasteTransactionEntity): Promise<Nullable<WasteTransactionEntity>> {
+    const em = this.getEntityManager()
+    await em.persist(transaction).flush()
+    return transaction
+  }
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   private getEntityManager() {
     const em = RequestContext.getEntityManager()
