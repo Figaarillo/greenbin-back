@@ -1,17 +1,25 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
+import type NeighborRepository from '../../../neighbor/domain/repositories/neighbor.repository'
 import SchemaValidator from '../../../shared/infrastructure/middlewares/zod-schema-validator.middleware'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetURLParams } from '../../../shared/utils/http.request.util'
+import type WasteTransactionDetailRepository from '../../../waste-transaction-detail/domain/repositories/waste-transaction-detail.repository'
+import type WasteRepository from '../../../waste/domain/repositories/waste.repository'
 import FindByIdWasteTransactionByIDUseCase from '../../application/usecases/find-by-id.usecase'
+import RegisterWasteDeliveryUseCase from '../../application/usecases/register-waste-delivery.usecase'
 import RegisterWasteTransactionUseCase from '../../application/usecases/register.usecase'
+import type WasteDeliveryPayload from '../../domain/payloads/waste-delivery.payload'
 import type WasteTransactionPayload from '../../domain/payloads/waste-transaction.payload'
 import type WasteTransactionRepository from '../../domain/repositories/waste-transaction.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
 
 class WasteTransactionHandler {
-  constructor(private readonly repository: WasteTransactionRepository) {
-    this.repository = repository
-  }
+  constructor(
+    private readonly transactionDetailRepository: WasteTransactionDetailRepository,
+    private readonly transactionRepository: WasteTransactionRepository,
+    private readonly wasteRepository: WasteRepository,
+    private readonly neighborRepository: NeighborRepository
+  ) {}
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
@@ -20,7 +28,7 @@ class WasteTransactionHandler {
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const findWasteTransaction = new FindByIdWasteTransactionByIDUseCase(this.repository)
+      const findWasteTransaction = new FindByIdWasteTransactionByIDUseCase(this.transactionRepository)
       const wasteTransaction = await findWasteTransaction.exec(id)
 
       HandleHTTPResponse.OK(res, 'Waste transaction retrieved successfully', wasteTransaction)
@@ -36,10 +44,29 @@ class WasteTransactionHandler {
       // const validateRegisterSchema = new SchemaValidator(RegisterWasteTransactionDTO, payload)
       // validateRegisterSchema.exec()
       //
-      const registerWasteTransaction = new RegisterWasteTransactionUseCase(this.repository)
+      const registerWasteTransaction = new RegisterWasteTransactionUseCase(this.transactionRepository)
       const WasteTransaction = await registerWasteTransaction.exec(payload)
 
       HandleHTTPResponse.Created(res, 'Waste transaction registered successfully', { id: WasteTransaction.id })
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async registerWasteDelivery(req: FastifyRequest, res: FastifyReply): Promise<void> {
+    try {
+      const payload: WasteDeliveryPayload = req.body as WasteDeliveryPayload
+
+      const registerWasteDelivery = new RegisterWasteDeliveryUseCase(
+        this.transactionDetailRepository,
+        this.transactionRepository,
+        this.wasteRepository,
+        this.neighborRepository,
+        payload
+      )
+      const transaction = await registerWasteDelivery.exec()
+
+      HandleHTTPResponse.Created(res, 'Waste delivery registered successfully', transaction)
     } catch (error) {
       res.status(500).send(error)
     }
