@@ -66,15 +66,33 @@ test: docker.db.test
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=$(DB_HOST) pnpm test
 
-migrations: docker.clean docker.db
+migrations: docker.clean
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │    CRAEATING AND RUNNING MIGRATIONS    │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm run migration:create
+	$(MAKE) migrations.create
 	$(MAKE) migrations.up
 
-migrations.up:
+migrations.create: docker.db
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │          CREATING MIGRATIONS           │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:create
+
+migrations.up: docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │           RUNNING MIGRATIONS           │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=$(DB_HOST) pnpm run migration:up
+
+migrations.delete:
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │          DELETING MIGRATIONS           │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	rm -rf ./src/migrations
+
+migrations.initial: migrations.delete docker.clean docker.db
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │       INITIALIZING MIGRATIONS          │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:initial

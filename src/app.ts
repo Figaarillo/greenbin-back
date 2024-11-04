@@ -17,6 +17,9 @@ import { FastifyCorsConfig } from './shared/config/fastify-cors.config'
 import FastifyConifg from './shared/config/fastify.config'
 import { SwaggerConfig, SwaggerUiConfig } from './shared/config/swagger.config'
 import bootstrapWasteCategory from './waste-category/waste-category.bootstrap'
+import bootstrapWasteTransactionDetail from './waste-transaction-detail/waste-transaction-detail.bootstrap'
+import bootstrapWasteTransaction from './waste-transaction/waste-transaction.bootstrap'
+import bootstrapWaste from './waste/waste.bootstrap'
 
 async function bootstrapApp(port: number, options?: Options): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM(options)
@@ -54,6 +57,9 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapNeighbor(app)
   bootstrapRewardPartner(app)
   bootstrapGreenPoint(app)
+  bootstrapWaste(app)
+  bootstrapWasteTransaction(app)
+  bootstrapWasteTransactionDetail(app)
 
   /* Start the server */
   const url: string = await fastify.start(port)

@@ -10,8 +10,8 @@ export function GetURLQueryParam(
   propKey: string
 ): string {
   const propValue = req.query[propKey]
-  if (propValue === '' || propValue == null) {
-    throw new Error(`The query parameter ${propKey} is required`)
+  if (propValue === '') {
+    throw new Error(`The query parameter ${propKey} most be not empty string`)
   }
 
   return propValue
@@ -19,12 +19,12 @@ export function GetURLQueryParam(
 
 export function GetPaginationParams(req: FastifyRequest<{ Querystring: Record<string, string> }>): PaginationParams {
   const offset = parseInt(GetURLQueryParam(req, 'offset'))
-  if (offset < 0) {
-    throw new Error('Offset parameter must be greater than 0')
+  if (!Number.isNaN(offset) && offset < 0) {
+    throw new Error('Offset parameter must be greater than or equal to 0')
   }
 
   const limit = parseInt(GetURLQueryParam(req, 'limit'))
-  if (limit < 1) {
+  if (!Number.isNaN(limit) && limit < 1) {
     throw new Error('Limit parameter must be greater than 1')
   }
 

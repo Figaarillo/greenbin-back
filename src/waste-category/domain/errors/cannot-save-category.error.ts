@@ -1,6 +1,6 @@
 class ErrorCannotSaveCategory extends Error {
-  constructor(message: string) {
-    super(message)
+  constructor() {
+    super('Cannot save a new waste category')
     this.name = ErrorCannotSaveCategory.name
   }
 }
