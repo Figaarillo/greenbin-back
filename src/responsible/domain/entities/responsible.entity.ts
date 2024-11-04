@@ -1,10 +1,20 @@
 /* eslint-disable indent */
-import { BeforeCreate, BeforeUpdate, Entity, Enum, EventArgs, Property } from '@mikro-orm/postgresql'
+import {
+  BeforeCreate,
+  BeforeUpdate,
+  Collection,
+  Entity,
+  Enum,
+  EventArgs,
+  OneToMany,
+  Property
+} from '@mikro-orm/postgresql'
 import { hash, verify } from 'argon2'
+import { Roles } from '../../../auth/domain/entities/role'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
+import WasteTransactionEntity from '../../../waste-transaction/domain/entities/waste-transaction.entity'
 import ResponsiblePayload from '../payloads/responsible.payload'
 import type ResponsibleUpdatePayload from '../payloads/responsible.update.payload'
-import { Roles } from '../../../auth/domain/entities/role'
 
 @Entity()
 class ResponsibleEntity extends BaseEntity {
@@ -31,6 +41,9 @@ class ResponsibleEntity extends BaseEntity {
 
   @Enum({ items: () => Roles })
   role: Roles
+
+  @OneToMany(() => WasteTransactionEntity, transaction => transaction.responsible)
+  transactions = new Collection<WasteTransactionEntity>(this)
 
   constructor(payload: ResponsiblePayload) {
     super()

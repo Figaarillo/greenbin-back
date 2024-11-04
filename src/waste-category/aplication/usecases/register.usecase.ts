@@ -13,7 +13,7 @@ class RegisterWasteCategoryUseCase {
 
     const category = await this.repository.save(newCategory)
     if (category == null) {
-      throw new ErrorCannotSaveCategory('Cannot save new waste category')
+      throw new ErrorCannotSaveCategory()
     }
 
     return category

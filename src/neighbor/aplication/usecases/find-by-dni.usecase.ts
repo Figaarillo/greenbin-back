@@ -2,8 +2,10 @@ import type NeighborEntity from '../../domain/entities/neighbor.entity'
 import ErrorNeighborNotFound from '../../domain/errors/neighbor-not-found.error'
 import type NeighborRepository from '../../domain/repositories/neighbor.repository'
 
-class FindNeighborByDniUseCase {
-  constructor(private readonly repository: NeighborRepository) {}
+class FindNeighborByDNIUseCase {
+  constructor(private readonly repository: NeighborRepository) {
+    this.repository = repository
+  }
 
   async exec(dni: string): Promise<NeighborEntity> {
     const neighbor = await this.repository.find({ dni })
@@ -12,4 +14,4 @@ class FindNeighborByDniUseCase {
   }
 }
 
-export default FindNeighborByDniUseCase
+export default FindNeighborByDNIUseCase
