@@ -9,7 +9,7 @@ import type WasteTransactionRepository from '../../domain/repositories/waste-tra
 class RegisterWasteTransactionUseCase {
   constructor(private readonly repository: WasteTransactionRepository) {}
 
-  async exec(payload: WasteTransactionPayload): Promise<any> {
+  async exec(payload: WasteTransactionPayload): Promise<WasteTransactionEntity> {
     const idResponsible: string = payload.responsible as unknown as string
     const idNeighbor: string = payload.neighbor as unknown as string
     const idGreenPoint: string = payload.greenPoint as unknown as string
