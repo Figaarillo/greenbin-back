@@ -16,7 +16,6 @@ class RegisterWasteUseCase {
 
     const newWaste = new WasteEntity({ ...payload, pointsPerWeight: category.pointsPerWeight })
 
-    console.log({ newWaste, where: 'in usecase' })
     const waste = await this.repository.save(newWaste)
     if (waste == null) {
       throw new ErrorCannotSaveWaste()
