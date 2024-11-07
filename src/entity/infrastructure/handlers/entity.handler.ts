@@ -137,7 +137,7 @@ class EntityHandler {
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
-      const tokenEntity = req.entity as { username: string; email: string; role: string }
+      const tokenEntity = req.entity as { name: string; email: string; role: string }
 
       const findByEmail = new FindByEmailUseCase(this.repository)
       const entity = await findByEmail.exec(tokenEntity.email)

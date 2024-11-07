@@ -5,20 +5,22 @@ import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.prov
 import DateUtils from '../../../shared/utils/date.util'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import DeleteNeighborUseCase from '../../aplication/usecases/delete.usecase'
+import FindNeighborByDNIUseCase from '../../aplication/usecases/find-by-dni.usecase'
 import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 import FindNeighborByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 import ListNeighborsUseCase from '../../aplication/usecases/list.usecase'
 import LoginNeighborUseCase from '../../aplication/usecases/login.usecase'
 import RegisterNeighborUseCase from '../../aplication/usecases/register.usecase'
 import UpdateNeighborUseCase from '../../aplication/usecases/update.usecase'
+import type NeighborLoginPayload from '../../domain/payloads/neighbor.login.payload'
 import type NeighborPayload from '../../domain/payloads/neighbor.payload'
 import type NeighborRepository from '../../domain/repositories/neighbor.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
+import LoginNeighborDTO from '../dtos/login-neighbor.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
-import DeleteNeighborUseCase from '../../aplication/usecases/delete.usecase'
-import FindNeighborByDNIUseCase from '../../aplication/usecases/find-by-dni.usecase'
 
 class NeighborHandler {
   constructor(
@@ -141,7 +143,10 @@ class NeighborHandler {
 
   async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
-      const paylaod = req.body as NeighborPayload
+      const paylaod = req.body as NeighborLoginPayload
+
+      const schemaValidator = new SchemaValidator(LoginNeighborDTO, paylaod)
+      schemaValidator.exec()
 
       const login = new LoginNeighborUseCase(this.repository)
       const neighbor = await login.exec(paylaod)

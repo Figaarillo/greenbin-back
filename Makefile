@@ -1,4 +1,4 @@
-.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations
+.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations migrations.up migrations.create
 
 # ############ VARIABLES ############ #
 DB_HOST=localhost
@@ -83,16 +83,4 @@ migrations.up: docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │           RUNNING MIGRATIONS           │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm run migration:up
-
-migrations.delete:
-	@echo " ╭────────────────────────────────────────╮ "
-	@echo " │          DELETING MIGRATIONS           │ "
-	@echo " ╰────────────────────────────────────────╯ "
-	rm -rf ./src/migrations
-
-migrations.initial: migrations.delete docker.clean docker.db
-	@echo " ╭────────────────────────────────────────╮ "
-	@echo " │       INITIALIZING MIGRATIONS          │ "
-	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm run migration:initial
+	DATABASE_HOST=localhost pnpm run migration:up

@@ -2,7 +2,7 @@ class ErrorEntityNotFound extends Error {
   constructor(id?: string, name?: string, email?: string) {
     const fields = [
       id != null ? `id: ${id}` : null,
-      name != null ? `username: ${name}` : null,
+      name != null ? `name: ${name}` : null,
       email != null ? `email: ${email}` : null
     ].filter(Boolean)
 

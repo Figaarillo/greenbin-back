@@ -1,4 +1,3 @@
-import ErrorNeighborNotFound from '../../../neighbor/domain/errors/neighbor-not-found.error'
 import type RewardPartnerEntity from '../../domain/entities/reward-partner.entity'
 import ErrorInvalidPassword from '../../domain/errors/invalid-password.error'
 import ErrorRewardPartnerNotFound from '../../domain/errors/reward-partner-not-found.error'
@@ -34,11 +33,11 @@ class LoginRewardPartnerUseCase {
     }
 
     if (payload.email != null && rewardPartnerByEmail == null) {
-      throw new ErrorNeighborNotFound(undefined, undefined, payload.email)
+      throw new ErrorRewardPartnerNotFound(undefined, undefined, payload.email)
     }
 
     if (payload.username != null && rewardPartnerByUsername == null) {
-      throw new ErrorNeighborNotFound(undefined, payload.username, undefined)
+      throw new ErrorRewardPartnerNotFound(undefined, payload.username, undefined)
     }
 
     if (
