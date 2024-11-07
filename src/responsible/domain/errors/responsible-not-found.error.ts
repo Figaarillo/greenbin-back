@@ -5,7 +5,13 @@ class ErrorResponsibleNotFound extends Error {
       username != null ? `username: ${username}` : null,
       email != null ? `email: ${email}` : null
     ].filter(Boolean)
-    super(`cannot find responsible with ${fields.join(', ')}`)
+
+    const message =
+      fields.length > 0
+        ? `Cannot find responsible with ${fields.join(', ')}`
+        : 'Cannot find any responsible when try to list all responsibles'
+
+    super(message)
     this.name = ErrorResponsibleNotFound.name
   }
 }

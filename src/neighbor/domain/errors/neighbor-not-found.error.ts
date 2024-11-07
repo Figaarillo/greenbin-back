@@ -1,12 +1,18 @@
 class ErrorNeighborNotFound extends Error {
-  constructor(id?: string, username?: string, email?: string) {
+  constructor(id?: string, username?: string, email?: string, dni?: string) {
     const fields = [
       id != null ? `id: ${id}` : null,
       username != null ? `username: ${username}` : null,
-      email != null ? `email: ${email}` : null
+      email != null ? `email: ${email}` : null,
+      dni != null ? `dni: ${dni}` : null
     ].filter(Boolean)
 
-    super(`cannot find neighbor with ${fields.join(', ')}`)
+    const message =
+      fields.length > 0
+        ? `Cannot find neighbor with ${fields.join(', ')}`
+        : 'Cannot find any neighbor when try to list all neighbors'
+
+    super(message)
     this.name = ErrorNeighborNotFound.name
   }
 }

@@ -1,4 +1,7 @@
-.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations migrations.up db
+.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations migrations.up migrations.create
+
+# ############ VARIABLES ############ #
+DB_HOST=localhost
 
 # ############# COMMANDS ############ #
 docker: docker.clean docker.build docker.db docker.db.test
@@ -49,31 +52,35 @@ run: docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │             RUNNING SERVER             │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=localhost pnpm start
+	DATABASE_HOST=$(DB_HOST) pnpm start
 
 run.dev: docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │      RUNNING SERVER IN WATCH MODE      │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=localhost pnpm dev
+	DATABASE_HOST=$(DB_HOST) pnpm dev
 
-migrations: db.rm.volumes
+test: docker.db.test
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │             RUNNING TESTS              │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm test
+
+migrations: docker.clean
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │    CRAEATING AND RUNNING MIGRATIONS    │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=localhost pnpm run migration:create
-	DATABASE_HOST=localhost pnpm run migration:up
+	$(MAKE) migrations.create
+	$(MAKE) migrations.up
 
+migrations.create: docker.db
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │          CREATING MIGRATIONS           │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:create
 
-migrations.up:
+migrations.up: docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │           RUNNING MIGRATIONS           │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=localhost pnpm run migration:up
-
-db.rm.volumes:
-	@echo " ╭────────────────────────────────────────╮ "
-	@echo " │            DELETING DATABASE           │ "
-	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=lolcalhost rm greenbin-back_pgdata
-

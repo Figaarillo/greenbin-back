@@ -6,7 +6,12 @@ class ErrorEntityNotFound extends Error {
       email != null ? `email: ${email}` : null
     ].filter(Boolean)
 
-    super(`cannot find entity with ${fields.join(', ')}`)
+    const message =
+      fields.length > 0
+        ? `Cannot find entity with ${fields.join(', ')}`
+        : 'Cannot find any entity when try to list all entities find entity'
+
+    super(message)
     this.name = ErrorEntityNotFound.name
   }
 }

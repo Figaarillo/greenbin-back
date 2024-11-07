@@ -10,7 +10,7 @@ class FindEntityByIDUseCase {
   async exec(id: string): Promise<EntityEntity> {
     const entityFound = await this.repository.find({ id })
     if (entityFound == null) {
-      throw new ErrorEntityNotFound(`Cannont find entity with id: ${id} when get entity by id`)
+      throw new ErrorEntityNotFound(id)
     }
 
     return entityFound

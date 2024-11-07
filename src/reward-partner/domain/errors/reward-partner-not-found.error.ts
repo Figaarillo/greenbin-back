@@ -6,7 +6,12 @@ class ErrorRewardPartnerNotFound extends Error {
       email != null ? `email: ${email}` : null
     ].filter(Boolean)
 
-    super(`cannot find reward partner with ${fields.join(', ')}`)
+    const message =
+      fields.length > 0
+        ? `Cannot find reward partner with ${fields.join(', ')}`
+        : 'Cannot find any reward partner when try to list all reward partners'
+
+    super(message)
     this.name = ErrorRewardPartnerNotFound.name
   }
 }
