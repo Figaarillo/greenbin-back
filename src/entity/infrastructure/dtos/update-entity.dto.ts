@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { descriptionDTO } from './dto-types/dto-types'
+import { descriptionDTO } from '../../../shared/infrastructure/dto-types/dto-types'
 
 const UpdateEntityDTO = z.object({
   description: descriptionDTO

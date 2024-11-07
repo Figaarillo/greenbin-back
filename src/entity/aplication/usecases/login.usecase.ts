@@ -5,9 +5,7 @@ import type EntityLoginPayload from '../../domain/payloads/entity.login.payload'
 import type EntityRepository from '../../domain/repositories/entity.repository'
 
 class LoginEntityUseCase {
-  constructor(private readonly repository: EntityRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: EntityRepository) {}
 
   async exec(payload: EntityLoginPayload): Promise<EntityEntity> {
     const entity = await this.findEntity(payload)

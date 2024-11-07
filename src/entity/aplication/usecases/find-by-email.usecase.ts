@@ -7,7 +7,10 @@ class FindByEmailUseCase {
 
   async exec(email: string): Promise<EntityEntity> {
     const entity = await this.repository.find({ email })
-    if (entity == null) throw new ErrorEntityNotFound(undefined, undefined, email)
+    if (entity == null) {
+      throw new ErrorEntityNotFound(undefined, undefined, email)
+    }
+
     return entity
   }
 }

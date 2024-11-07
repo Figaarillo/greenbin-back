@@ -4,16 +4,14 @@ import type EntityPayload from '../../domain/payloads/entity.payload'
 import type EntityRepository from '../../domain/repositories/entity.repository'
 
 class RegisterEntityUseCase {
-  constructor(private readonly repository: EntityRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: EntityRepository) {}
 
   async exec(payload: EntityPayload): Promise<EntityEntity> {
     const newEntity = new EntityEntity(payload)
 
     const entity = await this.repository.save(newEntity)
     if (entity == null) {
-      throw new ErrorCannotSaveEntity('Cannot save new entity')
+      throw new ErrorCannotSaveEntity()
     }
 
     return entity

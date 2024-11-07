@@ -6,8 +6,12 @@ import ErrorEntityNotFound from '../../../domain/errors/entity-not-found.error'
 import type EntityRepository from '../../../domain/repositories/entity.repository'
 
 class EntityMikroORMRepository implements EntityRepository {
-  async list(offset: number, limit: number): Promise<Nullable<EntityEntity[]>> {
+  async list(offset?: number, limit?: number): Promise<Nullable<EntityEntity[]>> {
     const em = this.getEntityManager()
+
+    if (limit == null) return await em.find(EntityEntity, {})
+    if (offset == null) return await em.find(EntityEntity, {}, { limit })
+
     return await em.find(EntityEntity, {}, { limit, offset })
   }
 

@@ -1,5 +1,11 @@
 import { z } from 'zod'
-import { cityDTO, descriptionDTO, nameDTO, passwordDTO, provinceDTO } from './dto-types/dto-types'
+import {
+  nameDTO,
+  descriptionDTO,
+  passwordDTO,
+  cityDTO,
+  provinceDTO
+} from '../../../shared/infrastructure/dto-types/dto-types'
 
 const RegisterEntityDTO = z.object({
   name: nameDTO,
