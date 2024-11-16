@@ -1,5 +1,9 @@
 import { type FastifyInstance, type FastifyRequest } from 'fastify'
-import { registerSwaggerSchema, updateSwaggerSchema } from '../swagger-schemas/reward-partner.swagger-schema'
+import {
+  loginSwaggerSchema,
+  registerSwaggerSchema,
+  updateSwaggerSchema
+} from '../swagger-schemas/reward-partner.swagger-schema'
 import type RewardPartnerHandler from '../handlers/reward-partner.handler'
 
 class RewardPartnerRoute {
@@ -19,7 +23,7 @@ class RewardPartnerRoute {
         await this.handler.update(req, res)
       }
     })
-    this.server.post('/api/reward-partner/auth/login', async (req, res) => {
+    this.server.post('/api/reward-partner/auth/login', { schema: loginSwaggerSchema }, async (req, res) => {
       await this.handler.login(req, res)
     })
     this.server.get('/api/reward-partner/auth/refresh-token', {
