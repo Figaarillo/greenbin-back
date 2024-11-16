@@ -6,6 +6,10 @@ interface RewardPartnerPayload {
   email: string
   password: string
   phoneNumber: string
+  coordinates: {
+    latitude: number
+    longitude: number
+  }
 }
 
 export default RewardPartnerPayload

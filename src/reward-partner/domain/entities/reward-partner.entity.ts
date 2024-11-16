@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { BeforeCreate, BeforeUpdate, Entity, Enum, EventArgs, Property } from '@mikro-orm/postgresql'
+import { BeforeCreate, BeforeUpdate, Entity, Enum, EventArgs, Property, t } from '@mikro-orm/postgresql'
 import { hash, verify } from 'argon2'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import RewardPartnerPayload from '../payloads/reward-partner.payload'
@@ -32,6 +32,12 @@ class RewardPartnerEntity extends BaseEntity {
   @Enum({ items: () => Roles })
   role: Roles
 
+  @Property({ unique: true, type: t.json })
+  coordinates: {
+    latitude: number
+    longitude: number
+  }
+
   constructor(payload: RewardPartnerPayload) {
     super()
     this.name = payload.name
@@ -42,6 +48,7 @@ class RewardPartnerEntity extends BaseEntity {
     this.password = payload.password
     this.phoneNumber = payload.phoneNumber
     this.role = Roles.REWARD_PARTNER
+    this.coordinates = payload.coordinates
   }
 
   update(payload: RewardPartnerUpdatePayload): void {
