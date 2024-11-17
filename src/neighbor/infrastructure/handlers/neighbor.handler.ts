@@ -2,9 +2,13 @@ import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/aplicaction/service/auth.service'
 import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
+import FindEntityByIDUseCase from '../../../entity/aplication/usecases/find-by-id.usecase'
+import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import DateUtils from '../../../shared/utils/date.util'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import DeleteNeighborUseCase from '../../aplication/usecases/delete.usecase'
+import FindNeighborByDNIUseCase from '../../aplication/usecases/find-by-dni.usecase'
 import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
 import FindNeighborByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 import ListNeighborsUseCase from '../../aplication/usecases/list.usecase'
@@ -17,22 +21,19 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
-import DeleteNeighborUseCase from '../../aplication/usecases/delete.usecase'
-import FindNeighborByDNIUseCase from '../../aplication/usecases/find-by-dni.usecase'
 
 class NeighborHandler {
   constructor(
-    private readonly repository: NeighborRepository,
+    private readonly neighborRepository: NeighborRepository,
+    private readonly entityRepository: EntityRepository,
     private readonly jwtProvider: IJWTProvider
-  ) {
-    this.repository = repository
-  }
+  ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
-      const listNeighbor = new ListNeighborsUseCase(this.repository)
+      const listNeighbor = new ListNeighborsUseCase(this.neighborRepository)
       const neighbors = await listNeighbor.exec(offset, limit)
 
       HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
@@ -46,7 +47,7 @@ class NeighborHandler {
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const findNeighbor = new FindNeighborByIDUseCase(this.repository)
+      const findNeighbor = new FindNeighborByIDUseCase(this.neighborRepository)
       const neighbor = await findNeighbor.exec(id)
 
       HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
@@ -59,7 +60,7 @@ class NeighborHandler {
     try {
       const dni = GetURLParams(req, 'dni')
 
-      const findByDNI = new FindNeighborByDNIUseCase(this.repository)
+      const findByDNI = new FindNeighborByDNIUseCase(this.neighborRepository)
       const neighbor = await findByDNI.exec(dni)
 
       HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
@@ -78,7 +79,10 @@ class NeighborHandler {
         birthdate: DateUtils.parseDate((req.body as any).birthdate as string)
       }
 
-      const registerNeighbor = new RegisterNeighborUseCase(this.repository)
+      const registerNeighbor = new RegisterNeighborUseCase(
+        this.neighborRepository,
+        new FindEntityByIDUseCase(this.entityRepository)
+      )
       const neighbor = await registerNeighbor.exec(payload)
 
       const authService = new AuthService(this.jwtProvider)
@@ -114,7 +118,7 @@ class NeighborHandler {
       const schemaValidator = new SchemaValidator(UpdateNeighborDTO, payload)
       schemaValidator.exec()
 
-      const updateNeighbor = new UpdateNeighborUseCase(this.repository)
+      const updateNeighbor = new UpdateNeighborUseCase(this.neighborRepository)
       await updateNeighbor.exec(id, payload)
 
       HandleHTTPResponse.OK(rep, 'Neighbor updated successfully', { id })
@@ -130,7 +134,7 @@ class NeighborHandler {
       const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
       schemaValidator.exec()
 
-      const deleteNeighbor = new DeleteNeighborUseCase(this.repository)
+      const deleteNeighbor = new DeleteNeighborUseCase(this.neighborRepository)
       await deleteNeighbor.exec(id)
 
       HandleHTTPResponse.OK(rep, 'Neighbor deleted successfully', { id })
@@ -143,7 +147,7 @@ class NeighborHandler {
     try {
       const paylaod = req.body as NeighborPayload
 
-      const login = new LoginNeighborUseCase(this.repository)
+      const login = new LoginNeighborUseCase(this.neighborRepository)
       const neighbor = await login.exec(paylaod)
 
       const authService = new AuthService(this.jwtProvider)
@@ -172,7 +176,7 @@ class NeighborHandler {
     try {
       const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
 
-      const findByEmail = new FindByEmailUseCase(this.repository)
+      const findByEmail = new FindByEmailUseCase(this.neighborRepository)
       const neighbor = await findByEmail.exec(tokenNeighbor.email)
 
       const authService = new AuthService(this.jwtProvider)
