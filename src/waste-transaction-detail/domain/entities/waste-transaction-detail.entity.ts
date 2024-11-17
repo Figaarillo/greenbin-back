@@ -1,9 +1,8 @@
 /* eslint-disable indent */
 import { Entity, ManyToOne, Property } from '@mikro-orm/core'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
-import WasteEntity from '../../../waste/domain/entities/waste.entity'
-import WasteTransactionDetailPayload from '../payloads/waste-transaction-detail.payload'
 import WasteTransactionEntity from '../../../waste-transaction/domain/entities/waste-transaction.entity'
+import WasteEntity from '../../../waste/domain/entities/waste.entity'
 
 @Entity({ tableName: 'wastes_transactions_details' })
 class WasteTransactionDetailEntity extends BaseEntity {
@@ -19,10 +18,10 @@ class WasteTransactionDetailEntity extends BaseEntity {
   @ManyToOne(() => WasteTransactionEntity)
   transaction: WasteTransactionEntity
 
-  constructor(payload: WasteTransactionDetailPayload) {
+  constructor(waste: WasteEntity, transaction: WasteTransactionEntity) {
     super()
-    this.waste = payload.waste
-    this.transaction = payload.transaction
+    this.waste = waste
+    this.transaction = transaction
   }
 
   setPointsPerWeight(): void {
