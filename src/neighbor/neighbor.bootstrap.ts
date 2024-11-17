@@ -5,12 +5,15 @@ import type NeighborRepository from './domain/repositories/neighbor.repository'
 import NeighborHandler from './infrastructure/handlers/neighbor.handler'
 import NeighborMikroORMRepository from './infrastructure/repositories/mikro-orm/neighbor.mikroorm.repository'
 import NeighborRoute from './infrastructure/routes/neighbor.route'
+import EntityMikroORMRepository from '../entity/infrastructure/repositories/mikro-orm/entity.mikroorm.repository'
+import type EntityRepository from '../entity/domain/repositories/entity.repository'
 
 async function bootstrapNeighbor(router: FastifyInstance): Promise<void> {
-  const repository: NeighborRepository = new NeighborMikroORMRepository()
-  const jetProvider: IJWTProvider = new JWTProvider()
+  const neighborRepository: NeighborRepository = new NeighborMikroORMRepository()
+  const entityRepository: EntityRepository = new EntityMikroORMRepository()
+  const jwtProvider: IJWTProvider = new JWTProvider()
 
-  const handler = new NeighborHandler(repository, jetProvider)
+  const handler = new NeighborHandler(neighborRepository, entityRepository, jwtProvider)
 
   const routes = new NeighborRoute(router, handler)
   routes.setupRoutes()
