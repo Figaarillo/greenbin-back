@@ -2,7 +2,9 @@ import { type FastifyReply, type FastifyRequest } from 'fastify'
 import SchemaValidator from '../../../shared/infrastructure/middlewares/zod-schema-validator.middleware'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetURLParams } from '../../../shared/utils/http.request.util'
+import FindWasteTransactionByIDUseCase from '../../../waste-transaction/application/usecases/find-by-id.usecase'
 import type WasteTransactionRepository from '../../../waste-transaction/domain/repositories/waste-transaction.repository'
+import FindWasteByIDUseCase from '../../../waste/application/usecases/find-by-id.usecase'
 import type WasteRepository from '../../../waste/domain/repositories/waste.repository'
 import FindWasteTransactionDetailByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import RegisterWasteTransactionDetailUseCase from '../../application/usecases/register.usecase'
@@ -10,8 +12,6 @@ import type WasteTransactionDetailPayload from '../../domain/payloads/waste-tran
 import type WasteTransactionDetailRepository from '../../domain/repositories/waste-transaction-detail.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterWasteTransactionDetailDTO from '../dtos/register-waste-transaction-detail.dto'
-import FindWasteTransactionByIDUseCase from '../../../waste-transaction/application/usecases/find-by-id.usecase'
-import FindWasteByIDUseCase from '../../../waste/application/usecases/find-by-id.usecase'
 
 class WasteTransactionDetailHandler {
   constructor(

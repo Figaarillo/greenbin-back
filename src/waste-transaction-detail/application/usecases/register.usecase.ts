@@ -1,4 +1,4 @@
-import type FindByIdWasteTransactionByIDUseCase from '../../../waste-transaction/application/usecases/find-by-id.usecase'
+import type FindWasteTransactionByIDUseCase from '../../../waste-transaction/application/usecases/find-by-id.usecase'
 import type FindWasteByIDUseCase from '../../../waste/application/usecases/find-by-id.usecase'
 import WasteTransactionDetailEntity from '../../domain/entities/waste-transaction-detail.entity'
 import ErrorCannotSaveWasteTransactionDetail from '../../domain/errors/cannot-save-waste-transaction-detail.error'
@@ -8,7 +8,7 @@ import type WasteTransactionDetailRepository from '../../domain/repositories/was
 class RegisterWasteTransactionDetailUseCase {
   constructor(
     private readonly repository: WasteTransactionDetailRepository,
-    private readonly findTransactionByID: FindByIdWasteTransactionByIDUseCase,
+    private readonly findTransactionByID: FindWasteTransactionByIDUseCase,
     private readonly findWasteById: FindWasteByIDUseCase
   ) {}
 
