@@ -1,7 +1,7 @@
 interface WasteTransactionPayload {
-  responsible: string
-  neighbor: string
-  greenPoint: string
+  responsibleId: string
+  neighborId: string
+  greenPointId: string
 }
 
 export default WasteTransactionPayload
