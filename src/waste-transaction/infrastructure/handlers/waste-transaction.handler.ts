@@ -13,6 +13,10 @@ import type WasteTransactionPayload from '../../domain/payloads/waste-transactio
 import type WasteTransactionRepository from '../../domain/repositories/waste-transaction.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterWasteTransactionDTO from '../dtos/register-waste-transaction.dto'
+import FindNeighborByIDUseCase from '../../../neighbor/aplication/usecases/find-by-id.usecase'
+import RegisterWasteTransactionDetailUseCase from '../../../waste-transaction-detail/application/usecases/register.usecase'
+import RegisterWasteUseCase from '../../../waste/application/usecases/register.usecase'
+import UpdateWasteTransactionUseCase from '../../application/usecases/update.usecase'
 
 class WasteTransactionHandler {
   constructor(
@@ -54,20 +58,19 @@ class WasteTransactionHandler {
     }
   }
 
-  async registerWasteDelivery(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async registerWasteDelivery(req: FastifyRequest<{ Body: WasteDeliveryPayload }>, res: FastifyReply): Promise<void> {
     try {
-      const payload: WasteDeliveryPayload = req.body as WasteDeliveryPayload
-
       const registerWasteDelivery = new RegisterWasteDeliveryUseCase(
-        this.transactionDetailRepository,
-        this.transactionRepository,
-        this.wasteRepository,
-        this.neighborRepository,
-        payload
+        new RegisterWasteTransactionUseCase(this.transactionRepository),
+        new UpdateWasteTransactionUseCase(this.transactionRepository),
+        new RegisterWasteTransactionDetailUseCase(this.transactionDetailRepository),
+        new RegisterWasteUseCase(this.wasteRepository),
+        new FindNeighborByIDUseCase(this.neighborRepository)
       )
-      const transaction = await registerWasteDelivery.exec()
 
-      HandleHTTPResponse.Created(res, 'Waste delivery registered successfully', transaction)
+      await registerWasteDelivery.exec(req.body)
+
+      HandleHTTPResponse.Created(res, 'Waste delivery registered successfully')
     } catch (error) {
       res.status(500).send(error)
     }
