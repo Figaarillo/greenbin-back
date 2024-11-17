@@ -12,6 +12,7 @@ import type WasteDeliveryPayload from '../../domain/payloads/waste-delivery.payl
 import type WasteTransactionPayload from '../../domain/payloads/waste-transaction.payload'
 import type WasteTransactionRepository from '../../domain/repositories/waste-transaction.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
+import RegisterWasteTransactionDTO from '../dtos/register-waste-transaction.dto'
 
 class WasteTransactionHandler {
   constructor(
@@ -41,13 +42,13 @@ class WasteTransactionHandler {
     try {
       const payload: WasteTransactionPayload = req.body as WasteTransactionPayload
 
-      // const validateRegisterSchema = new SchemaValidator(RegisterWasteTransactionDTO, payload)
-      // validateRegisterSchema.exec()
-      //
-      const registerWasteTransaction = new RegisterWasteTransactionUseCase(this.transactionRepository)
-      const WasteTransaction = await registerWasteTransaction.exec(payload)
+      const validateRegisterSchema = new SchemaValidator(RegisterWasteTransactionDTO, payload)
+      validateRegisterSchema.exec()
 
-      HandleHTTPResponse.Created(res, 'Waste transaction registered successfully', { id: WasteTransaction.id })
+      const registerWasteTransaction = new RegisterWasteTransactionUseCase(this.transactionRepository)
+      const wasteTransaction = await registerWasteTransaction.exec(payload)
+
+      HandleHTTPResponse.Created(res, 'Waste transaction registered successfully', { id: wasteTransaction.id })
     } catch (error) {
       res.status(500).send(error)
     }
