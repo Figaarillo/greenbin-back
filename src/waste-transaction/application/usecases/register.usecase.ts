@@ -10,14 +10,14 @@ class RegisterWasteTransactionUseCase {
   constructor(private readonly repository: WasteTransactionRepository) {}
 
   async exec(payload: WasteTransactionPayload): Promise<WasteTransactionEntity> {
-    const responsible = await this.repository.findResponsible({ id: payload.responsible })
-    if (responsible == null) throw new ErrorResponsibleNotFound(payload.responsible)
+    const responsible = await this.repository.findResponsible({ id: payload.responsibleId })
+    if (responsible == null) throw new ErrorResponsibleNotFound(payload.responsibleId)
 
-    const neighbor = await this.repository.findNeighbor({ id: payload.neighbor })
-    if (neighbor == null) throw new ErrorNeighborNotFound(payload.neighbor)
+    const neighbor = await this.repository.findNeighbor({ id: payload.neighborId })
+    if (neighbor == null) throw new ErrorNeighborNotFound(payload.neighborId)
 
-    const greenPoint = await this.repository.fidnGreenPoint({ id: payload.greenPoint })
-    if (greenPoint == null) throw new ErrorGreenPointNotFound(payload.greenPoint)
+    const greenPoint = await this.repository.fidnGreenPoint({ id: payload.greenPointId })
+    if (greenPoint == null) throw new ErrorGreenPointNotFound(payload.greenPointId)
 
     const transaction = new WasteTransactionEntity(responsible, neighbor, greenPoint)
     const savedTransaction = await this.repository.save(transaction)
