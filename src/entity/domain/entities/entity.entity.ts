@@ -1,9 +1,20 @@
 /* eslint-disable indent */
-import { BeforeCreate, BeforeUpdate, Entity, Enum, EventArgs, Property, t } from '@mikro-orm/core'
+import {
+  BeforeCreate,
+  BeforeUpdate,
+  Collection,
+  Entity,
+  Enum,
+  EventArgs,
+  OneToMany,
+  Property,
+  t
+} from '@mikro-orm/core'
 import { hash, verify } from 'argon2'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import EntityPayload from '../payloads/entity.payload'
 import { Roles } from '../../../auth/domain/entities/role'
+import NeighborEntity from '../../../neighbor/domain/entities/neighbor.entity'
 
 @Entity()
 class EntityEntity extends BaseEntity {
@@ -27,6 +38,9 @@ class EntityEntity extends BaseEntity {
 
   @Enum({ items: () => Roles })
   role: Roles
+
+  @OneToMany(() => NeighborEntity, neighbor => neighbor.entity)
+  neighbors = new Collection<NeighborEntity>(this)
 
   constructor(payload: EntityPayload) {
     super()
@@ -55,6 +69,10 @@ class EntityEntity extends BaseEntity {
 
   async verifyPassword(password: string): Promise<boolean> {
     return await verify(this.password, password)
+  }
+
+  addNeighbor(neighbor: NeighborEntity): void {
+    this.neighbors.add(neighbor)
   }
 }
 
