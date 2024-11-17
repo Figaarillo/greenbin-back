@@ -7,6 +7,7 @@ interface NeighborPayload {
   dni: number
   birthdate: Date
   phoneNumber: string
+  entityId: string
 }
 
 export default NeighborPayload
