@@ -1,7 +1,6 @@
 import type FindNeighborByIDUseCase from '../../../neighbor/aplication/usecases/find-by-id.usecase'
 import type RegisterWasteTransactionDetailUseCase from '../../../waste-transaction-detail/application/usecases/register.usecase'
 import type RegisterWasteUseCase from '../../../waste/application/usecases/register.usecase'
-import type WasteTransactionEntity from '../../domain/entities/waste-transaction.entity'
 import type WasteDeliveryPayload from '../../domain/payloads/waste-delivery.payload'
 import type RegisterWasteTransactionUseCase from './register.usecase'
 import type UpdateWasteTransactionUseCase from './update.usecase'
@@ -15,7 +14,7 @@ class RegisterWasteDeliveryUseCase {
     private readonly findNeighborByID: FindNeighborByIDUseCase
   ) {}
 
-  async exec(payload: WasteDeliveryPayload): Promise<WasteTransactionEntity> {
+  async exec(payload: WasteDeliveryPayload): Promise<void> {
     const transaction = await this.registerTransaction.exec(payload)
     const { wastes, neighborId } = payload
 
@@ -40,9 +39,7 @@ class RegisterWasteDeliveryUseCase {
     }
 
     transaction.calculateTotalPoints()
-
-    const updatedTransaction = await this.updateTransaction.exec(transaction.id, transaction)
-    return updatedTransaction
+    await this.updateTransaction.exec(transaction.id, transaction)
   }
 }
 
