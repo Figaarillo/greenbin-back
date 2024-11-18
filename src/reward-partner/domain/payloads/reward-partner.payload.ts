@@ -10,6 +10,7 @@ interface RewardPartnerPayload {
     latitude: number
     longitude: number
   }
+  entityId: string
 }
 
 export default RewardPartnerPayload

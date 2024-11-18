@@ -17,6 +17,7 @@ import { Roles } from '../../../auth/domain/entities/role'
 import NeighborEntity from '../../../neighbor/domain/entities/neighbor.entity'
 import GreenPointEntity from '../../../green-point/domain/entities/green-point.entity'
 import ResponsibleEntity from '../../../responsible/domain/entities/responsible.entity'
+import RewardPartnerEntity from '../../../reward-partner/domain/entities/reward-partner.entity'
 
 @Entity()
 class EntityEntity extends BaseEntity {
@@ -49,6 +50,9 @@ class EntityEntity extends BaseEntity {
 
   @OneToMany(() => ResponsibleEntity, responsible => responsible.entity)
   responsible = new Collection<ResponsibleEntity>(this)
+
+  @OneToMany(() => RewardPartnerEntity, rewardPartner => rewardPartner.entity)
+  rewardPartners = new Collection<RewardPartnerEntity>(this)
 
   constructor(payload: EntityPayload) {
     super()
@@ -89,6 +93,10 @@ class EntityEntity extends BaseEntity {
 
   addResponsible(responsible: ResponsibleEntity): void {
     this.responsible.add(responsible)
+  }
+
+  addRewardPartner(rewardPartner: RewardPartnerEntity): void {
+    this.rewardPartners.add(rewardPartner)
   }
 }
 
