@@ -11,7 +11,6 @@ class EntityMikroORMRepository implements EntityRepository {
 
     if (limit == null) return await em.find(EntityEntity, {})
     if (offset == null) return await em.find(EntityEntity, {}, { limit })
-
     return await em.find(EntityEntity, {}, { limit, offset })
   }
 

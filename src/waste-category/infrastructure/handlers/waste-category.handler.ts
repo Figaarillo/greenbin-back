@@ -14,9 +14,7 @@ import UpdateWasteCategoryDTO from '../dtos/update-waste-category.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class WasteCategoryHandler {
-  constructor(private readonly repository: WasteCategoryRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: WasteCategoryRepository) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {

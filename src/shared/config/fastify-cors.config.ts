@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { type OriginFunction } from '@fastify/cors'
 import EnvVar from './env-var.config'
 
