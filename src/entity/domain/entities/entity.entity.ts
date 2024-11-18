@@ -9,12 +9,13 @@ import {
   OneToMany,
   Property,
   t
-} from '@mikro-orm/core'
+} from '@mikro-orm/postgresql'
 import { hash, verify } from 'argon2'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import EntityPayload from '../payloads/entity.payload'
 import { Roles } from '../../../auth/domain/entities/role'
 import NeighborEntity from '../../../neighbor/domain/entities/neighbor.entity'
+import GreenPointEntity from '../../../green-point/domain/entities/green-point.entity'
 
 @Entity()
 class EntityEntity extends BaseEntity {
@@ -41,6 +42,9 @@ class EntityEntity extends BaseEntity {
 
   @OneToMany(() => NeighborEntity, neighbor => neighbor.entity)
   neighbors = new Collection<NeighborEntity>(this)
+
+  @OneToMany(() => GreenPointEntity, greenPoint => greenPoint.entity)
+  greenPoints = new Collection<GreenPointEntity>(this)
 
   constructor(payload: EntityPayload) {
     super()
@@ -73,6 +77,10 @@ class EntityEntity extends BaseEntity {
 
   addNeighbor(neighbor: NeighborEntity): void {
     this.neighbors.add(neighbor)
+  }
+
+  addGreenPoint(greenPoint: GreenPointEntity): void {
+    this.greenPoints.add(greenPoint)
   }
 }
 
