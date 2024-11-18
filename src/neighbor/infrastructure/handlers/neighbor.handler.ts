@@ -21,6 +21,7 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import GetWatesOfNeighborUseCase from '../../application/usecases/get-waste.usecase'
 
 class NeighborHandler {
   constructor(
@@ -201,6 +202,19 @@ class NeighborHandler {
         throw new Error('Invalid role')
       }
       HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async getWastes(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+
+      const getWastes = new GetWatesOfNeighborUseCase(this.neighborRepository)
+      const wastes = await getWastes.exec(id)
+
+      HandleHTTPResponse.OK(rep, 'Wastes retrieved successfully', wastes)
     } catch (error) {
       rep.status(500).send(error)
     }
