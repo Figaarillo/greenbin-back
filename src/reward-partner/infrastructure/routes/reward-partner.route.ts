@@ -13,6 +13,9 @@ class RewardPartnerRoute {
   ) {}
 
   setupRoutes(): void {
+    this.server.get('/api/reward-partner', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+      await this.handler.findById(req, res)
+    })
     this.server.post('/api/reward-partner', { schema: registerSwaggerSchema }, async (req, res) => {
       await this.handler.register(req, res)
     })

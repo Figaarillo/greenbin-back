@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/application/service/auth.service'
 import { Roles } from '../../../auth/domain/entities/role'
@@ -8,6 +7,7 @@ import type EntityRepository from '../../../entity/domain/repositories/entity.re
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetURLParams } from '../../../shared/utils/http.request.util'
 import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
+import FindRewardPartnerByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import LoginRewardPartnerUseCase from '../../application/usecases/login.usecase'
 import RegisterRewardPartnerUseCase from '../../application/usecases/register.usecase'
 import UpdateRewardPartnerUseCase from '../../application/usecases/update.usecase'
@@ -26,6 +26,22 @@ class RewardPartnerHandler {
     private readonly entityRepository: EntityRepository,
     private readonly jwtStrategy: IJWTStrategy
   ) {}
+
+  async findById(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+
+      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      validateIDSchema.exec()
+
+      const findRewardPartner = new FindRewardPartnerByIDUseCase(this.rewardPartnerRepository)
+      const rewardPartner = await findRewardPartner.exec(id)
+
+      HandleHTTPResponse.OK(res, 'Reward partner retrieved successfully', rewardPartner)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
 
   async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
