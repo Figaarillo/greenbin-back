@@ -16,6 +16,7 @@ import EntityPayload from '../payloads/entity.payload'
 import { Roles } from '../../../auth/domain/entities/role'
 import NeighborEntity from '../../../neighbor/domain/entities/neighbor.entity'
 import GreenPointEntity from '../../../green-point/domain/entities/green-point.entity'
+import ResponsibleEntity from '../../../responsible/domain/entities/responsible.entity'
 
 @Entity()
 class EntityEntity extends BaseEntity {
@@ -45,6 +46,9 @@ class EntityEntity extends BaseEntity {
 
   @OneToMany(() => GreenPointEntity, greenPoint => greenPoint.entity)
   greenPoints = new Collection<GreenPointEntity>(this)
+
+  @OneToMany(() => ResponsibleEntity, responsible => responsible.entity)
+  responsible = new Collection<ResponsibleEntity>(this)
 
   constructor(payload: EntityPayload) {
     super()
@@ -81,6 +85,10 @@ class EntityEntity extends BaseEntity {
 
   addGreenPoint(greenPoint: GreenPointEntity): void {
     this.greenPoints.add(greenPoint)
+  }
+
+  addResponsible(responsible: ResponsibleEntity): void {
+    this.responsible.add(responsible)
   }
 }
 
