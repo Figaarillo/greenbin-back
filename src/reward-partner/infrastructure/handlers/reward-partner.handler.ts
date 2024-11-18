@@ -1,30 +1,31 @@
 /* eslint-disable no-console */
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/aplicaction/service/auth.service'
+import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
+import FindEntityByIDUseCase from '../../../entity/aplication/usecases/find-by-id.usecase'
+import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetURLParams } from '../../../shared/utils/http.request.util'
+import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
+import LoginRewardPartnerUseCase from '../../aplication/usecases/login.usecase'
 import RegisterRewardPartnerUseCase from '../../aplication/usecases/register.usecase'
 import UpdateRewardPartnerUseCase from '../../aplication/usecases/update.usecase'
+import type RewardPartnerLoginPayload from '../../domain/payloads/reward-partner.login.payload'
 import type RewardPartnerPayload from '../../domain/payloads/reward-partner.payload'
 import type RewardPartnerRepository from '../../domain/repositories/reward-partner.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
+import LoginRewardPartnerDTO from '../dtos/login-reward-partner.dto'
 import RegisterRewardPartnerDTO from '../dtos/register-reward-partner.dto'
 import UpdateRewardPartnerDTO from '../dtos/update-reward-partner.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
-import type RewardPartnerLoginPayload from '../../domain/payloads/reward-partner.login.payload'
-import LoginRewardPartnerUseCase from '../../aplication/usecases/login.usecase'
-import LoginRewardPartnerDTO from '../dtos/login-reward-partner.dto'
-import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
-import { Roles } from '../../../auth/domain/entities/role'
 
 class RewardPartnerHandler {
   constructor(
-    private readonly repository: RewardPartnerRepository,
+    private readonly rewardPartnerRepository: RewardPartnerRepository,
+    private readonly entityRepository: EntityRepository,
     private readonly jwtProvider: IJWTProvider
-  ) {
-    this.repository = repository
-  }
+  ) {}
 
   async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
@@ -33,7 +34,10 @@ class RewardPartnerHandler {
       const validateRegisterRewardPartnerSchema = new SchemaValidator(RegisterRewardPartnerDTO, payload)
       validateRegisterRewardPartnerSchema.exec()
 
-      const registerRewardPartner = new RegisterRewardPartnerUseCase(this.repository)
+      const registerRewardPartner = new RegisterRewardPartnerUseCase(
+        this.rewardPartnerRepository,
+        new FindEntityByIDUseCase(this.entityRepository)
+      )
       const rewardPartner = await registerRewardPartner.exec(payload)
 
       const authService = new AuthService(this.jwtProvider)
@@ -64,7 +68,7 @@ class RewardPartnerHandler {
       const schemaValidator = new SchemaValidator(UpdateRewardPartnerDTO, payload)
       schemaValidator.exec()
 
-      const updateRewardPartner = new UpdateRewardPartnerUseCase(this.repository)
+      const updateRewardPartner = new UpdateRewardPartnerUseCase(this.rewardPartnerRepository)
       await updateRewardPartner.exec(id, payload)
 
       HandleHTTPResponse.OK(res, 'Reward partner updated successfully', { id })
@@ -80,7 +84,7 @@ class RewardPartnerHandler {
       const schemaValidator = new SchemaValidator(LoginRewardPartnerDTO, payload)
       schemaValidator.exec()
 
-      const login = new LoginRewardPartnerUseCase(this.repository)
+      const login = new LoginRewardPartnerUseCase(this.rewardPartnerRepository)
       const rewardPartner = await login.exec(payload)
 
       const authService = new AuthService(this.jwtProvider)
@@ -109,7 +113,7 @@ class RewardPartnerHandler {
     try {
       const tokenRewardPartner = req.rewardPartner as { username: string; email: string; role: string }
 
-      const findByEmail = new FindByEmailUseCase(this.repository)
+      const findByEmail = new FindByEmailUseCase(this.rewardPartnerRepository)
       const rewardPartner = await findByEmail.exec(tokenRewardPartner.email)
 
       const authService = new AuthService(this.jwtProvider)
