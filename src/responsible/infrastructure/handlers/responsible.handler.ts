@@ -2,6 +2,8 @@ import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/aplicaction/service/auth.service'
 import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
+import FindEntityByIDUseCase from '../../../entity/aplication/usecases/find-by-id.usecase'
+import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteResponsibleUseCase from '../../aplication/usecases/delete.usecase'
@@ -20,18 +22,16 @@ import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class ResponsibleHandler {
   constructor(
-    private readonly repository: ResponsibleRepository,
+    private readonly responsibleRepository: ResponsibleRepository,
+    private readonly entityRepository: EntityRepository,
     private readonly jwtProvider: IJWTProvider
-  ) {
-    this.repository = repository
-    this.jwtProvider = jwtProvider
-  }
+  ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
-      const listResponsibles = new ListResponsiblesUseCase(this.repository)
+      const listResponsibles = new ListResponsiblesUseCase(this.responsibleRepository)
       const responsibles = await listResponsibles.exec(offset, limit)
 
       HandleHTTPResponse.OK(res, 'Responsibles retrieved successfully', responsibles)
@@ -47,7 +47,7 @@ class ResponsibleHandler {
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const findResponsible = new FindResponsibleByIDUseCase(this.repository)
+      const findResponsible = new FindResponsibleByIDUseCase(this.responsibleRepository)
       const responsible = await findResponsible.exec(id)
 
       HandleHTTPResponse.OK(res, 'Responsible retrieved successfully', responsible)
@@ -63,7 +63,10 @@ class ResponsibleHandler {
       const validateRegisterResponsiblesSchema = new SchemaValidator(RegisterResponsibleDTO, payload)
       validateRegisterResponsiblesSchema.exec()
 
-      const registerResponsible = new RegisterResponsibleUseCase(this.repository)
+      const registerResponsible = new RegisterResponsibleUseCase(
+        this.responsibleRepository,
+        new FindEntityByIDUseCase(this.entityRepository)
+      )
       const responsible = await registerResponsible.exec(payload)
 
       HandleHTTPResponse.Created(res, 'Responsible registered successfully', { id: responsible.id })
@@ -83,7 +86,7 @@ class ResponsibleHandler {
       const schemaValidator = new SchemaValidator(UpdateResponsibleDTO, payload)
       schemaValidator.exec()
 
-      const updateResponsible = new UpdateResponsibleUseCase(this.repository)
+      const updateResponsible = new UpdateResponsibleUseCase(this.responsibleRepository)
       await updateResponsible.exec(id, payload)
 
       HandleHTTPResponse.OK(res, 'Responsible updated successfully', { id })
@@ -99,7 +102,7 @@ class ResponsibleHandler {
       const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
       schemaValidator.exec()
 
-      const deleteResponsible = new DeleteResponsibleUseCase(this.repository)
+      const deleteResponsible = new DeleteResponsibleUseCase(this.responsibleRepository)
       await deleteResponsible.exec(id)
 
       HandleHTTPResponse.OK(res, 'Responsible deleted successfully', { id })
@@ -112,7 +115,7 @@ class ResponsibleHandler {
     try {
       const payload = req.body as ResponsiblePayload
 
-      const login = new LoginResponsibleUseCase(this.repository)
+      const login = new LoginResponsibleUseCase(this.responsibleRepository)
       const responsible = await login.exec(payload)
 
       const authService = new AuthService(this.jwtProvider)
@@ -141,7 +144,7 @@ class ResponsibleHandler {
     try {
       const tokenResponsible = req.responsible as { username: string; email: string; role: string }
 
-      const findByEmail = new FindByEmailUseCase(this.repository)
+      const findByEmail = new FindByEmailUseCase(this.responsibleRepository)
       const responsible = await findByEmail.exec(tokenResponsible.email)
 
       const authService = new AuthService(this.jwtProvider)
