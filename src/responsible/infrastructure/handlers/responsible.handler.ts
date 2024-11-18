@@ -1,7 +1,7 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import AuthService from '../../../auth/aplicaction/service/auth.service'
+import AuthService from '../../../auth/application/service/auth.service'
 import { Roles } from '../../../auth/domain/entities/role'
-import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
+import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
@@ -24,7 +24,7 @@ class ResponsibleHandler {
   constructor(
     private readonly responsibleRepository: ResponsibleRepository,
     private readonly entityRepository: EntityRepository,
-    private readonly jwtProvider: IJWTProvider
+    private readonly jwtStrategy: IJWTStrategy
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
@@ -118,7 +118,7 @@ class ResponsibleHandler {
       const login = new LoginResponsibleUseCase(this.responsibleRepository)
       const responsible = await login.exec(payload)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(responsible.id, {
         username: responsible.username,
         email: responsible.email,
@@ -147,7 +147,7 @@ class ResponsibleHandler {
       const findByEmail = new FindByEmailUseCase(this.responsibleRepository)
       const responsible = await findByEmail.exec(tokenResponsible.email)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(req.responsible.id, {
         username: responsible.username,
         email: responsible.email,

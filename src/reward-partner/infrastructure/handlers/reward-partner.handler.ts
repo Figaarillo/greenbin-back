@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import AuthService from '../../../auth/aplicaction/service/auth.service'
+import AuthService from '../../../auth/application/service/auth.service'
 import { Roles } from '../../../auth/domain/entities/role'
-import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
+import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
@@ -24,7 +24,7 @@ class RewardPartnerHandler {
   constructor(
     private readonly rewardPartnerRepository: RewardPartnerRepository,
     private readonly entityRepository: EntityRepository,
-    private readonly jwtProvider: IJWTProvider
+    private readonly jwtStrategy: IJWTStrategy
   ) {}
 
   async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
@@ -40,7 +40,7 @@ class RewardPartnerHandler {
       )
       const rewardPartner = await registerRewardPartner.exec(payload)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(rewardPartner.id, {
         name: rewardPartner.name,
         role: 'reward-partner'
@@ -87,7 +87,7 @@ class RewardPartnerHandler {
       const login = new LoginRewardPartnerUseCase(this.rewardPartnerRepository)
       const rewardPartner = await login.exec(payload)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(rewardPartner.id, {
         username: rewardPartner.username,
         email: rewardPartner.email,
@@ -116,7 +116,7 @@ class RewardPartnerHandler {
       const findByEmail = new FindByEmailUseCase(this.rewardPartnerRepository)
       const rewardPartner = await findByEmail.exec(tokenRewardPartner.email)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(req.rewardPartner.id, {
         username: rewardPartner.username,
         email: rewardPartner.email,

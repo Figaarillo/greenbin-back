@@ -1,7 +1,7 @@
-import type IJWTProvider from '../../domain/providers/jwt.interface.provider'
+import type IJWTStrategy from '../../domain/strategies/jwt.interface.strategy'
 import jwt from 'jsonwebtoken'
 
-class JWTProvider implements IJWTProvider {
+class JWTStrategy implements IJWTStrategy {
   /**
    * @param sub - something that identifies the subject of the JWT
    * @param payload - extra data to include int the JWT that will be used to validate or identify the user
@@ -23,4 +23,4 @@ class JWTProvider implements IJWTProvider {
   }
 }
 
-export default JWTProvider
+export default JWTStrategy

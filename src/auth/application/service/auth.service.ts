@@ -1,6 +1,6 @@
 import EnvVar from '../../../shared/config/env-var.config'
 import ErrorGeneratingToken from '../../domain/errors/error-generating-token.error'
-import type IJWTProvider from '../../domain/providers/jwt.interface.provider'
+import type IJWTStrategy from '../../domain/strategies/jwt.interface.strategy'
 
 class AuthService {
   private readonly ACCESS_TOKEN = EnvVar.auth.accessToken
@@ -8,10 +8,10 @@ class AuthService {
   private readonly ACCESS_TOKEN_EXPIRES_IN = EnvVar.auth.accessTokenExpiresIn
   private readonly REFRESH_TOKEN_EXPIRES_IN = EnvVar.auth.refreshTokenExpiresIn
 
-  constructor(readonly jwtProvider: IJWTProvider) {}
+  constructor(readonly jwtStrategy: IJWTStrategy) {}
 
   async generateAccessToken(id: string, credential: Record<string, string>): Promise<string> {
-    const jwt = await this.jwtProvider.generateToken(
+    const jwt = await this.jwtStrategy.generateToken(
       id,
       { ...credential, type: 'access' },
       this.ACCESS_TOKEN_EXPIRES_IN,
@@ -22,7 +22,7 @@ class AuthService {
   }
 
   async generateRefreshToken(id: string, credential: Record<string, string>): Promise<string> {
-    const jwt = await this.jwtProvider.generateToken(
+    const jwt = await this.jwtStrategy.generateToken(
       id,
       { ...credential, type: 'refresh' },
       this.REFRESH_TOKEN_EXPIRES_IN,
@@ -33,11 +33,11 @@ class AuthService {
   }
 
   async verifyAccessToken(token: string): Promise<Record<string, string>> {
-    return await this.jwtProvider.verifyToken(token, this.ACCESS_TOKEN)
+    return await this.jwtStrategy.verifyToken(token, this.ACCESS_TOKEN)
   }
 
   async verifyRefreshToken(token: string): Promise<Record<string, string>> {
-    return await this.jwtProvider.verifyToken(token, this.REFRESH_TOKEN)
+    return await this.jwtStrategy.verifyToken(token, this.REFRESH_TOKEN)
   }
 }
 

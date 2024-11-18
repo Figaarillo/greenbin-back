@@ -1,7 +1,7 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import AuthService from '../../../auth/aplicaction/service/auth.service'
+import AuthService from '../../../auth/application/service/auth.service'
 import { Roles } from '../../../auth/domain/entities/role'
-import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
+import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import DateUtils from '../../../shared/utils/date.util'
@@ -26,7 +26,7 @@ class NeighborHandler {
   constructor(
     private readonly neighborRepository: NeighborRepository,
     private readonly entityRepository: EntityRepository,
-    private readonly jwtProvider: IJWTProvider
+    private readonly jwtStrategy: IJWTStrategy
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
@@ -85,7 +85,7 @@ class NeighborHandler {
       )
       const neighbor = await registerNeighbor.exec(payload)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(neighbor.id, {
         username: neighbor.username,
         email: neighbor.email,
@@ -150,7 +150,7 @@ class NeighborHandler {
       const login = new LoginNeighborUseCase(this.neighborRepository)
       const neighbor = await login.exec(paylaod)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(neighbor.id, {
         username: neighbor.username,
         email: neighbor.email,
@@ -179,7 +179,7 @@ class NeighborHandler {
       const findByEmail = new FindByEmailUseCase(this.neighborRepository)
       const neighbor = await findByEmail.exec(tokenNeighbor.email)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(req.neighbor.id, {
         username: neighbor.username,
         email: neighbor.email,
