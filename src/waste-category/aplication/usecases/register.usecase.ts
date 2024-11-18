@@ -4,9 +4,7 @@ import type WasteCategoryPayload from '../../domain/payloads/waste-category.payl
 import type WasteCategoryRepository from '../../domain/repositories/waste-category.repository'
 
 class RegisterWasteCategoryUseCase {
-  constructor(private readonly repository: WasteCategoryRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: WasteCategoryRepository) {}
 
   async exec(payload: WasteCategoryPayload): Promise<WasteCategoryEntity> {
     const newCategory = new WasteCategoryEntity(payload)

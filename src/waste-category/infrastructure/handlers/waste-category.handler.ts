@@ -2,7 +2,7 @@ import { type FastifyReply, type FastifyRequest } from 'fastify'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteCategoryUseCase from '../../aplication/usecases/delete.usecase'
-import FindCategoryByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
+import FindWasteCategoryByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
 import ListCategoriesUseCase from '../../aplication/usecases/list.usecase'
 import RegisterWasteCategoryUseCase from '../../aplication/usecases/register.usecase'
 import UpdateCategoryUseCase from '../../aplication/usecases/update.usecase'
@@ -38,7 +38,7 @@ class WasteCategoryHandler {
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const findCategory = new FindCategoryByIDUseCase(this.repository)
+      const findCategory = new FindWasteCategoryByIDUseCase(this.repository)
       const category = await findCategory.exec(id)
 
       HandleHTTPResponse.OK(res, 'Waste Category retrieved successfully', category)

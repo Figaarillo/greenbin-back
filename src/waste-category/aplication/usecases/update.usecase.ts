@@ -4,14 +4,12 @@ import type WasteCategoryPayload from '../../domain/payloads/waste-category.payl
 import type WasteCategoryRepository from '../../domain/repositories/waste-category.repository'
 
 class UpdateCategoryUseCase {
-  constructor(private readonly repository: WasteCategoryRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: WasteCategoryRepository) {}
 
   async exec(id: string, payload: WasteCategoryPayload): Promise<WasteCategoryEntity> {
     const categoryUpdated = await this.repository.update(id, payload)
     if (categoryUpdated == null) {
-      throw new ErrorCategoryNotFound(id, undefined)
+      throw new ErrorCategoryNotFound(id)
     }
 
     return categoryUpdated
