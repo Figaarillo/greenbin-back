@@ -1,4 +1,4 @@
-import type FindEntityByIDUseCase from '../../../entity/aplication/usecases/find-by-id.usecase'
+import type FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import NeighborEntity from '../../domain/entities/neighbor.entity'
 import ErrorCannotSaveNeighbor from '../../domain/errors/cannot-save-neighbor.error'
 import type NeighborPayload from '../../domain/payloads/neighbor.payload'

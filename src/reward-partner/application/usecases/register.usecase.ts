@@ -1,4 +1,4 @@
-import type FindEntityByIDUseCase from '../../../entity/aplication/usecases/find-by-id.usecase'
+import type FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import RewardPartnerEntity from '../../domain/entities/reward-partner.entity'
 import ErrorCannotSaveRewardPartner from '../../domain/errors/cannot-save-reward-partner.error'
 import type RewardPartnerPayload from '../../domain/payloads/reward-partner.payload'

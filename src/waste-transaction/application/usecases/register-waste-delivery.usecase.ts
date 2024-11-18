@@ -1,4 +1,4 @@
-import type FindNeighborByIDUseCase from '../../../neighbor/aplication/usecases/find-by-id.usecase'
+import type FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find-by-id.usecase'
 import type RegisterWasteTransactionDetailUseCase from '../../../waste-transaction-detail/application/usecases/register.usecase'
 import type RegisterWasteUseCase from '../../../waste/application/usecases/register.usecase'
 import type WasteDeliveryPayload from '../../domain/payloads/waste-delivery.payload'

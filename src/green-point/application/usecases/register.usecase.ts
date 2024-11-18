@@ -1,4 +1,4 @@
-import type FindEntityByIDUseCase from '../../../entity/aplication/usecases/find-by-id.usecase'
+import type FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import GreenPointEntity from '../../domain/entities/green-point.entity'
 import ErrorCannotSaveGreenPoint from '../../domain/errors/cannot-save-green-point.error'
 import type GreenPointPayload from '../../domain/payloads/green-point.payload'

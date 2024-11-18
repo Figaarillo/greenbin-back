@@ -1,4 +1,4 @@
-import type FindWasteCategoryByIDUseCase from '../../../waste-category/aplication/usecases/find-by-id.usecase'
+import type FindWasteCategoryByIDUseCase from '../../../waste-category/application/usecases/find-by-id.usecase'
 import WasteEntity from '../../domain/entities/waste.entity'
 import ErrorCannotSaveWaste from '../../domain/errors/cannot-save-waste.error'
 import type WastePayload from '../../domain/payloads/waste.payload'

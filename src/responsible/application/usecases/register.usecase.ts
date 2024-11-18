@@ -1,4 +1,4 @@
-import type FindEntityByIDUseCase from '../../../entity/aplication/usecases/find-by-id.usecase'
+import type FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import ResponsibleEntity from '../../domain/entities/responsible.entity'
 import ErrorCannotSaveResponsible from '../../domain/errors/cannot-save-responsible.error'
 import type ResponsiblePayload from '../../domain/payloads/responsible.payload'
