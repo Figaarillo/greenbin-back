@@ -31,6 +31,7 @@ class RegisterWasteDeliveryUseCase {
       const points = newWaste.calculatePoints()
       transactionDetail.points = points
       transactionDetail.pointsPerWeight = newWaste.pointsPerWeight
+      transactionDetail.weight = newWaste.weight
 
       neighbor.addPoints(points)
       neighbor.registerWaste(newWaste)

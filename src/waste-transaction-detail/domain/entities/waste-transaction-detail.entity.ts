@@ -13,6 +13,9 @@ class WasteTransactionDetailEntity extends BaseEntity {
   pointsPerWeight: number = 0
 
   @Property()
+  weight: number = 0
+
+  @Property()
   points: number = 0
 
   @ManyToOne(() => WasteTransactionEntity)
