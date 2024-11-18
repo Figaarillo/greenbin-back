@@ -95,4 +95,5 @@ migrations.initial: migrations.delete docker.clean docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │       INITIALIZING MIGRATIONS          │ "
 	@echo " ╰────────────────────────────────────────╯ "
+	sleep 1
 	DATABASE_HOST=$(DB_HOST) pnpm run migration:initial
