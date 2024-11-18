@@ -1,4 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
+import FindEntityByIDUseCase from '../../../entity/aplication/usecases/find-by-id.usecase'
+import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteGreenPointUseCase from '../../aplication/usecases/delete.usecase'
@@ -14,13 +16,16 @@ import UpdateGreenPointDTO from '../dtos/update-green-point.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class GreenPointHandler {
-  constructor(private readonly repository: GreenPointRepository) {}
+  constructor(
+    private readonly greenPointRepository: GreenPointRepository,
+    private readonly entityRepository: EntityRepository
+  ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
-      const listGreenPoints = new ListGreenPointsUseCase(this.repository)
+      const listGreenPoints = new ListGreenPointsUseCase(this.greenPointRepository)
       const greenPoints = await listGreenPoints.exec(offset, limit)
 
       HandleHTTPResponse.OK(res, 'Green points retrieved successfully', greenPoints)
@@ -36,7 +41,7 @@ class GreenPointHandler {
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const findGreenPoint = new FindGreenPointByIDUseCase(this.repository)
+      const findGreenPoint = new FindGreenPointByIDUseCase(this.greenPointRepository)
       const greenPoint = await findGreenPoint.exec(id)
 
       HandleHTTPResponse.OK(res, 'Green point retrieved successfully', greenPoint)
@@ -52,7 +57,10 @@ class GreenPointHandler {
       const validateRegisterGreenPointSchema = new SchemaValidator(RegisterGreenPointDTO, payload)
       validateRegisterGreenPointSchema.exec()
 
-      const registerGreenPoint = new RegisterGreenPointUseCase(this.repository)
+      const registerGreenPoint = new RegisterGreenPointUseCase(
+        this.greenPointRepository,
+        new FindEntityByIDUseCase(this.entityRepository)
+      )
       const greenPoint = await registerGreenPoint.exec(payload)
 
       HandleHTTPResponse.Created(res, 'Green point registered successfully', { id: greenPoint.id })
@@ -72,7 +80,7 @@ class GreenPointHandler {
       const schemaValidator = new SchemaValidator(UpdateGreenPointDTO, payload)
       schemaValidator.exec()
 
-      const updateGreenPoint = new UpdateGreenPointUseCase(this.repository)
+      const updateGreenPoint = new UpdateGreenPointUseCase(this.greenPointRepository)
       await updateGreenPoint.exec(id, payload)
 
       HandleHTTPResponse.OK(res, 'Green point updated successfully', { id })
@@ -88,7 +96,7 @@ class GreenPointHandler {
       const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
       schemaValidator.exec()
 
-      const deleteGreenPoint = new DeleteGreenPointUseCase(this.repository)
+      const deleteGreenPoint = new DeleteGreenPointUseCase(this.greenPointRepository)
       await deleteGreenPoint.exec(id)
 
       HandleHTTPResponse.OK(res, 'Green point deleted successfully', { id })
