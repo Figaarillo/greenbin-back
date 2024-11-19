@@ -1,26 +1,36 @@
-import { ZodError, type ZodType } from 'zod'
+import { ZodError, type ZodIssue, type ZodType } from 'zod'
 import type GreenPointEntity from '../../domain/entities/green-point.entity'
 import ErrorGreenPointSchemaValidation from '../../domain/errors/green-point-schema-validation.error'
 
 class SchemaValidator<TDTOSchema> {
-  private readonly schema: ZodType<TDTOSchema>
-  private readonly payload: Partial<GreenPointEntity>
-
-  constructor(schema: ZodType<TDTOSchema>, payload: Partial<GreenPointEntity>) {
-    this.schema = schema
-    this.payload = payload
-  }
+  constructor(
+    private readonly schema: ZodType<TDTOSchema>,
+    private readonly payload: Partial<GreenPointEntity>
+  ) {}
 
   exec(): TDTOSchema {
     try {
       return this.schema.parse(this.payload)
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new ErrorGreenPointSchemaValidation(error.errors.map(err => err.message).join('\n'))
+        const detailedErrors = this.formatZodErrors(error.errors)
+        throw new ErrorGreenPointSchemaValidation(
+          JSON.stringify({
+            message: 'Validation errors occurred',
+            errors: detailedErrors
+          })
+        )
       }
-
       throw error
     }
+  }
+
+  private formatZodErrors(errors: ZodIssue[]): Array<{ field: string; error: string }> {
+    return errors.map(err => ({
+      field: err.path.join('.'),
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      error: err.message || 'Invalid value'
+    }))
   }
 }
 
