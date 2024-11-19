@@ -8,6 +8,7 @@ import FindGreenPointByIDUseCase from '../../application/usecases/find-by-id.use
 import ListGreenPointsUseCase from '../../application/usecases/list.usecase'
 import RegisterGreenPointUseCase from '../../application/usecases/register.usecase'
 import UpdateGreenPointUseCase from '../../application/usecases/update.usecase'
+import ErrorGreenPointSchemaValidation from '../../domain/errors/green-point-schema-validation.error'
 import type GreenPointPayload from '../../domain/payloads/green-point.payload'
 import type GreenPointRepository from '../../domain/repositories/green-point.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
@@ -101,7 +102,11 @@ class GreenPointHandler {
 
       HandleHTTPResponse.OK(res, 'Green point deleted successfully', { id })
     } catch (error) {
-      res.status(500).send(error)
+      if (error instanceof ErrorGreenPointSchemaValidation) {
+        res.status(400).send(error)
+      } else {
+        res.status(500).send({ error: 'Internal Server Error', message: 'Something went wrong.' })
+      }
     }
   }
 }
