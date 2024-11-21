@@ -1,4 +1,5 @@
 import type EntityEntity from '../../domain/entities/entity.entity'
+import { EntityRelationships } from '../../domain/enums/entity.enum'
 import ErrorEntityNotFound from '../../domain/errors/entity-not-found.error'
 import ErrorInvalidPassword from '../../domain/errors/invalid-password.error'
 import type EntityLoginPayload from '../../domain/payloads/entity.login.payload'
@@ -23,11 +24,11 @@ class LoginEntityUseCase {
 
   private async findEntity(payload: EntityLoginPayload): Promise<EntityEntity | null> {
     if (payload.email !== undefined && payload.email !== '') {
-      return await this.repository.findWithPassword({ email: payload.email })
+      return await this.repository.findWithPopulate({ email: payload.email }, {}, [EntityRelationships.PASSWORD])
     }
 
     if (payload.name !== undefined && payload.name !== '') {
-      return await this.repository.findWithPassword({ name: payload.name })
+      return await this.repository.findWithPopulate({ name: payload.name }, {}, [EntityRelationships.PASSWORD])
     }
 
     throw new Error('Email or name is required')
