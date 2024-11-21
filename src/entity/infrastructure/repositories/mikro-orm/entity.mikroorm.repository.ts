@@ -4,6 +4,7 @@ import type Nullable from '../../../../shared/domain/types/nullable.type'
 import EntityEntity from '../../../domain/entities/entity.entity'
 import ErrorEntityNotFound from '../../../domain/errors/entity-not-found.error'
 import type EntityRepository from '../../../domain/repositories/entity.repository'
+import { type EntityRelationships } from '../../../domain/enums/entity.enum'
 
 class EntityMikroORMRepository implements EntityRepository {
   async list(offset?: number, limit?: number): Promise<Nullable<EntityEntity[]>> {
@@ -19,9 +20,13 @@ class EntityMikroORMRepository implements EntityRepository {
     return await em.findOne(EntityEntity, property)
   }
 
-  async findWithPassword(property: Record<string, string>): Promise<Nullable<EntityEntity>> {
+  async findWithPopulate(
+    where: Record<string, any>,
+    options: { limit?: number | undefined; offset?: number | undefined },
+    populate: EntityRelationships[]
+  ): Promise<Nullable<EntityEntity>> {
     const em = this.getEntityManager()
-    return await em.findOne(EntityEntity, property, { populate: ['password'] })
+    return await em.findOne(EntityEntity, where, { populate, ...options })
   }
 
   async save(entity: EntityEntity): Promise<Nullable<EntityEntity>> {
