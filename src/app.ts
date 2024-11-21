@@ -20,6 +20,7 @@ import bootstrapWasteCategory from './waste-category/waste-category.bootstrap'
 import bootstrapWasteTransactionDetail from './waste-transaction-detail/waste-transaction-detail.bootstrap'
 import bootstrapWasteTransaction from './waste-transaction/waste-transaction.bootstrap'
 import bootstrapWaste from './waste/waste.bootstrap'
+import jwt from 'jsonwebtoken'
 
 async function bootstrapApp(port: number, options?: Options): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM(options)
@@ -48,6 +49,29 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   app.get('/', async () => {
     return 'Hello, World!'
   })
+
+  /* Add Metabase endpoint */
+  app.get('/metabase-dashboard', async (request, reply) => {
+    const { id } = request.query as { id?: string }; 
+    if (!id) {
+      return reply.status(400).send({ error: 'ID is required' });
+    }
+  
+    const METABASE_SITE_URL = "http://localhost:3000";
+    const METABASE_SECRET_KEY ="e133c6146faa73cbf9aa5be19e837d941ede38da29db7aae7103d12c2271fbdc";
+  
+    const payload = {
+      resource: { dashboard: 2 },
+      params: { id: [id] }, // Incluir el ID en los parámetros
+      exp: Math.round(Date.now() / 1000) + (10 * 60), // 10 minutos de expiración
+    };
+  
+    const token = jwt.sign(payload, METABASE_SECRET_KEY);
+    const iframeUrl = `${METABASE_SITE_URL}/embed/dashboard/${token}#bordered=true&titled=true`;
+  
+    return { iframeUrl };
+  });
+  
 
   /* Register the entities */
   bootstrapAuth(app)

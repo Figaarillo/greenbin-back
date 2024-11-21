@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20241118132331 extends Migration {
+export class Migration20241118213249 extends Migration {
 
   async up(): Promise<void> {
     this.addSql('create table "entity_entity" ("id" uuid not null, "created_at" timestamptz not null, "updated_at" timestamptz not null, "name" varchar(255) not null, "email" varchar(255) not null, "description" text not null, "password" varchar(255) not null, "city" varchar(255) not null, "province" varchar(255) not null, "role" text check ("role" in (\'entity\', \'neighbor\', \'responsible\', \'rewardPartner\', \'admin\')) not null, constraint "entity_entity_pkey" primary key ("id"));');
@@ -60,6 +60,58 @@ export class Migration20241118132331 extends Migration {
 
     this.addSql('alter table "wastes_transactions_details" add constraint "wastes_transactions_details_waste_id_foreign" foreign key ("waste_id") references "wastes" ("id") on update cascade;');
     this.addSql('alter table "wastes_transactions_details" add constraint "wastes_transactions_details_transaction_id_foreign" foreign key ("transaction_id") references "wastes_transactions" ("id") on update cascade;');
+  }
+
+  async down(): Promise<void> {
+    this.addSql('alter table "green_point_entity" drop constraint "green_point_entity_entity_id_foreign";');
+
+    this.addSql('alter table "neighbor_entity" drop constraint "neighbor_entity_entity_id_foreign";');
+
+    this.addSql('alter table "responsible_entity" drop constraint "responsible_entity_entity_id_foreign";');
+
+    this.addSql('alter table "reward_partner_entity" drop constraint "reward_partner_entity_entity_id_foreign";');
+
+    this.addSql('alter table "wastes_transactions" drop constraint "wastes_transactions_green_point_id_foreign";');
+
+    this.addSql('alter table "neighbor_entity_wastes" drop constraint "neighbor_entity_wastes_neighbor_entity_id_foreign";');
+
+    this.addSql('alter table "wastes_neighbors" drop constraint "wastes_neighbors_neighbor_entity_id_foreign";');
+
+    this.addSql('alter table "wastes_transactions" drop constraint "wastes_transactions_neighbor_id_foreign";');
+
+    this.addSql('alter table "wastes_transactions" drop constraint "wastes_transactions_responsible_id_foreign";');
+
+    this.addSql('alter table "wastes" drop constraint "wastes_category_id_foreign";');
+
+    this.addSql('alter table "neighbor_entity_wastes" drop constraint "neighbor_entity_wastes_waste_entity_id_foreign";');
+
+    this.addSql('alter table "wastes_neighbors" drop constraint "wastes_neighbors_waste_entity_id_foreign";');
+
+    this.addSql('alter table "wastes_transactions_details" drop constraint "wastes_transactions_details_waste_id_foreign";');
+
+    this.addSql('alter table "wastes_transactions_details" drop constraint "wastes_transactions_details_transaction_id_foreign";');
+
+    this.addSql('drop table if exists "entity_entity" cascade;');
+
+    this.addSql('drop table if exists "green_point_entity" cascade;');
+
+    this.addSql('drop table if exists "neighbor_entity" cascade;');
+
+    this.addSql('drop table if exists "responsible_entity" cascade;');
+
+    this.addSql('drop table if exists "reward_partner_entity" cascade;');
+
+    this.addSql('drop table if exists "waste_categories" cascade;');
+
+    this.addSql('drop table if exists "wastes" cascade;');
+
+    this.addSql('drop table if exists "neighbor_entity_wastes" cascade;');
+
+    this.addSql('drop table if exists "wastes_neighbors" cascade;');
+
+    this.addSql('drop table if exists "wastes_transactions" cascade;');
+
+    this.addSql('drop table if exists "wastes_transactions_details" cascade;');
   }
 
 }

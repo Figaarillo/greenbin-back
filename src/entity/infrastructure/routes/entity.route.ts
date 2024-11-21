@@ -17,7 +17,6 @@ class EntityRoute {
   setupRoutes(): void {
     this.server.get('/api/entity', {
       schema: listSwaggerSchema,
-      preHandler: this.server.auth([this.server.validateAccessToken]),
       handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
         await this.handler.list(req, res)
       }
