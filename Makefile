@@ -1,4 +1,4 @@
-.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations
+.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations migrations.up migrations.create
 
 # ############ VARIABLES ############ #
 DB_HOST=localhost

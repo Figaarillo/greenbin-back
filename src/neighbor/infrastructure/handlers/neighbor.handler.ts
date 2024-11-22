@@ -11,17 +11,19 @@ import DeleteNeighborUseCase from '../../application/usecases/delete.usecase'
 import FindNeighborByDNIUseCase from '../../application/usecases/find-by-dni.usecase'
 import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
 import FindNeighborByIDUseCase from '../../application/usecases/find-by-id.usecase'
+import GetWatesOfNeighborUseCase from '../../application/usecases/get-waste.usecase'
 import ListNeighborsUseCase from '../../application/usecases/list.usecase'
 import LoginNeighborUseCase from '../../application/usecases/login.usecase'
 import RegisterNeighborUseCase from '../../application/usecases/register.usecase'
 import UpdateNeighborUseCase from '../../application/usecases/update.usecase'
+import type NeighborLoginPayload from '../../domain/payloads/neighbor.login.payload'
 import type NeighborPayload from '../../domain/payloads/neighbor.payload'
 import type NeighborRepository from '../../domain/repositories/neighbor.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
+import LoginNeighborDTO from '../dtos/login-neighbor.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
-import GetWatesOfNeighborUseCase from '../../application/usecases/get-waste.usecase'
 
 class NeighborHandler {
   constructor(
@@ -146,7 +148,10 @@ class NeighborHandler {
 
   async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
-      const paylaod = req.body as NeighborPayload
+      const paylaod = req.body as NeighborLoginPayload
+
+      const schemaValidator = new SchemaValidator(LoginNeighborDTO, paylaod)
+      schemaValidator.exec()
 
       const login = new LoginNeighborUseCase(this.neighborRepository)
       const neighbor = await login.exec(paylaod)
