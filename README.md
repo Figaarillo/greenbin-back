@@ -99,7 +99,7 @@ pnpm run prettier
 ```sh
 src
 ├── entity
-│   ├── aplication
+│   ├── application
 │   │   └── usecases            # Application use cases
 │   ├── domain
 │   │   ├── entities            # Domain entity definitions

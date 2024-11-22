@@ -1,6 +1,6 @@
 import { ZodError, type ZodType } from 'zod'
 import type EntityEntity from '../../domain/entities/entity.entity'
-import ErrorEntitySchemaValidation from '../../domain/errors/entity-schema-validation.error'
+import ErrorSchemaValidation from '../../../shared/domain/errors/schema-validation.error'
 
 class SchemaValidator<TDTOSchema> {
   private readonly schema: ZodType<TDTOSchema>
@@ -16,7 +16,7 @@ class SchemaValidator<TDTOSchema> {
       return this.schema.parse(this.payload)
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new ErrorEntitySchemaValidation(error.errors.map(err => err.message).join('\n'))
+        throw new ErrorSchemaValidation(error.errors.map(err => err.message).join('\n'))
       }
 
       throw error

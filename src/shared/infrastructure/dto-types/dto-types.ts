@@ -36,6 +36,15 @@ export const coordinatesDTO = z
     message: 'The coordinates cannot be 0,0'
   })
 
+export const cuitDTO = z
+  .string()
+  .regex(/^\d{11}$/, {
+    message: 'The CUIT must have only numeric characters. Do not use letters or special characters.'
+  })
+  .min(11, { message: 'The CUIT must be only 11 characters long' })
+  .max(11, { message: 'The CUIT must be only 11 characters long' })
+  .refine((cuit: string) => cuit.trim().length > 0, { message: 'The CUIT cannot be empty' })
+
 export const descriptionDTO = z.string().max(500, { message: 'The length of description must be less than 500' })
 
 export const dniDTO = z

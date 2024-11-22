@@ -57,6 +57,12 @@ class NeighborRoute {
         await this.handler.validateRole(req, rep)
       }
     })
+    this.server.get('/api/neighbor/get-waste/:id', {
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply) => {
+        await this.handler.getWastes(req, rep)
+      }
+    })
   }
 }
 

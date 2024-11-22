@@ -8,6 +8,7 @@ interface GreenPointPayload {
     latitude: number
     longitude: number
   }
+  entityId: string
 }
 
 export default GreenPointPayload

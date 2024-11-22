@@ -83,4 +83,17 @@ migrations.up: docker.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │           RUNNING MIGRATIONS           │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=localhost pnpm run migration:up
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:up
+
+migrations.delete:
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │          DELETING MIGRATIONS           │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	rm -rf ./src/migrations
+
+migrations.initial: migrations.delete docker.clean docker.db
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │       INITIALIZING MIGRATIONS          │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	sleep 1
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:initial

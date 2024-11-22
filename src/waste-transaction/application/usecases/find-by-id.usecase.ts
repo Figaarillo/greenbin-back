@@ -2,7 +2,7 @@ import type WasteTransactionEntity from '../../domain/entities/waste-transaction
 import ErrorWasteTransactionNotFound from '../../domain/errors/waste-transaction-not-found.error'
 import type WasteTransactionRepository from '../../domain/repositories/waste-transaction.repository'
 
-class FindByIdWasteTransactionByIDUseCase {
+class FindWasteTransactionByIDUseCase {
   constructor(private readonly repository: WasteTransactionRepository) {}
 
   async exec(id: string): Promise<WasteTransactionEntity> {
@@ -15,4 +15,4 @@ class FindByIdWasteTransactionByIDUseCase {
   }
 }
 
-export default FindByIdWasteTransactionByIDUseCase
+export default FindWasteTransactionByIDUseCase

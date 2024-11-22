@@ -17,6 +17,11 @@ class NeighborMikroORMRepository implements NeighborRepository {
     return await em.findOne(NeighborEntity, property)
   }
 
+  async findWithWaste(property: Record<string, string>): Promise<Nullable<NeighborEntity>> {
+    const em = this.getEntityManager()
+    return await em.findOne(NeighborEntity, property, { populate: ['wastes'] })
+  }
+
   async findWithPassword(property: Partial<NeighborEntity>): Promise<NeighborEntity | null> {
     const em = this.getEntityManager()
     return await em.findOne(NeighborEntity, property, { populate: ['password'] })

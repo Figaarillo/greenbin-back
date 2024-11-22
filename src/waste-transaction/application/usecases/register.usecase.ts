@@ -10,33 +10,21 @@ class RegisterWasteTransactionUseCase {
   constructor(private readonly repository: WasteTransactionRepository) {}
 
   async exec(payload: WasteTransactionPayload): Promise<WasteTransactionEntity> {
-    const idResponsible: string = payload.responsible as unknown as string
-    const idNeighbor: string = payload.neighbor as unknown as string
-    const idGreenPoint: string = payload.greenPoint as unknown as string
+    const responsible = await this.repository.findResponsible({ id: payload.responsibleId })
+    if (responsible == null) throw new ErrorResponsibleNotFound(payload.responsibleId)
 
-    const responsible = await this.repository.findResponsible({ id: idResponsible })
-    if (responsible == null) {
-      throw new ErrorResponsibleNotFound(idResponsible)
-    }
+    const neighbor = await this.repository.findNeighbor({ id: payload.neighborId })
+    if (neighbor == null) throw new ErrorNeighborNotFound(payload.neighborId)
 
-    const neighbor = await this.repository.findNeighbor({ id: idNeighbor })
-    if (neighbor == null) {
-      throw new ErrorNeighborNotFound(idNeighbor)
-    }
+    const greenPoint = await this.repository.fidnGreenPoint({ id: payload.greenPointId })
+    if (greenPoint == null) throw new ErrorGreenPointNotFound(payload.greenPointId)
 
-    const greenPoint = await this.repository.fidnGreenPoint({ id: idGreenPoint })
-    if (greenPoint == null) {
-      throw new ErrorGreenPointNotFound(idGreenPoint)
-    }
+    const transaction = new WasteTransactionEntity(responsible, neighbor, greenPoint)
+    const savedTransaction = await this.repository.save(transaction)
 
-    const newTransaction = new WasteTransactionEntity(payload)
+    if (savedTransaction == null) throw new ErrorCannotSaveWasteTransaction()
 
-    const wasteTransaction = await this.repository.save(newTransaction)
-    if (wasteTransaction == null) {
-      throw new ErrorCannotSaveWasteTransaction()
-    }
-
-    return wasteTransaction
+    return savedTransaction
   }
 }
 

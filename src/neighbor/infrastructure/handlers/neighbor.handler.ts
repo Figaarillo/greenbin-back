@@ -1,18 +1,21 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import AuthService from '../../../auth/aplicaction/service/auth.service'
+import AuthService from '../../../auth/application/service/auth.service'
 import { Roles } from '../../../auth/domain/entities/role'
-import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
+import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
+import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
+import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import DateUtils from '../../../shared/utils/date.util'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
-import DeleteNeighborUseCase from '../../aplication/usecases/delete.usecase'
-import FindNeighborByDNIUseCase from '../../aplication/usecases/find-by-dni.usecase'
-import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
-import FindNeighborByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
-import ListNeighborsUseCase from '../../aplication/usecases/list.usecase'
-import LoginNeighborUseCase from '../../aplication/usecases/login.usecase'
-import RegisterNeighborUseCase from '../../aplication/usecases/register.usecase'
-import UpdateNeighborUseCase from '../../aplication/usecases/update.usecase'
+import DeleteNeighborUseCase from '../../application/usecases/delete.usecase'
+import FindNeighborByDNIUseCase from '../../application/usecases/find-by-dni.usecase'
+import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
+import FindNeighborByIDUseCase from '../../application/usecases/find-by-id.usecase'
+import GetWatesOfNeighborUseCase from '../../application/usecases/get-waste.usecase'
+import ListNeighborsUseCase from '../../application/usecases/list.usecase'
+import LoginNeighborUseCase from '../../application/usecases/login.usecase'
+import RegisterNeighborUseCase from '../../application/usecases/register.usecase'
+import UpdateNeighborUseCase from '../../application/usecases/update.usecase'
 import type NeighborLoginPayload from '../../domain/payloads/neighbor.login.payload'
 import type NeighborPayload from '../../domain/payloads/neighbor.payload'
 import type NeighborRepository from '../../domain/repositories/neighbor.repository'
@@ -24,17 +27,16 @@ import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class NeighborHandler {
   constructor(
-    private readonly repository: NeighborRepository,
-    private readonly jwtProvider: IJWTProvider
-  ) {
-    this.repository = repository
-  }
+    private readonly neighborRepository: NeighborRepository,
+    private readonly entityRepository: EntityRepository,
+    private readonly jwtStrategy: IJWTStrategy
+  ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
-      const listNeighbor = new ListNeighborsUseCase(this.repository)
+      const listNeighbor = new ListNeighborsUseCase(this.neighborRepository)
       const neighbors = await listNeighbor.exec(offset, limit)
 
       HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
@@ -48,7 +50,7 @@ class NeighborHandler {
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const findNeighbor = new FindNeighborByIDUseCase(this.repository)
+      const findNeighbor = new FindNeighborByIDUseCase(this.neighborRepository)
       const neighbor = await findNeighbor.exec(id)
 
       HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
@@ -61,7 +63,7 @@ class NeighborHandler {
     try {
       const dni = GetURLParams(req, 'dni')
 
-      const findByDNI = new FindNeighborByDNIUseCase(this.repository)
+      const findByDNI = new FindNeighborByDNIUseCase(this.neighborRepository)
       const neighbor = await findByDNI.exec(dni)
 
       HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
@@ -80,10 +82,13 @@ class NeighborHandler {
         birthdate: DateUtils.parseDate((req.body as any).birthdate as string)
       }
 
-      const registerNeighbor = new RegisterNeighborUseCase(this.repository)
+      const registerNeighbor = new RegisterNeighborUseCase(
+        this.neighborRepository,
+        new FindEntityByIDUseCase(this.entityRepository)
+      )
       const neighbor = await registerNeighbor.exec(payload)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(neighbor.id, {
         username: neighbor.username,
         email: neighbor.email,
@@ -116,7 +121,7 @@ class NeighborHandler {
       const schemaValidator = new SchemaValidator(UpdateNeighborDTO, payload)
       schemaValidator.exec()
 
-      const updateNeighbor = new UpdateNeighborUseCase(this.repository)
+      const updateNeighbor = new UpdateNeighborUseCase(this.neighborRepository)
       await updateNeighbor.exec(id, payload)
 
       HandleHTTPResponse.OK(rep, 'Neighbor updated successfully', { id })
@@ -132,7 +137,7 @@ class NeighborHandler {
       const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
       schemaValidator.exec()
 
-      const deleteNeighbor = new DeleteNeighborUseCase(this.repository)
+      const deleteNeighbor = new DeleteNeighborUseCase(this.neighborRepository)
       await deleteNeighbor.exec(id)
 
       HandleHTTPResponse.OK(rep, 'Neighbor deleted successfully', { id })
@@ -148,10 +153,10 @@ class NeighborHandler {
       const schemaValidator = new SchemaValidator(LoginNeighborDTO, paylaod)
       schemaValidator.exec()
 
-      const login = new LoginNeighborUseCase(this.repository)
+      const login = new LoginNeighborUseCase(this.neighborRepository)
       const neighbor = await login.exec(paylaod)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(neighbor.id, {
         username: neighbor.username,
         email: neighbor.email,
@@ -177,10 +182,10 @@ class NeighborHandler {
     try {
       const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
 
-      const findByEmail = new FindByEmailUseCase(this.repository)
+      const findByEmail = new FindByEmailUseCase(this.neighborRepository)
       const neighbor = await findByEmail.exec(tokenNeighbor.email)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(req.neighbor.id, {
         username: neighbor.username,
         email: neighbor.email,
@@ -202,6 +207,19 @@ class NeighborHandler {
         throw new Error('Invalid role')
       }
       HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async getWastes(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+
+      const getWastes = new GetWatesOfNeighborUseCase(this.neighborRepository)
+      const wastes = await getWastes.exec(id)
+
+      HandleHTTPResponse.OK(rep, 'Wastes retrieved successfully', wastes)
     } catch (error) {
       rep.status(500).send(error)
     }

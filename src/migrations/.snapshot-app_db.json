@@ -237,6 +237,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "json"
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
         }
       },
       "name": "green_point_entity",
@@ -264,7 +273,20 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {},
+      "foreignKeys": {
+        "green_point_entity_entity_id_foreign": {
+          "constraintName": "green_point_entity_entity_id_foreign",
+          "columnNames": [
+            "entity_id"
+          ],
+          "localTableName": "public.green_point_entity",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.entity_entity",
+          "updateRule": "cascade"
+        }
+      },
       "nativeEnums": {}
     },
     {
@@ -402,6 +424,15 @@
             "admin"
           ],
           "mappedType": "enum"
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
         }
       },
       "name": "neighbor_entity",
@@ -439,7 +470,20 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {},
+      "foreignKeys": {
+        "neighbor_entity_entity_id_foreign": {
+          "constraintName": "neighbor_entity_entity_id_foreign",
+          "columnNames": [
+            "entity_id"
+          ],
+          "localTableName": "public.neighbor_entity",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.entity_entity",
+          "updateRule": "cascade"
+        }
+      },
       "nativeEnums": {}
     },
     {
@@ -557,6 +601,15 @@
             "admin"
           ],
           "mappedType": "enum"
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
         }
       },
       "name": "responsible_entity",
@@ -594,7 +647,20 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {},
+      "foreignKeys": {
+        "responsible_entity_entity_id_foreign": {
+          "constraintName": "responsible_entity_entity_id_foreign",
+          "columnNames": [
+            "entity_id"
+          ],
+          "localTableName": "public.responsible_entity",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.entity_entity",
+          "updateRule": "cascade"
+        }
+      },
       "nativeEnums": {}
     },
     {
@@ -713,6 +779,24 @@
             "admin"
           ],
           "mappedType": "enum"
+        },
+        "coordinates": {
+          "name": "coordinates",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "json"
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
         }
       },
       "name": "reward_partner_entity",
@@ -759,6 +843,16 @@
           "unique": true
         },
         {
+          "columnNames": [
+            "coordinates"
+          ],
+          "composite": false,
+          "keyName": "reward_partner_entity_coordinates_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
           "keyName": "reward_partner_entity_pkey",
           "columnNames": [
             "id"
@@ -770,7 +864,20 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {},
+      "foreignKeys": {
+        "reward_partner_entity_entity_id_foreign": {
+          "constraintName": "reward_partner_entity_entity_id_foreign",
+          "columnNames": [
+            "entity_id"
+          ],
+          "localTableName": "public.reward_partner_entity",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.entity_entity",
+          "updateRule": "cascade"
+        }
+      },
       "nativeEnums": {}
     },
     {
@@ -908,6 +1015,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "0",
           "mappedType": "integer"
         },
         "weight": {
@@ -1159,6 +1267,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "0",
           "mappedType": "integer"
         },
         "date": {
@@ -1274,6 +1383,17 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "0",
+          "mappedType": "integer"
+        },
+        "weight": {
+          "name": "weight",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "0",
           "mappedType": "integer"
         },
         "points": {
@@ -1283,6 +1403,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
+          "default": "0",
           "mappedType": "integer"
         },
         "transaction_id": {

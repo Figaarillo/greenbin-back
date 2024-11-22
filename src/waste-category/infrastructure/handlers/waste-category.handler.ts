@@ -1,11 +1,11 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
-import DeleteCategoryUseCase from '../../aplication/usecases/delete.usecase'
-import FindCategoryByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
-import ListCategoriesUseCase from '../../aplication/usecases/list.usecase'
-import RegisterWasteCategoryUseCase from '../../aplication/usecases/register.usecase'
-import UpdateCategoryUseCase from '../../aplication/usecases/update.usecase'
+import DeleteCategoryUseCase from '../../application/usecases/delete.usecase'
+import FindWasteCategoryByIDUseCase from '../../application/usecases/find-by-id.usecase'
+import ListCategoriesUseCase from '../../application/usecases/list.usecase'
+import RegisterWasteCategoryUseCase from '../../application/usecases/register.usecase'
+import UpdateCategoryUseCase from '../../application/usecases/update.usecase'
 import type WasteCategoryPayload from '../../domain/payloads/waste-category.payload'
 import type WasteCategoryRepository from '../../domain/repositories/waste-category.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
@@ -14,9 +14,7 @@ import UpdateWasteCategoryDTO from '../dtos/update-waste-category.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class WasteCategoryHandler {
-  constructor(private readonly repository: WasteCategoryRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: WasteCategoryRepository) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
@@ -38,7 +36,7 @@ class WasteCategoryHandler {
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const findCategory = new FindCategoryByIDUseCase(this.repository)
+      const findCategory = new FindWasteCategoryByIDUseCase(this.repository)
       const category = await findCategory.exec(id)
 
       HandleHTTPResponse.OK(res, 'Waste Category retrieved successfully', category)
