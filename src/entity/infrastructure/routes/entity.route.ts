@@ -29,6 +29,9 @@ class EntityRoute {
         await this.handler.findByID(req, res)
       }
     })
+    this.server.get('/api/entity/populate', async (req: FastifyRequest<{ Params: Record<string, string> }>, res) => {
+      await this.handler.findAndPopulate(req, res)
+    })
     this.server.post('/api/entity', { schema: registerSwaggerSchema }, async (req, res) => {
       await this.handler.register(req, res)
     })
