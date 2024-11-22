@@ -18,6 +18,8 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterEntityDTO from '../dtos/register-entity.dto'
 import UpdateEntityDTO from '../dtos/update-entity.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import EntityQueryParams from '../dtos/query-params.dto'
+import FindEntityWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
 
 class EntityHandler {
   constructor(
@@ -47,6 +49,19 @@ class EntityHandler {
 
       const findEntity = new FindEntityByIDUseCase(this.repository)
       const entity = await findEntity.exec(id)
+
+      HandleHTTPResponse.OK(res, 'Entity retrieved successfully', entity)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async findAndPopulate(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+    try {
+      const params = EntityQueryParams.parse(req.query)
+
+      const findWithPopulate = new FindEntityWithPopulateUseCase(this.repository)
+      const entity = await findWithPopulate.exec(params.id, params.with)
 
       HandleHTTPResponse.OK(res, 'Entity retrieved successfully', entity)
     } catch (error) {
