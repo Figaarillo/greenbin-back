@@ -24,11 +24,11 @@ class LoginEntityUseCase {
 
   private async findEntity(payload: EntityLoginPayload): Promise<EntityEntity | null> {
     if (payload.email !== undefined && payload.email !== '') {
-      return await this.repository.findWithPopulate({ email: payload.email }, {}, [EntityRelationships.PASSWORD])
+      return await this.repository.findWithPopulate({ email: payload.email }, [EntityRelationships.PASSWORD])
     }
 
     if (payload.name !== undefined && payload.name !== '') {
-      return await this.repository.findWithPopulate({ name: payload.name }, {}, [EntityRelationships.PASSWORD])
+      return await this.repository.findWithPopulate({ name: payload.name }, [EntityRelationships.PASSWORD])
     }
 
     throw new Error('Email or name is required')

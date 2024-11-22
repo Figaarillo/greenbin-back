@@ -20,13 +20,9 @@ class EntityMikroORMRepository implements EntityRepository {
     return await em.findOne(EntityEntity, property)
   }
 
-  async findWithPopulate(
-    where: Record<string, any>,
-    options: { limit?: number | undefined; offset?: number | undefined },
-    populate: EntityRelationships[]
-  ): Promise<Nullable<EntityEntity>> {
+  async findWithPopulate(where: Record<string, any>, populate: EntityRelationships[]): Promise<Nullable<EntityEntity>> {
     const em = this.getEntityManager()
-    return await em.findOne(EntityEntity, where, { populate, ...options })
+    return await em.findOne(EntityEntity, where, { populate })
   }
 
   async save(entity: EntityEntity): Promise<Nullable<EntityEntity>> {
