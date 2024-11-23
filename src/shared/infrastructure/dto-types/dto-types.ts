@@ -36,7 +36,14 @@ export const coordinatesDTO = z
     message: 'The coordinates cannot be 0,0'
   })
 
+export const costInPointsDTO = z.number().min(1, { message: 'The cost in points must be at least 1' }).positive()
+
 export const descriptionDTO = z.string().max(500, { message: 'The length of description must be less than 500' })
+
+export const discountDTO = z
+  .number()
+  .min(0, { message: 'The discount must be greater than 0' })
+  .max(100, { message: 'The discount must be less than 100' })
 
 export const dniDTO = z
   .number()
@@ -95,12 +102,24 @@ export const provinceDTO = z
   .min(2, { message: 'Province name must be at least 2 characters long' })
   .max(100, { message: 'Province name must be less than 100 characters' })
 
+export const titleDTO = z
+  .string()
+  .min(3, { message: 'The title must be at least 3 characters long' })
+  .max(200, { message: 'The length of title must be less than 200' })
+  .refine((title: string) => title.trim().length > 0, { message: 'The name cannot be empty' })
+
 export const usernameDTO = z
   .string()
   .min(4, { message: 'Username must be at least 4 characters long' })
   .max(100, { message: 'Username must be less than 100 characters' })
   .regex(/^[a-zA-Z0-9]+$/, { message: 'Username must only contain letters and numbers' })
   .refine((username: string) => username.trim().length > 0, { message: 'Username cannot be empty' })
+
+export const validDaysDTO = z
+  .number()
+  .min(1, { message: 'The valid days must be at least 1' })
+  .max(365, { message: 'The valid days must be less than 365' })
+  .positive({ message: 'The valid days must be positive' })
 
 export const weightDTO = z
   .number()
