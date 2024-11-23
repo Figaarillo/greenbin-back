@@ -4,8 +4,11 @@ import FastifyCors from '@fastify/cors'
 import Swagger from '@fastify/swagger'
 import SwaggerUI from '@fastify/swagger-ui'
 import { RequestContext, type Options } from '@mikro-orm/postgresql'
+import env from 'env-var'
 import { type FastifyInstance } from 'fastify'
+import jwt from 'jsonwebtoken'
 import bootstrapAuth from './auth/auth.bootstrap'
+import bootstrapCoupon from './coupon/coupon.bootstrap'
 import initMikroORM, { type Services } from './db'
 import bootstrapEntity from './entity/entity.bootstrap'
 import bootstrapGreenPoint from './green-point/green-point.bootstrap'
@@ -20,8 +23,6 @@ import bootstrapWasteCategory from './waste-category/waste-category.bootstrap'
 import bootstrapWasteTransactionDetail from './waste-transaction-detail/waste-transaction-detail.bootstrap'
 import bootstrapWasteTransaction from './waste-transaction/waste-transaction.bootstrap'
 import bootstrapWaste from './waste/waste.bootstrap'
-import jwt from 'jsonwebtoken'
-import env from 'env-var'
 
 async function bootstrapApp(port: number, options?: Options): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM(options)
@@ -80,6 +81,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapWaste(app)
   bootstrapWasteTransaction(app)
   bootstrapWasteTransactionDetail(app)
+  bootstrapCoupon(app)
 
   /* Start the server */
   const url: string = await fastify.start(port)
