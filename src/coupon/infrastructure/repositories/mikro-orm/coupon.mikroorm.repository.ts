@@ -4,6 +4,7 @@ import type Nullable from '../../../../shared/domain/types/nullable.type'
 import CouponEntity from '../../../domain/entities/coupon.entity'
 import { type CouponRelationship } from '../../../domain/enums/coupon.enum'
 import type CouponRepository from '../../../domain/repositories/coupon.repository'
+import type CouponUpdatePayload from '../../../domain/payloads/coupon.update.payload'
 
 class CouponMikroORMRepository implements CouponRepository {
   async list(offset?: number, limit?: number): Promise<Nullable<CouponEntity[]>> {
@@ -30,6 +31,27 @@ class CouponMikroORMRepository implements CouponRepository {
     const em = this.getEntityManager()
     await em.persist(newCategory).flush()
     return newCategory
+  }
+
+  async update(id: string, payload: CouponUpdatePayload): Promise<Nullable<CouponEntity>> {
+    const em = this.getEntityManager()
+
+    const coupon = em.getReference(CouponEntity, id)
+    if (coupon == null) return null
+
+    coupon.update(payload)
+    return coupon
+  }
+
+  async delete(id: string): Promise<void> {
+    const em = this.getEntityManager()
+
+    const coupon = em.getReference(CouponEntity, id)
+    if (coupon == null) {
+      throw new Error('Error when try to delete coupon. Coupon not found')
+    }
+
+    await em.remove(coupon).flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
