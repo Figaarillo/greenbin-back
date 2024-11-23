@@ -1,11 +1,12 @@
 import { ZodError, type ZodType } from 'zod'
+import type ExtendPayload from '../../../shared/domain/types/ext-payload.type'
+import type WasteTransactionDetailPayload from '../../domain/payloads/waste-transaction-detail.payload'
 import handleZodError from '../../../shared/utils/hanlde-zod-error.util'
-import type EntityEntity from '../../domain/entities/entity.entity'
 
-class SchemaValidator<TDTOSchema> {
+class WasteTransactionDetailSchemaValidator<TDTOSchema> {
   constructor(
     private readonly schema: ZodType<TDTOSchema>,
-    private readonly payload: Partial<EntityEntity>
+    private readonly payload: Partial<ExtendPayload<WasteTransactionDetailPayload>>
   ) {}
 
   exec(): TDTOSchema {
@@ -19,4 +20,4 @@ class SchemaValidator<TDTOSchema> {
   }
 }
 
-export default SchemaValidator
+export default WasteTransactionDetailSchemaValidator

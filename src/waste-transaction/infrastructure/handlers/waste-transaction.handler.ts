@@ -1,7 +1,7 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find-by-id.usecase'
 import type NeighborRepository from '../../../neighbor/domain/repositories/neighbor.repository'
-import SchemaValidator from '../../../shared/infrastructure/middlewares/zod-schema-validator.middleware'
+import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetURLParams } from '../../../shared/utils/http.request.util'
 import FindWasteCategoryByIDUseCase from '../../../waste-category/application/usecases/find-by-id.usecase'
@@ -18,8 +18,8 @@ import UpdateWasteTransactionUseCase from '../../application/usecases/update.use
 import type WasteDeliveryPayload from '../../domain/payloads/waste-delivery.payload'
 import type WasteTransactionPayload from '../../domain/payloads/waste-transaction.payload'
 import type WasteTransactionRepository from '../../domain/repositories/waste-transaction.repository'
-import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterWasteTransactionDTO from '../dtos/register-waste-transaction.dto'
+import WasteTransactionSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class WasteTransactionHandler {
   constructor(
@@ -34,7 +34,7 @@ class WasteTransactionHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new WasteTransactionSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findWasteTransaction = new FindWasteTransactionByIDUseCase(this.transactionRepository)
@@ -48,7 +48,7 @@ class WasteTransactionHandler {
 
   async register(req: FastifyRequest<{ Body: WasteTransactionPayload }>, res: FastifyReply): Promise<void> {
     try {
-      const validateRegisterSchema = new SchemaValidator(RegisterWasteTransactionDTO, req.body)
+      const validateRegisterSchema = new WasteTransactionSchemaValidator(RegisterWasteTransactionDTO, req.body)
       validateRegisterSchema.exec()
 
       const registerWasteTransaction = new RegisterWasteTransactionUseCase(this.transactionRepository)

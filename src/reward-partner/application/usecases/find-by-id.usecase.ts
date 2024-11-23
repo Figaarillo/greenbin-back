@@ -2,19 +2,17 @@ import type RewardPartnerEntity from '../../domain/entities/reward-partner.entit
 import ErrorRewardPartnerNotFound from '../../domain/errors/reward-partner-not-found.error'
 import type RewardPartnerRepository from '../../domain/repositories/reward-partner.repository'
 
-class FindRewardPartnerByIDUseCase {
-  constructor(private readonly repository: RewardPartnerRepository) {
-    this.repository = repository
-  }
+class FindRewardPartnerByIdUseCase {
+  constructor(private readonly repository: RewardPartnerRepository) {}
 
   async exec(id: string): Promise<RewardPartnerEntity> {
-    const categoryFound = await this.repository.find({ id })
-    if (categoryFound == null) {
+    const rewardPartner = await this.repository.find({ id })
+    if (rewardPartner == null) {
       throw new ErrorRewardPartnerNotFound(id)
     }
 
-    return categoryFound
+    return rewardPartner
   }
 }
 
-export default FindRewardPartnerByIDUseCase
+export default FindRewardPartnerByIdUseCase

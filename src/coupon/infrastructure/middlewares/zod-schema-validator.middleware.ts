@@ -1,11 +1,11 @@
 import { ZodError, type ZodType } from 'zod'
 import handleZodError from '../../../shared/utils/hanlde-zod-error.util'
-import type EntityEntity from '../../domain/entities/entity.entity'
+import type CouponEntity from '../../domain/entities/coupon.entity'
 
 class SchemaValidator<TDTOSchema> {
   constructor(
     private readonly schema: ZodType<TDTOSchema>,
-    private readonly payload: Partial<EntityEntity>
+    private readonly payload: Partial<CouponEntity>
   ) {}
 
   exec(): TDTOSchema {

@@ -1,11 +1,23 @@
 /* eslint-disable indent */
-import { BeforeCreate, BeforeUpdate, Entity, Enum, EventArgs, ManyToOne, Property, t } from '@mikro-orm/postgresql'
+import {
+  BeforeCreate,
+  BeforeUpdate,
+  Collection,
+  Entity,
+  Enum,
+  EventArgs,
+  ManyToOne,
+  OneToMany,
+  Property,
+  t
+} from '@mikro-orm/postgresql'
 import { hash, verify } from 'argon2'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import RewardPartnerPayload from '../payloads/reward-partner.payload'
 import type RewardPartnerUpdatePayload from '../payloads/reward-partner.update.payload'
 import { Roles } from '../../../auth/domain/entities/role'
 import EntityEntity from '../../../entity/domain/entities/entity.entity'
+import CouponEntity from '../../../coupon/domain/entities/coupon.entity'
 
 @Entity()
 class RewardPartnerEntity extends BaseEntity {
@@ -41,6 +53,9 @@ class RewardPartnerEntity extends BaseEntity {
 
   @ManyToOne()
   entity: EntityEntity
+
+  @OneToMany(() => CouponEntity, coupon => coupon.rewardPartner)
+  neighbors = new Collection<CouponEntity>(this)
 
   constructor(payload: RewardPartnerPayload, entity: EntityEntity) {
     super()
