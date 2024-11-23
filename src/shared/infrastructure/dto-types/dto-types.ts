@@ -47,6 +47,8 @@ export const cuitDTO = z
   .max(11, { message: 'The CUIT must be only 11 characters long' })
   .refine((cuit: string) => cuit.trim().length > 0, { message: 'The CUIT cannot be empty' })
 
+export const co2DTO = z.number().min(0, { message: 'The CO2 must be greater than 0' })
+
 export const descriptionDTO = z.string().max(500, { message: 'The length of description must be less than 500' })
 
 export const discountDTO = z
