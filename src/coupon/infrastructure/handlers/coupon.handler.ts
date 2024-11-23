@@ -49,8 +49,8 @@ class CouponHandler {
 
   async register(req: FastifyRequest<{ Body: CouponPayload }>, res: FastifyReply): Promise<void> {
     try {
-      const validateRegisterCategoriesSchema = new SchemaValidator(RegisterCouponDTO, req.body)
-      validateRegisterCategoriesSchema.exec()
+      const validateRegisterCouponsSchema = new SchemaValidator(RegisterCouponDTO, req.body)
+      validateRegisterCouponsSchema.exec()
 
       const findRewardPartner = new FindRewardPartnerByIdUseCase(this.rewardPartnerRepository)
       const registerCoupon = new RegisterCouponUseCase(this.couponRepository, findRewardPartner)
