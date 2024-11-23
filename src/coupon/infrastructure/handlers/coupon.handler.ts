@@ -1,8 +1,7 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import FindRewardPartnerByIdUseCase from '../../../reward-partner/application/usecases/find-by-id.usecase'
 import type RewardPartnerRepository from '../../../reward-partner/domain/repositories/reward-partner.repository'
-import { idDTO } from '../../../shared/infrastructure/dto-types/dto-types'
-import SchemaValidator from '../../../shared/infrastructure/middlewares/zod-schema-validator.middleware'
+import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import FindCouponWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
@@ -13,6 +12,7 @@ import type CouponPayload from '../../domain/payloads/coupon.payload'
 import type CouponRepository from '../../domain/repositories/coupon.repository'
 import CouponQueryParams from '../dtos/query-params.dto'
 import RegisterCouponDTO from '../dtos/register-coupon.dto'
+import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class CouponHandler {
   constructor(
@@ -37,7 +37,7 @@ class CouponHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(idDTO, id)
+      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findCoupon = new FindCouponByIDUseCase(this.couponRepository)
