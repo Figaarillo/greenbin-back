@@ -1,5 +1,5 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import SchemaValidator from '../../../shared/infrastructure/middlewares/zod-schema-validator.middleware'
+import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetURLParams } from '../../../shared/utils/http.request.util'
 import FindWasteCategoryByIDUseCase from '../../../waste-category/application/usecases/find-by-id.usecase'
@@ -8,8 +8,8 @@ import FindWasteByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import RegisterWasteUseCase from '../../application/usecases/register.usecase'
 import type WastePayload from '../../domain/payloads/waste.payload'
 import type WasteRepository from '../../domain/repositories/waste.repository'
-import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterWasteDTO from '../dtos/register-waste.dto'
+import WasteSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class WasteHandler {
   constructor(
@@ -21,7 +21,7 @@ class WasteHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new WasteSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findByID = new FindWasteByIDUseCase(this.wasteRepository)
@@ -37,7 +37,7 @@ class WasteHandler {
     try {
       const payload: WastePayload = req.body as WastePayload
 
-      const validateRegisterWasteSchema = new SchemaValidator(RegisterWasteDTO, payload)
+      const validateRegisterWasteSchema = new WasteSchemaValidator(RegisterWasteDTO, payload)
       validateRegisterWasteSchema.exec()
 
       const registerWaste = new RegisterWasteUseCase(

@@ -1,5 +1,5 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import SchemaValidator from '../../../shared/infrastructure/middlewares/zod-schema-validator.middleware'
+import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetURLParams } from '../../../shared/utils/http.request.util'
 import FindWasteTransactionByIDUseCase from '../../../waste-transaction/application/usecases/find-by-id.usecase'
@@ -10,8 +10,8 @@ import FindWasteTransactionDetailByIDUseCase from '../../application/usecases/fi
 import RegisterWasteTransactionDetailUseCase from '../../application/usecases/register.usecase'
 import type WasteTransactionDetailPayload from '../../domain/payloads/waste-transaction-detail.payload'
 import type WasteTransactionDetailRepository from '../../domain/repositories/waste-transaction-detail.repository'
-import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterWasteTransactionDetailDTO from '../dtos/register-waste-transaction-detail.dto'
+import WasteTransactionDetailSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class WasteTransactionDetailHandler {
   constructor(
@@ -24,7 +24,7 @@ class WasteTransactionDetailHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new WasteTransactionDetailSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findWasteTransactionDetail = new FindWasteTransactionDetailByIDUseCase(this.transactionDetailRepository)
@@ -40,7 +40,10 @@ class WasteTransactionDetailHandler {
     try {
       const payload: WasteTransactionDetailPayload = req.body as WasteTransactionDetailPayload
 
-      const validateRegisterSchema = new SchemaValidator(RegisterWasteTransactionDetailDTO, payload)
+      const validateRegisterSchema = new WasteTransactionDetailSchemaValidator(
+        RegisterWasteTransactionDetailDTO,
+        payload
+      )
       validateRegisterSchema.exec()
 
       const registerWasteTransactionDetail = new RegisterWasteTransactionDetailUseCase(
