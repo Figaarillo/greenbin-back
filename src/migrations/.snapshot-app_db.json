@@ -1066,6 +1066,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "text"
+        },
+        "co2": {
+          "name": "co2",
+          "type": "real",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "float"
         }
       },
       "name": "waste_categories",
