@@ -94,6 +94,15 @@
           "length": 255,
           "mappedType": "string"
         },
+        "coordinates": {
+          "name": "coordinates",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "json"
+        },
         "role": {
           "name": "role",
           "type": "text",
@@ -111,7 +120,7 @@
           "mappedType": "enum"
         }
       },
-      "name": "entity_entity",
+      "name": "entities",
       "schema": "public",
       "indexes": [
         {
@@ -119,7 +128,7 @@
             "name"
           ],
           "composite": false,
-          "keyName": "entity_entity_name_unique",
+          "keyName": "entities_name_unique",
           "constraint": true,
           "primary": false,
           "unique": true
@@ -129,13 +138,23 @@
             "email"
           ],
           "composite": false,
-          "keyName": "entity_entity_email_unique",
+          "keyName": "entities_email_unique",
           "constraint": true,
           "primary": false,
           "unique": true
         },
         {
-          "keyName": "entity_entity_pkey",
+          "columnNames": [
+            "coordinates"
+          ],
+          "composite": false,
+          "keyName": "entities_coordinates_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "entities_pkey",
           "columnNames": [
             "id"
           ],
@@ -283,7 +302,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.entity_entity",
+          "referencedTableName": "public.entities",
           "updateRule": "cascade"
         }
       },
@@ -480,7 +499,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.entity_entity",
+          "referencedTableName": "public.entities",
           "updateRule": "cascade"
         }
       },
@@ -657,7 +676,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.entity_entity",
+          "referencedTableName": "public.entities",
           "updateRule": "cascade"
         }
       },
@@ -874,7 +893,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.entity_entity",
+          "referencedTableName": "public.entities",
           "updateRule": "cascade"
         }
       },
