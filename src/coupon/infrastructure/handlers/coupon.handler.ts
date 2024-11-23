@@ -37,7 +37,7 @@ class CouponHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(idDTO, { id })
+      const validateIDSchema = new SchemaValidator(idDTO, id)
       validateIDSchema.exec()
 
       const findCoupon = new FindCouponByIDUseCase(this.couponRepository)
