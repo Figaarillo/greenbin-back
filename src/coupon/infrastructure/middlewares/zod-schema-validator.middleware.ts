@@ -1,5 +1,5 @@
 import { ZodError, type ZodType } from 'zod'
-import throwZodError from '../../../shared/infrastructure/middlewares/zod-schema-validator.middleware'
+import handleZodError from '../../../shared/utils/hanlde-zod-error.util'
 import type CouponEntity from '../../domain/entities/coupon.entity'
 
 class SchemaValidator<TDTOSchema> {
@@ -12,7 +12,7 @@ class SchemaValidator<TDTOSchema> {
     try {
       return this.schema.parse(this.payload)
     } catch (error) {
-      if (error instanceof ZodError) throwZodError(error)
+      if (error instanceof ZodError) handleZodError(error)
 
       throw error
     }
