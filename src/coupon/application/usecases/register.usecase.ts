@@ -1,4 +1,4 @@
-import type FindRewardPartnerByIdUseCase from '../../../reward-partner/aplication/usecases/find-by-id.usecase'
+import type FindRewardPartnerByIdUseCase from '../../../reward-partner/application/usecases/find-by-id.usecase'
 import CouponEntity from '../../domain/entities/coupon.entity'
 import ErrorCannotSaveCoupon from '../../domain/errors/cannot-save-coupon.error'
 import type CouponPayload from '../../domain/payloads/coupon.payload'

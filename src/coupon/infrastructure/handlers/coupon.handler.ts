@@ -1,18 +1,18 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import FindRewardPartnerByIdUseCase from '../../../reward-partner/aplication/usecases/find-by-id.usecase'
+import FindRewardPartnerByIdUseCase from '../../../reward-partner/application/usecases/find-by-id.usecase'
 import type RewardPartnerRepository from '../../../reward-partner/domain/repositories/reward-partner.repository'
 import { idDTO } from '../../../shared/infrastructure/dto-types/dto-types'
 import SchemaValidator from '../../../shared/infrastructure/middlewares/zod-schema-validator.middleware'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import FindCouponWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
 import FindCouponByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import ListCouponsUseCase from '../../application/usecases/list.usecase'
 import RegisterCouponUseCase from '../../application/usecases/register.usecase'
 import type CouponPayload from '../../domain/payloads/coupon.payload'
 import type CouponRepository from '../../domain/repositories/coupon.repository'
-import RegisterCouponDTO from '../dtos/register-coupon.dto'
 import CouponQueryParams from '../dtos/query-params.dto'
-import FindCouponWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
+import RegisterCouponDTO from '../dtos/register-coupon.dto'
 
 class CouponHandler {
   constructor(
