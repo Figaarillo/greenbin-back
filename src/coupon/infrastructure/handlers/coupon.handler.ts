@@ -11,6 +11,8 @@ import RegisterCouponUseCase from '../../application/usecases/register.usecase'
 import type CouponPayload from '../../domain/payloads/coupon.payload'
 import type CouponRepository from '../../domain/repositories/coupon.repository'
 import RegisterCouponDTO from '../dtos/register-coupon.dto'
+import CouponQueryParams from '../dtos/query-params.dto'
+import FindCouponWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
 
 class CouponHandler {
   constructor(
@@ -40,6 +42,19 @@ class CouponHandler {
 
       const findCoupon = new FindCouponByIDUseCase(this.couponRepository)
       const coupon = await findCoupon.exec(id)
+
+      HandleHTTPResponse.OK(res, 'Coupon retrieved successfully', coupon)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async findAndPopulate(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+    try {
+      const params = CouponQueryParams.parse(req.query)
+
+      const findWithPopulate = new FindCouponWithPopulateUseCase(this.couponRepository)
+      const coupon = await findWithPopulate.exec(params.id, params.with)
 
       HandleHTTPResponse.OK(res, 'Coupon retrieved successfully', coupon)
     } catch (error) {

@@ -15,6 +15,9 @@ class CouponRoute {
     this.server.get('/api/coupon/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
       await this.handler.findByID(req, res)
     })
+    this.server.get('/api/coupon/populate', async (req: FastifyRequest<{ Params: Record<string, string> }>, res) => {
+      await this.handler.findAndPopulate(req, res)
+    })
     this.server.post('/api/coupon', async (req: FastifyRequest<{ Body: CouponPayload }>, res) => {
       await this.handler.register(req, res)
     })
