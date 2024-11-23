@@ -1148,12 +1148,12 @@
         },
         "weight": {
           "name": "weight",
-          "type": "int",
+          "type": "real",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "mappedType": "float"
         },
         "points_per_weight": {
           "name": "points_per_weight",
