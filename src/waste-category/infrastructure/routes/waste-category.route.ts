@@ -7,6 +7,7 @@ import {
   registerSwaggerSchema,
   updateSwaggerSchema
 } from '../swagger-schemas/waste-category.swagger-schema'
+import type WasteCategoryPayload from '../../domain/payloads/waste-category.payload'
 
 class WasteCategoryRoute {
   constructor(
@@ -29,13 +30,17 @@ class WasteCategoryRoute {
         await this.handler.findByID(req, res)
       }
     )
-    this.server.post('/api/waste-category', { schema: registerSwaggerSchema }, async (req, res) => {
-      await this.handler.register(req, res)
-    })
+    this.server.post(
+      '/api/waste-category',
+      { schema: registerSwaggerSchema },
+      async (req: FastifyRequest<{ Body: WasteCategoryPayload }>, res) => {
+        await this.handler.register(req, res)
+      }
+    )
     this.server.put(
       '/api/waste-category/:id',
       { schema: updateSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+      async (req: FastifyRequest<{ Params: { id: string }; Body: WasteCategoryPayload }>, res) => {
         await this.handler.update(req, res)
       }
     )
