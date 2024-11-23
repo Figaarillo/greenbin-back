@@ -4,14 +4,18 @@ import type RewardPartnerRepository from '../../../reward-partner/domain/reposit
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import DeleteCouponUseCase from '../../application/usecases/delete.usecase'
 import FindCouponWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
 import FindCouponByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import ListCouponsUseCase from '../../application/usecases/list.usecase'
 import RegisterCouponUseCase from '../../application/usecases/register.usecase'
+import UpdateCouponUseCase from '../../application/usecases/update.usecase'
 import type CouponPayload from '../../domain/payloads/coupon.payload'
+import type CouponUpdatePayload from '../../domain/payloads/coupon.update.payload'
 import type CouponRepository from '../../domain/repositories/coupon.repository'
 import CouponQueryParams from '../dtos/query-params.dto'
 import RegisterCouponDTO from '../dtos/register-coupon.dto'
+import UpdateCouponDTO from '../dtos/update-coupon.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class CouponHandler {
@@ -72,6 +76,44 @@ class CouponHandler {
       const coupon = await registerCoupon.exec(req.body)
 
       HandleHTTPResponse.Created(res, 'Coupon registered successfully', { id: coupon.id })
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async update(
+    req: FastifyRequest<{ Params: Record<string, string>; Body: CouponUpdatePayload }>,
+    res: FastifyReply
+  ): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+
+      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      validateIDSchema.exec()
+
+      const schemaValidator = new SchemaValidator(UpdateCouponDTO, req.body)
+      schemaValidator.exec()
+
+      const updateCoupon = new UpdateCouponUseCase(this.couponRepository)
+      await updateCoupon.exec(id, req.body)
+
+      HandleHTTPResponse.OK(res, 'Coupon updated successfully', { id })
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+
+      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      schemaValidator.exec()
+
+      const deleteCoupon = new DeleteCouponUseCase(this.couponRepository)
+      await deleteCoupon.exec(id)
+
+      HandleHTTPResponse.OK(res, 'Coupon deleted successfully', { id })
     } catch (error) {
       res.status(500).send(error)
     }

@@ -21,6 +21,15 @@ class CouponRoute {
     this.server.post('/api/coupon', async (req: FastifyRequest<{ Body: CouponPayload }>, res) => {
       await this.handler.register(req, res)
     })
+    this.server.put(
+      '/api/coupon/:id',
+      async (req: FastifyRequest<{ Params: Record<string, string>; Body: CouponPayload }>, res) => {
+        await this.handler.update(req, res)
+      }
+    )
+    this.server.delete('/api/coupon/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+      await this.handler.delete(req, res)
+    })
   }
 }
 
