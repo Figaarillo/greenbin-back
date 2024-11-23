@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { idDTO } from './dto-types/dto-types'
+import { idDTO } from '../../../shared/infrastructure/dto-types/dto-types'
 
 const CheckIdDTO = z.object({
   id: idDTO

@@ -2,15 +2,15 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetHeader } from '../../../shared/utils/http.request.util'
-import AuthService from '../../aplicaction/service/auth.service'
-import type IJWTProvider from '../../domain/providers/jwt.interface.provider'
+import AuthService from '../../application/service/auth.service'
+import type IJWTStrategy from '../../domain/strategies/jwt.interface.strategy'
 
 const validateRefreshToken = async (
   req: FastifyRequest,
   rep: FastifyReply,
-  jwtProvider: IJWTProvider
+  jwtStrategy: IJWTStrategy
 ): Promise<void> => {
-  const authService = new AuthService(jwtProvider)
+  const authService = new AuthService(jwtStrategy)
   const headerToken = GetHeader(req, 'authorization').split(' ')[1]
 
   if (headerToken === '') {

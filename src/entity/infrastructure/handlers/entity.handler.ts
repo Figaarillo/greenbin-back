@@ -1,16 +1,16 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import AuthService from '../../../auth/aplicaction/service/auth.service'
+import AuthService from '../../../auth/application/service/auth.service'
 import { Roles } from '../../../auth/domain/entities/role'
-import type IJWTProvider from '../../../auth/domain/providers/jwt.interface.provider'
+import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
-import DeleteEntityUseCase from '../../aplication/usecases/delete.usecase'
-import FindByEmailUseCase from '../../aplication/usecases/find-by-email.usecase'
-import FindEntityByIDUseCase from '../../aplication/usecases/find-by-id.usecase'
-import ListEntitiesUseCase from '../../aplication/usecases/list.usecase'
-import LoginEntityUseCase from '../../aplication/usecases/login.usecase'
-import RegisterEntityUseCase from '../../aplication/usecases/register.usecase'
-import UpdateEntityUseCase from '../../aplication/usecases/update.usecase'
+import DeleteEntityUseCase from '../../application/usecases/delete.usecase'
+import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
+import FindEntityByIDUseCase from '../../application/usecases/find-by-id.usecase'
+import ListEntitiesUseCase from '../../application/usecases/list.usecase'
+import LoginEntityUseCase from '../../application/usecases/login.usecase'
+import RegisterEntityUseCase from '../../application/usecases/register.usecase'
+import UpdateEntityUseCase from '../../application/usecases/update.usecase'
 import type EntityLoginPayload from '../../domain/payloads/entity.login.payload'
 import type EntityPayload from '../../domain/payloads/entity.payload'
 import type EntityRepository from '../../domain/repositories/entity.repository'
@@ -18,11 +18,13 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterEntityDTO from '../dtos/register-entity.dto'
 import UpdateEntityDTO from '../dtos/update-entity.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import EntityQueryParams from '../dtos/query-params.dto'
+import FindEntityWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
 
 class EntityHandler {
   constructor(
     private readonly repository: EntityRepository,
-    private readonly jwtProvider: IJWTProvider
+    private readonly jwtStrategy: IJWTStrategy
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
@@ -47,6 +49,19 @@ class EntityHandler {
 
       const findEntity = new FindEntityByIDUseCase(this.repository)
       const entity = await findEntity.exec(id)
+
+      HandleHTTPResponse.OK(res, 'Entity retrieved successfully', entity)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async findAndPopulate(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+    try {
+      const params = EntityQueryParams.parse(req.query)
+
+      const findWithPopulate = new FindEntityWithPopulateUseCase(this.repository)
+      const entity = await findWithPopulate.exec(params.id, params.with)
 
       HandleHTTPResponse.OK(res, 'Entity retrieved successfully', entity)
     } catch (error) {
@@ -113,7 +128,7 @@ class EntityHandler {
       const login = new LoginEntityUseCase(this.repository)
       const entity = await login.exec(payload)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(entity.id, {
         name: entity.name,
         email: entity.email,
@@ -142,7 +157,7 @@ class EntityHandler {
       const findByEmail = new FindByEmailUseCase(this.repository)
       const entity = await findByEmail.exec(tokenEntity.email)
 
-      const authService = new AuthService(this.jwtProvider)
+      const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(req.entity.id, {
         name: entity.name,
         email: entity.email,

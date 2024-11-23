@@ -7,10 +7,12 @@ import {
   Enum,
   EventArgs,
   ManyToMany,
+  ManyToOne,
   Property
 } from '@mikro-orm/postgresql'
 import { hash, verify } from 'argon2'
 import { Roles } from '../../../auth/domain/entities/role'
+import EntityEntity from '../../../entity/domain/entities/entity.entity'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import type WasteEntity from '../../../waste/domain/entities/waste.entity'
 import NeighborPayload from '../payloads/neighbor.payload'
@@ -43,7 +45,7 @@ class NeighborEntity extends BaseEntity {
   phoneNumber: string
 
   @Property({ default: 0 })
-  points: number
+  points: number = 0
 
   @Enum({ items: () => Roles })
   role: Roles = Roles.NEIGHBOR
@@ -51,7 +53,10 @@ class NeighborEntity extends BaseEntity {
   @ManyToMany()
   wastes = new Collection<WasteEntity>(this)
 
-  constructor(payload: NeighborPayload) {
+  @ManyToOne()
+  entity: EntityEntity
+
+  constructor(payload: NeighborPayload, entity: EntityEntity) {
     super()
     this.firstname = payload.firstname
     this.lastname = payload.lastname
@@ -61,7 +66,7 @@ class NeighborEntity extends BaseEntity {
     this.dni = payload.dni
     this.birthdate = payload.birthdate
     this.phoneNumber = payload.phoneNumber
-    this.points = 0
+    this.entity = entity
   }
 
   addPoints(points: number): void {

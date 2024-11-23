@@ -5,7 +5,6 @@ import NeighborEntity from '../../../neighbor/domain/entities/neighbor.entity'
 import ResponsibleEntity from '../../../responsible/domain/entities/responsible.entity'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import WasteTransactionDetailEntity from '../../../waste-transaction-detail/domain/entities/waste-transaction-detail.entity'
-import WasteTransactionPayload from '../payloads/waste-transaction.payload'
 
 @Entity({ tableName: 'wastes_transactions' })
 class WasteTransactionEntity extends BaseEntity {
@@ -27,11 +26,11 @@ class WasteTransactionEntity extends BaseEntity {
   @Property()
   date: Date = new Date()
 
-  constructor(payload: WasteTransactionPayload) {
+  constructor(responsible: ResponsibleEntity, neighbor: NeighborEntity, greenPoint: GreenPointEntity) {
     super()
-    this.responsible = payload.responsible
-    this.neighbor = payload.neighbor
-    this.greenPoint = payload.greenPoint
+    this.responsible = responsible
+    this.neighbor = neighbor
+    this.greenPoint = greenPoint
   }
 
   addTransactionDetail(detail: WasteTransactionDetailEntity): void {

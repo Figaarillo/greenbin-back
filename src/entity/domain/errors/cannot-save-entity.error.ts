@@ -1,6 +1,6 @@
 class ErrorCannotSaveEntity extends Error {
-  constructor(message: string) {
-    super(message)
+  constructor() {
+    super('Cannot save a new entity')
     this.name = ErrorCannotSaveEntity.name
   }
 }

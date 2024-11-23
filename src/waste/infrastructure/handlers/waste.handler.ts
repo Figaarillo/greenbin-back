@@ -1,18 +1,21 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
+import SchemaValidator from '../../../shared/infrastructure/middlewares/zod-schema-validator.middleware'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetURLParams } from '../../../shared/utils/http.request.util'
+import FindWasteCategoryByIDUseCase from '../../../waste-category/application/usecases/find-by-id.usecase'
+import type WasteCategoryRepository from '../../../waste-category/domain/repositories/waste-category.repository'
 import FindWasteByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import RegisterWasteUseCase from '../../application/usecases/register.usecase'
 import type WastePayload from '../../domain/payloads/waste.payload'
 import type WasteRepository from '../../domain/repositories/waste.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterWasteDTO from '../dtos/register-waste.dto'
-import SchemaValidator from '../../../shared/infrastructure/middlewares/zod-schema-validator.middleware'
 
 class WasteHandler {
-  constructor(private readonly repository: WasteRepository) {
-    this.repository = repository
-  }
+  constructor(
+    private readonly wasteRepository: WasteRepository,
+    private readonly categoryReposiotry: WasteCategoryRepository
+  ) {}
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
@@ -21,7 +24,7 @@ class WasteHandler {
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const findByID = new FindWasteByIDUseCase(this.repository)
+      const findByID = new FindWasteByIDUseCase(this.wasteRepository)
       const category = await findByID.exec(id)
 
       HandleHTTPResponse.OK(res, 'Waste retrieved successfully', category)
@@ -37,7 +40,10 @@ class WasteHandler {
       const validateRegisterWasteSchema = new SchemaValidator(RegisterWasteDTO, payload)
       validateRegisterWasteSchema.exec()
 
-      const registerWaste = new RegisterWasteUseCase(this.repository)
+      const registerWaste = new RegisterWasteUseCase(
+        this.wasteRepository,
+        new FindWasteCategoryByIDUseCase(this.categoryReposiotry)
+      )
       const waste = await registerWaste.exec(payload)
 
       HandleHTTPResponse.Created(res, 'Waste registered successfully', { id: waste.id })

@@ -6,6 +6,7 @@ interface ResponsiblePayload {
   password: string
   dni: number
   phoneNumber: string
+  entityId: string
 }
 
 export default ResponsiblePayload

@@ -1,9 +1,8 @@
 /* eslint-disable indent */
 import { Collection, Entity, ManyToMany, ManyToOne, Property } from '@mikro-orm/core'
+import type NeighborEntity from '../../../neighbor/domain/entities/neighbor.entity'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import WasteCategoryEntity from '../../../waste-category/domain/entities/waste-category.entity'
-import WastePayload from '../payloads/waste.payload'
-import type NeighborEntity from '../../../neighbor/domain/entities/neighbor.entity'
 
 @Entity({ tableName: 'wastes' })
 class WasteEntity extends BaseEntity {
@@ -11,7 +10,7 @@ class WasteEntity extends BaseEntity {
   category: WasteCategoryEntity
 
   @Property()
-  points: number
+  points: number = 0
 
   @Property()
   weight: number
@@ -22,12 +21,11 @@ class WasteEntity extends BaseEntity {
   @ManyToMany()
   neighbors = new Collection<NeighborEntity>(this)
 
-  constructor(payload: WastePayload) {
+  constructor(category: WasteCategoryEntity, weight: number, pointsPerWeight: number) {
     super()
-    this.category = payload.category
-    this.weight = payload.weight
-    this.points = 0
-    this.pointsPerWeight = payload.pointsPerWeight
+    this.category = category
+    this.weight = weight
+    this.pointsPerWeight = pointsPerWeight
   }
 
   calculatePoints(): number {

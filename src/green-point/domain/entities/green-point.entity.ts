@@ -1,8 +1,9 @@
 /* eslint-disable indent */
-import { Entity, Property, t } from '@mikro-orm/core'
+import { Entity, ManyToOne, Property, t } from '@mikro-orm/core'
 import BaseGreenPoint from '../../../shared/domain/entities/base.entity'
 import GreenPointPayload from '../payloads/green-point.payload'
 import type GreenPointUpdatePayload from '../payloads/green-point.update.payload'
+import EntityEntity from '../../../entity/domain/entities/entity.entity'
 
 @Entity()
 class GreenPointEntity extends BaseGreenPoint {
@@ -27,7 +28,10 @@ class GreenPointEntity extends BaseGreenPoint {
     longitude: number
   }
 
-  constructor(payload: GreenPointPayload) {
+  @ManyToOne(() => EntityEntity)
+  entity: EntityEntity
+
+  constructor(payload: GreenPointPayload, entity: EntityEntity) {
     super()
     this.name = payload.name
     this.email = payload.email
@@ -35,6 +39,7 @@ class GreenPointEntity extends BaseGreenPoint {
     this.description = payload.description
     this.address = payload.address
     this.coordinates = payload.coordinates
+    this.entity = entity
   }
 
   update(payload: GreenPointUpdatePayload): void {

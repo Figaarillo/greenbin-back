@@ -17,7 +17,6 @@ class EntityRoute {
   setupRoutes(): void {
     this.server.get('/api/entity', {
       schema: listSwaggerSchema,
-      preHandler: this.server.auth([this.server.validateAccessToken]),
       handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
         await this.handler.list(req, res)
       }
@@ -28,6 +27,9 @@ class EntityRoute {
       handler: async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
         await this.handler.findByID(req, res)
       }
+    })
+    this.server.get('/api/entity/populate', async (req: FastifyRequest<{ Params: Record<string, string> }>, res) => {
+      await this.handler.findAndPopulate(req, res)
     })
     this.server.post('/api/entity', { schema: registerSwaggerSchema }, async (req, res) => {
       await this.handler.register(req, res)

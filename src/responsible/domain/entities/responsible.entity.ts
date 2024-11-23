@@ -6,6 +6,7 @@ import {
   Entity,
   Enum,
   EventArgs,
+  ManyToOne,
   OneToMany,
   Property
 } from '@mikro-orm/postgresql'
@@ -15,6 +16,7 @@ import BaseEntity from '../../../shared/domain/entities/base.entity'
 import WasteTransactionEntity from '../../../waste-transaction/domain/entities/waste-transaction.entity'
 import ResponsiblePayload from '../payloads/responsible.payload'
 import type ResponsibleUpdatePayload from '../payloads/responsible.update.payload'
+import EntityEntity from '../../../entity/domain/entities/entity.entity'
 
 @Entity()
 class ResponsibleEntity extends BaseEntity {
@@ -45,7 +47,10 @@ class ResponsibleEntity extends BaseEntity {
   @OneToMany(() => WasteTransactionEntity, transaction => transaction.responsible)
   transactions = new Collection<WasteTransactionEntity>(this)
 
-  constructor(payload: ResponsiblePayload) {
+  @ManyToOne()
+  entity: EntityEntity
+
+  constructor(payload: ResponsiblePayload, entity: EntityEntity) {
     super()
     this.firstname = payload.firstname
     this.lastname = payload.lastname
@@ -55,6 +60,7 @@ class ResponsibleEntity extends BaseEntity {
     this.dni = payload.dni
     this.phoneNumber = payload.phoneNumber
     this.role = Roles.RESPONSIBLE
+    this.entity = entity
   }
 
   update(payload: ResponsibleUpdatePayload): void {

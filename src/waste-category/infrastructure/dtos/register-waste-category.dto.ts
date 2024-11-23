@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { descriptionDTO, nameDTO } from './dto-types/dto-types'
+import { nameDTO, descriptionDTO } from '../../../shared/infrastructure/dto-types/dto-types'
 
 const RegisterWasteCategoryDTO = z.object({
   name: nameDTO,
