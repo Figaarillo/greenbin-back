@@ -12,6 +12,12 @@ class CouponRoute {
     this.server.get('/api/coupon', async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
       await this.handler.list(req, res)
     })
+    this.server.get(
+      '/api/coupon/available',
+      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
+        await this.handler.listAvailables(req, res)
+      }
+    )
     this.server.get('/api/coupon/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
       await this.handler.findByID(req, res)
     })

@@ -17,6 +17,7 @@ import CouponQueryParams from '../dtos/query-params.dto'
 import RegisterCouponDTO from '../dtos/register-coupon.dto'
 import UpdateCouponDTO from '../dtos/update-coupon.dto'
 import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import ListAvailableCouponUseCase from '../../application/usecases/list-available-coupon.usecase'
 
 class CouponHandler {
   constructor(
@@ -29,9 +30,22 @@ class CouponHandler {
       const { offset, limit } = GetPaginationParams(req)
 
       const listCoupons = new ListCouponsUseCase(this.couponRepository)
-      const entities = await listCoupons.exec(offset, limit)
+      const coupons = await listCoupons.exec(offset, limit)
 
-      HandleHTTPResponse.OK(res, 'Coupons retrieved successfully', entities)
+      HandleHTTPResponse.OK(res, 'Coupons retrieved successfully', coupons)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
+
+  async listAvailables(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
+    try {
+      const { offset, limit } = GetPaginationParams(req)
+
+      const listAvailableCoupons = new ListAvailableCouponUseCase(this.couponRepository)
+      const coupons = await listAvailableCoupons.exec(offset, limit)
+
+      HandleHTTPResponse.OK(res, 'Coupons availables retrieved successfully', coupons)
     } catch (error) {
       res.status(500).send(error)
     }
