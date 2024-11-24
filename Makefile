@@ -97,3 +97,9 @@ migrations.initial: migrations.delete docker.clean docker.db
 	@echo " ╰────────────────────────────────────────╯ "
 	sleep 1
 	DATABASE_HOST=$(DB_HOST) pnpm run migration:initial
+
+pgadmin: docker.db
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │           RUNNING PGADMIN              │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	docker compose up -d pgadmin
