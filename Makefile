@@ -103,3 +103,9 @@ pgadmin: docker.db
 	@echo " │           RUNNING PGADMIN              │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	docker compose up -d pgadmin
+
+pgadmin.stop:
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │          STOPPING PGADMIN              │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	docker compose stop pgadmin
