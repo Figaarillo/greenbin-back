@@ -52,7 +52,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
     return 'Hello, World!'
   })
 
-  app.get('/metabase-dashboard', async (request, reply) => {
+  app.get('/metabase', async (request, reply) => {
     const { id } = request.query as { id?: string }
     if (id === undefined || id === null || id === '') {
       return await reply.status(400).send({ error: 'ID is required' })
@@ -67,6 +67,22 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
       .get('METABASE_SITE_URL')
       .required()
       .asString()}/embed/dashboard/${token}#bordered=true&titled=true`
+
+    return { iframeUrl }
+  })
+
+  app.get('/metabase/neighbor', async (_request, _reply) => {
+    const payload = {
+      resource: { dashboard: 3 },
+      params: {},
+      exp: Math.round(Date.now() / 1000) + 10 * 60 // 10 minute expiration
+    }
+    const token = jwt.sign(payload, env.get('METABASE_SECRET_KEY').required().asString())
+    const iframeUrl = `${env
+      .get('METABASE_SITE_URL')
+      .required()
+      .asString()}/embed/dashboard/${token}#bordered=true&titled=true`
+
     return { iframeUrl }
   })
 
