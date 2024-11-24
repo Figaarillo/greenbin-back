@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20241118132331 extends Migration {
+export class Migration20241124150342 extends Migration {
 
   async up(): Promise<void> {
     this.addSql('create table "entity_entity" ("id" uuid not null, "created_at" timestamptz not null, "updated_at" timestamptz not null, "name" varchar(255) not null, "email" varchar(255) not null, "description" text not null, "password" varchar(255) not null, "city" varchar(255) not null, "province" varchar(255) not null, "role" text check ("role" in (\'entity\', \'neighbor\', \'responsible\', \'rewardPartner\', \'admin\')) not null, constraint "entity_entity_pkey" primary key ("id"));');
@@ -25,6 +25,8 @@ export class Migration20241118132331 extends Migration {
     this.addSql('alter table "reward_partner_entity" add constraint "reward_partner_entity_email_unique" unique ("email");');
     this.addSql('alter table "reward_partner_entity" add constraint "reward_partner_entity_coordinates_unique" unique ("coordinates");');
 
+    this.addSql('create table "coupon" ("id" uuid not null, "created_at" timestamptz not null, "updated_at" timestamptz not null, "title" varchar(255) not null, "description" varchar(255) not null, "discount" int not null, "is_available" boolean not null, "valid_days" int not null, "cost_in_points" int not null, "reward_partner_id" uuid not null, constraint "coupon_pkey" primary key ("id"));');
+
     this.addSql('create table "waste_categories" ("id" uuid not null, "created_at" timestamptz not null, "updated_at" timestamptz not null, "name" varchar(255) not null, "points_per_weight" int not null, "description" text not null, constraint "waste_categories_pkey" primary key ("id"));');
     this.addSql('alter table "waste_categories" add constraint "waste_categories_name_unique" unique ("name");');
 
@@ -45,6 +47,8 @@ export class Migration20241118132331 extends Migration {
     this.addSql('alter table "responsible_entity" add constraint "responsible_entity_entity_id_foreign" foreign key ("entity_id") references "entity_entity" ("id") on update cascade;');
 
     this.addSql('alter table "reward_partner_entity" add constraint "reward_partner_entity_entity_id_foreign" foreign key ("entity_id") references "entity_entity" ("id") on update cascade;');
+
+    this.addSql('alter table "coupon" add constraint "coupon_reward_partner_id_foreign" foreign key ("reward_partner_id") references "reward_partner_entity" ("id") on update cascade;');
 
     this.addSql('alter table "wastes" add constraint "wastes_category_id_foreign" foreign key ("category_id") references "waste_categories" ("id") on update cascade;');
 
