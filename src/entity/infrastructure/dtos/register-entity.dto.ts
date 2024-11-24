@@ -4,7 +4,8 @@ import {
   descriptionDTO,
   passwordDTO,
   cityDTO,
-  provinceDTO
+  provinceDTO,
+  coordinatesDTO
 } from '../../../shared/infrastructure/dto-types/dto-types'
 
 const RegisterEntityDTO = z.object({
@@ -12,7 +13,8 @@ const RegisterEntityDTO = z.object({
   description: descriptionDTO,
   password: passwordDTO,
   city: cityDTO,
-  province: provinceDTO
+  province: provinceDTO,
+  coordinates: coordinatesDTO
 })
 
 export default RegisterEntityDTO

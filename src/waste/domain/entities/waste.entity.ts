@@ -12,7 +12,7 @@ class WasteEntity extends BaseEntity {
   @Property()
   points: number = 0
 
-  @Property()
+  @Property({ type: 'float' })
   weight: number
 
   @Property()

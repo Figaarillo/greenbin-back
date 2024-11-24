@@ -1,3 +1,25 @@
+const entitySchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'string', format: 'uuid', description: 'Unique identifier for the Entity.' },
+    createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
+    updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
+    name: { type: 'string', description: 'Name of the entity.' },
+    description: { type: 'string', description: 'Description of the entity.' },
+    city: { type: 'string', description: 'City of the entity.' },
+    province: { type: 'string', description: 'Province of the entity.' },
+    coordinates: {
+      type: 'object',
+      properties: {
+        latitude: { type: 'number', description: 'Latitude of the green point.' },
+        longitude: { type: 'number', description: 'Longitude of the Green point.' }
+      },
+      required: ['latitude', 'longitude']
+    }
+  },
+  required: ['id', 'createdAt', 'updatedAt', 'name', 'description', 'city', 'province']
+}
+
 export const listSwaggerSchema = {
   description: 'This is an endpoint that retrieves a list of entities by pagination.',
   tags: ['Entity'],
@@ -17,19 +39,7 @@ export const listSwaggerSchema = {
         message: { type: 'string' },
         data: {
           type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              id: { type: 'string', format: 'uuid', description: 'Unique identifier for the Entity.' },
-              createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
-              updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
-              name: { type: 'string', description: 'Name of the entity.' },
-              description: { type: 'string', description: 'Description of the entity.' },
-              city: { type: 'string', description: 'City of the entity.' },
-              province: { type: 'string', description: 'Province of the entity.' }
-            },
-            required: ['id', 'createdAt', 'updatedAt', 'name', 'description', 'city', 'province']
-          }
+          items: entitySchema
         }
       },
       required: ['status', 'message', 'data']
@@ -54,19 +64,7 @@ export const findByIdSwaggerSchema = {
       properties: {
         status: { type: 'number' },
         message: { type: 'string' },
-        data: {
-          type: 'object',
-          properties: {
-            id: { type: 'string', format: 'uuid', description: 'Unique identifier for the entity.' },
-            createdAt: { type: 'string', format: 'date-time', description: 'Creation timestamp.' },
-            updatedAt: { type: 'string', format: 'date-time', description: 'Last update timestamp.' },
-            name: { type: 'string', description: 'Name of the entity.' },
-            description: { type: 'string', description: 'Description of the entity.' },
-            city: { type: 'string', description: 'City of the entity.' },
-            province: { type: 'string', description: 'Province of the entity.' }
-          },
-          required: ['id', 'createdAt', 'updatedAt', 'name', 'description', 'city', 'province']
-        }
+        data: entitySchema
       },
       required: ['status', 'message', 'data']
     }
@@ -74,7 +72,7 @@ export const findByIdSwaggerSchema = {
 }
 
 export const registerSwaggerSchema = {
-  description: 'This is an endpoint that register a new entity.',
+  description: 'This is an endpoint that registers a new entity.',
   tags: ['Entity'],
   body: {
     type: 'object',
@@ -108,7 +106,7 @@ export const registerSwaggerSchema = {
 }
 
 export const updateSwaggerSchema = {
-  description: 'This is an endpoint that updates a entity by ID.',
+  description: 'This is an endpoint that updates an entity by ID.',
   tags: ['Entity'],
   params: {
     type: 'object',
@@ -145,7 +143,7 @@ export const updateSwaggerSchema = {
 }
 
 export const deleteSwaggerSchema = {
-  description: 'This is an endpoint that deletes a entity by ID.',
+  description: 'This is an endpoint that deletes an entity by ID.',
   tags: ['Entity'],
   params: {
     type: 'object',

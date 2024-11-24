@@ -5,7 +5,7 @@ class ErrorCategoryNotFound extends Error {
     const message =
       fields.length > 0
         ? `Cannot find category with ${fields.join(', ')}`
-        : 'Cannot find any category when try to list all entities find entity'
+        : 'Cannot find any category when try to list all categories'
 
     super(message)
     this.name = ErrorCategoryNotFound.name

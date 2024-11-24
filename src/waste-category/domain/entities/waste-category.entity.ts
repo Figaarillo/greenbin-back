@@ -15,6 +15,9 @@ class WasteCategoryEntity extends BaseEntity {
   @Property({ type: t.text })
   description: string
 
+  @Property({ type: t.float })
+  co2: number
+
   @OneToMany(() => WasteEntity, waste => waste.category)
   wastes = new Collection<WasteEntity>(this)
 
@@ -23,6 +26,7 @@ class WasteCategoryEntity extends BaseEntity {
     this.name = payload.name
     this.pointsPerWeight = payload.pointsPerWeight
     this.description = payload.description
+    this.co2 = payload.co2
   }
 
   update(payload: WasteCategoryPayload): void {

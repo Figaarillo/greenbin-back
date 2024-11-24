@@ -19,7 +19,7 @@ import GreenPointEntity from '../../../green-point/domain/entities/green-point.e
 import ResponsibleEntity from '../../../responsible/domain/entities/responsible.entity'
 import RewardPartnerEntity from '../../../reward-partner/domain/entities/reward-partner.entity'
 
-@Entity()
+@Entity({ tableName: 'entities' })
 class EntityEntity extends BaseEntity {
   @Property({ unique: true })
   name: string
@@ -38,6 +38,12 @@ class EntityEntity extends BaseEntity {
 
   @Property()
   province: string
+
+  @Property({ unique: true, type: t.json })
+  coordinates: {
+    latitude: number
+    longitude: number
+  }
 
   @Enum({ items: () => Roles })
   role: Roles
@@ -62,6 +68,7 @@ class EntityEntity extends BaseEntity {
     this.password = payload.password
     this.city = payload.city
     this.province = payload.province
+    this.coordinates = payload.coordinates
     this.role = Roles.ENTITY
   }
 

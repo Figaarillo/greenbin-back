@@ -8,10 +8,10 @@ import RegisterWasteCategoryUseCase from '../../application/usecases/register.us
 import UpdateCategoryUseCase from '../../application/usecases/update.usecase'
 import type WasteCategoryPayload from '../../domain/payloads/waste-category.payload'
 import type WasteCategoryRepository from '../../domain/repositories/waste-category.repository'
-import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterWasteCategoryDTO from '../dtos/register-waste-category.dto'
 import UpdateWasteCategoryDTO from '../dtos/update-waste-category.dto'
-import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import WasteCategorySchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 
 class WasteCategoryHandler {
   constructor(private readonly repository: WasteCategoryRepository) {}
@@ -33,7 +33,7 @@ class WasteCategoryHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new WasteCategorySchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findCategory = new FindWasteCategoryByIDUseCase(this.repository)
@@ -45,15 +45,13 @@ class WasteCategoryHandler {
     }
   }
 
-  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest<{ Body: WasteCategoryPayload }>, res: FastifyReply): Promise<void> {
     try {
-      const payload: WasteCategoryPayload = req.body as WasteCategoryPayload
-
-      const validateRegisterCategoriesSchema = new SchemaValidator(RegisterWasteCategoryDTO, payload)
+      const validateRegisterCategoriesSchema = new WasteCategorySchemaValidator(RegisterWasteCategoryDTO, req.body)
       validateRegisterCategoriesSchema.exec()
 
       const registerCategory = new RegisterWasteCategoryUseCase(this.repository)
-      const category = await registerCategory.exec(payload)
+      const category = await registerCategory.exec(req.body)
 
       HandleHTTPResponse.Created(res, 'Waste Category registered successfully', { id: category.id })
     } catch (error) {
@@ -61,19 +59,21 @@ class WasteCategoryHandler {
     }
   }
 
-  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(
+    req: FastifyRequest<{ Params: Record<string, string>; Body: WasteCategoryPayload }>,
+    res: FastifyReply
+  ): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
-      const payload: WasteCategoryPayload = req.body as WasteCategoryPayload
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new WasteCategorySchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const schemaValidator = new SchemaValidator(UpdateWasteCategoryDTO, payload)
+      const schemaValidator = new WasteCategorySchemaValidator(UpdateWasteCategoryDTO, req.body)
       schemaValidator.exec()
 
       const updateCategory = new UpdateCategoryUseCase(this.repository)
-      await updateCategory.exec(id, payload)
+      await updateCategory.exec(id, req.body)
 
       HandleHTTPResponse.OK(res, 'Waste Category updated successfully', { id })
     } catch (error) {
@@ -85,7 +85,7 @@ class WasteCategoryHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      const schemaValidator = new WasteCategorySchemaValidator(CheckIdDTO, { id })
       schemaValidator.exec()
 
       const deleteCategory = new DeleteCategoryUseCase(this.repository)
