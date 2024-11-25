@@ -968,6 +968,16 @@
           "nullable": false,
           "mappedType": "boolean"
         },
+        "state": {
+          "name": "state",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
         "valid_days": {
           "name": "valid_days",
           "type": "int",
@@ -1018,6 +1028,189 @@
             "reward_partner_id"
           ],
           "localTableName": "public.coupon",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.reward_partner_entity",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "adquisition_date": {
+          "name": "adquisition_date",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "redeem_date": {
+          "name": "redeem_date",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "expiration_date": {
+          "name": "expiration_date",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "cost_in_points": {
+          "name": "cost_in_points",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "coupon_id": {
+          "name": "coupon_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "neighbor_id": {
+          "name": "neighbor_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "reward_partner_id": {
+          "name": "reward_partner_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "coupon_transactions",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "coupon_id"
+          ],
+          "composite": false,
+          "keyName": "coupon_transactions_coupon_id_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "coupon_transactions_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "coupon_transactions_coupon_id_foreign": {
+          "constraintName": "coupon_transactions_coupon_id_foreign",
+          "columnNames": [
+            "coupon_id"
+          ],
+          "localTableName": "public.coupon_transactions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.coupon",
+          "updateRule": "cascade"
+        },
+        "coupon_transactions_neighbor_id_foreign": {
+          "constraintName": "coupon_transactions_neighbor_id_foreign",
+          "columnNames": [
+            "neighbor_id"
+          ],
+          "localTableName": "public.coupon_transactions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.neighbor_entity",
+          "updateRule": "cascade"
+        },
+        "coupon_transactions_reward_partner_id_foreign": {
+          "constraintName": "coupon_transactions_reward_partner_id_foreign",
+          "columnNames": [
+            "reward_partner_id"
+          ],
+          "localTableName": "public.coupon_transactions",
           "referencedColumnNames": [
             "id"
           ],
