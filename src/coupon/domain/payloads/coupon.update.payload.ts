@@ -5,6 +5,7 @@ interface CouponUpdatePayload {
   isAvailable?: boolean
   validDays?: number
   costInPoints?: number
+  state?: string
 }
 
 export default CouponUpdatePayload
