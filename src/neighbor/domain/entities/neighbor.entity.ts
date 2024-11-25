@@ -93,8 +93,8 @@ class NeighborEntity extends BaseEntity {
     if (payload.phoneNumber != null) {
       this.phoneNumber = payload.phoneNumber
     }
-    if (payload.points != null && payload.points >= this.points) {
-      this.points = payload.points
+    if (payload.points != null) {
+      this.points = this.points - payload.points
     }
   }
 
