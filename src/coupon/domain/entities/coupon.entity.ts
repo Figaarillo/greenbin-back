@@ -20,6 +20,9 @@ class CouponEntity extends BaseEntity {
   isAvailable: boolean
 
   @Property()
+  state: string = 'CREADO'
+
+  @Property()
   validDays: number
 
   @Property()
@@ -46,6 +49,7 @@ class CouponEntity extends BaseEntity {
     this.isAvailable = payload.isAvailable ?? this.isAvailable
     this.validDays = payload.validDays ?? this.validDays
     this.costInPoints = payload.costInPoints ?? this.costInPoints
+    this.state = payload.state ?? this.state
   }
 }
 

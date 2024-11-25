@@ -78,20 +78,23 @@ class NeighborEntity extends BaseEntity {
   }
 
   update(payload: NeighborUpdatePayload): void {
-    if (payload.firstname != null || payload.firstname !== '') {
+    if (payload.firstname != null && payload.firstname !== '') {
       this.firstname = payload.firstname
     }
-    if (payload.lastname != null || payload.lastname !== '') {
+    if (payload.lastname != null && payload.lastname !== '') {
       this.lastname = payload.lastname
     }
-    if (payload.username != null || payload.username !== '') {
+    if (payload.username != null && payload.username !== '') {
       this.username = payload.username
     }
-    if (payload.email != null || payload.email !== '') {
+    if (payload.email != null && payload.email !== '') {
       this.email = payload.email
     }
     if (payload.phoneNumber != null) {
       this.phoneNumber = payload.phoneNumber
+    }
+    if (payload.points != null) {
+      this.points = this.points - payload.points
     }
   }
 

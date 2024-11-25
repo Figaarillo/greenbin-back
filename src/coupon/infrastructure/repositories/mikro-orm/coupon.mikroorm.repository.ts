@@ -7,11 +7,13 @@ import type CouponRepository from '../../../domain/repositories/coupon.repositor
 import type CouponUpdatePayload from '../../../domain/payloads/coupon.update.payload'
 
 class CouponMikroORMRepository implements CouponRepository {
-  async list(offset?: number, limit?: number): Promise<Nullable<CouponEntity[]>> {
+  async list(where: Record<string, any>, offset?: number, limit?: number): Promise<Nullable<CouponEntity[]>> {
     const em = this.getEntityManager()
-    if (limit == null) return await em.find(CouponEntity, {})
-    if (offset == null) return await em.find(CouponEntity, {}, { limit })
-    return await em.find(CouponEntity, {}, { limit, offset })
+
+    if (limit == null) return await em.find(CouponEntity, where)
+    if (offset == null) return await em.find(CouponEntity, where, { limit })
+
+    return await em.find(CouponEntity, where, { limit, offset })
   }
 
   async find(property: Record<string, string>): Promise<Nullable<CouponEntity>> {
