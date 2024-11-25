@@ -26,8 +26,16 @@ class RedeemCouponUseCase {
       throw new Error('You do not have enough points to redeem this coupon')
     }
 
-    this.subtractPoints.exec(payload.neighborId, coupon.costInPoints)
-    this.updateState.exec(coupon.id, 'ADQUIRIDO')
+    if (!coupon.isAvailable) {
+      throw new Error('Coupon is not available')
+    }
+
+    if (coupon.state === 'ADQUIRIDO') {
+      throw new Error('Coupon already redeemed')
+    }
+
+    await this.subtractPoints.exec(payload.neighborId, coupon.costInPoints)
+    await this.updateState.exec(coupon.id, 'ADQUIRIDO')
     const redeemedDate = new Date()
     const code = Math.floor(Math.random() * 1000000)
       .toString()
@@ -48,7 +56,7 @@ class RedeemCouponUseCase {
 
     const transaction = await this.repository.save(newTransaction)
     if (transaction == null) {
-      throw new Error('Cannot save new coupon transaction')
+      throw new Error('Cannot redeem new coupon transaction')
     }
 
     return transaction
