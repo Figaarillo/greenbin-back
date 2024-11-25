@@ -74,9 +74,9 @@ class WasteTransactionHandler {
         new FindNeighborByIDUseCase(this.neighborRepository)
       )
 
-      await registerWasteDelivery.exec(req.body)
+      const wasteDelivery = await registerWasteDelivery.exec(req.body)
 
-      HandleHTTPResponse.Created(res, 'Waste delivery registered successfully')
+      HandleHTTPResponse.Created(res, 'Waste delivery registered successfully', { id: wasteDelivery.id })
     } catch (error) {
       res.status(500).send(error)
     }
