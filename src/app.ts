@@ -8,6 +8,7 @@ import env from 'env-var'
 import { type FastifyInstance } from 'fastify'
 import jwt from 'jsonwebtoken'
 import bootstrapAuth from './auth/auth.bootstrap'
+import bootstrapCouponTransaction from './coupon-transaction/coupon-transaction.bootstrap'
 import bootstrapCoupon from './coupon/coupon.bootstrap'
 import initMikroORM, { type Services } from './db'
 import bootstrapEntity from './entity/entity.bootstrap'
@@ -98,6 +99,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapWasteTransaction(app)
   bootstrapWasteTransactionDetail(app)
   bootstrapCoupon(app)
+  bootstrapCouponTransaction(app)
 
   /* Start the server */
   const url: string = await fastify.start(port)
