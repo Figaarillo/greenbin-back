@@ -9,7 +9,7 @@ class JWTStrategy implements IJWTStrategy {
    * @param key - key used to sign the JWT
    * @returns JWT
    */
-  async generateToken(sub: string, payload: Record<string, string>, exp: string, key: string): Promise<string> {
+  async generateToken(sub: string, payload: Record<string, any>, exp: string, key: string): Promise<string> {
     return jwt.sign({ sub, ...payload }, key, { algorithm: 'HS256', expiresIn: exp === '' ? '1h' : exp })
   }
 
