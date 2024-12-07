@@ -24,11 +24,22 @@ interface Auth {
   refreshTokenExpiresIn: string
 }
 
+interface MetabaseConfig {
+  secretKey: string
+  port: number
+  adminEmail: string
+  adminPassword: string
+  adminFirstName: string
+  adminLastName: string
+  allowSignup: boolean
+}
+
 interface Config {
   auth: Auth
   server: ServerConfig
   database: DatabaseConfig
   testDatabase: DatabaseConfig
+  metabase: MetabaseConfig
 }
 
 const serverConfig: ServerConfig = {
@@ -60,11 +71,22 @@ const authConfig: Auth = {
   refreshTokenExpiresIn: env.get('REFRESH_TOKEN_EXPIRES_IN').required().asString()
 }
 
+const metabaseConfig: MetabaseConfig = {
+  secretKey: env.get('METABASE_SECRET_KEY').required().asString(),
+  port: env.get('METABASE_PORT').required().asPortNumber(),
+  adminEmail: env.get('METABASE_ADMIN_EMAIL').required().asString(),
+  adminPassword: env.get('METABASE_ADMIN_PASSWORD').required().asString(),
+  adminFirstName: env.get('METABASE_ADMIN_FIRST_NAME').required().asString(),
+  adminLastName: env.get('METABASE_ADMIN_LAST_NAME').required().asString(),
+  allowSignup: env.get('METABASE_ALLOW_SIGNUP').required().asBool()
+}
+
 const EnvVar: Config = {
   auth: authConfig,
   server: serverConfig,
   database: databaseConfig,
-  testDatabase: testDatabaseConfig
+  testDatabase: testDatabaseConfig,
+  metabase: metabaseConfig
 }
 
 export default EnvVar
