@@ -26,6 +26,7 @@ interface Auth {
 
 interface MetabaseConfig {
   secretKey: string
+  siteUrl: string
   port: number
   adminEmail: string
   adminPassword: string
@@ -73,6 +74,7 @@ const authConfig: Auth = {
 
 const metabaseConfig: MetabaseConfig = {
   secretKey: env.get('METABASE_SECRET_KEY').required().asString(),
+  siteUrl: env.get('METABASE_SITE_URL').required().asString(),
   port: env.get('METABASE_PORT').required().asPortNumber(),
   adminEmail: env.get('METABASE_ADMIN_EMAIL').required().asString(),
   adminPassword: env.get('METABASE_ADMIN_PASSWORD').required().asString(),
