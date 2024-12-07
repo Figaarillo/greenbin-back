@@ -15,7 +15,7 @@ docker.db:
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │   RUNNING CONTAINER FOR THE DATABASE   │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	docker compose up -d database
+	DATABASE_HOST=$(DB_HOST) docker compose up -d database
 
 docker.build:
 	@echo " ╭────────────────────────────────────────╮ "
@@ -33,7 +33,7 @@ docker.stop:
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │       STOPPING DOCKER CONTAINERS       │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	docker compose stop database database-test apiserver
+	docker compose stop database database-test apiserver metabase
 
 docker.clean:
 	@echo " ╭────────────────────────────────────────╮ "
@@ -48,7 +48,7 @@ docker.restart.server:
 	docker compose stop apiserver
 	docker compose up -d apiserver
 
-run: docker.db
+run: docker.db metabase
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │             RUNNING SERVER             │ "
 	@echo " ╰────────────────────────────────────────╯ "
@@ -97,3 +97,9 @@ migrations.initial: migrations.delete docker.clean docker.db
 	@echo " ╰────────────────────────────────────────╯ "
 	sleep 1
 	DATABASE_HOST=$(DB_HOST) pnpm run migration:initial
+
+metabase:
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │          RUNNING METABASE              │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	docker compose up -d metabase
