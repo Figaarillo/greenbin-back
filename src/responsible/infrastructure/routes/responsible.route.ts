@@ -7,6 +7,7 @@ import {
   registerSwaggerSchema,
   updateSwaggerSchema
 } from '../swagger-schemas/responsible.swagger-schema'
+import type ResponsiblePayload from '../../domain/payloads/responsible.payload'
 
 class ResponsibleRoute {
   constructor(
@@ -29,13 +30,17 @@ class ResponsibleRoute {
         await this.handler.findByID(req, res)
       }
     })
-    this.server.post('/api/responsible', { schema: registerSwaggerSchema }, async (req, res) => {
-      await this.handler.register(req, res)
-    })
+    this.server.post(
+      '/api/responsible',
+      { schema: registerSwaggerSchema },
+      async (req: FastifyRequest<{ Body: ResponsiblePayload }>, res) => {
+        await this.handler.register(req, res)
+      }
+    )
     this.server.put(
       '/api/responsible/:id',
       { schema: updateSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+      async (req: FastifyRequest<{ Body: ResponsiblePayload; Params: { id: string } }>, res) => {
         await this.handler.update(req, res)
       }
     )
@@ -46,7 +51,7 @@ class ResponsibleRoute {
         await this.handler.delete(req, res)
       }
     )
-    this.server.post('/api/responsible/auth/login', async (req, res) => {
+    this.server.post('/api/responsible/auth/login', async (req: FastifyRequest<{ Body: ResponsiblePayload }>, res) => {
       await this.handler.login(req, res)
     })
     this.server.get('/api/responsible/auth/refresh-token', {

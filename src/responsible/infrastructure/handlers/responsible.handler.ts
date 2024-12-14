@@ -56,18 +56,16 @@ class ResponsibleHandler {
     }
   }
 
-  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest<{ Body: ResponsiblePayload }>, res: FastifyReply): Promise<void> {
     try {
-      const payload: ResponsiblePayload = req.body as ResponsiblePayload
-
-      const validateRegisterResponsiblesSchema = new SchemaValidator(RegisterResponsibleDTO, payload)
+      const validateRegisterResponsiblesSchema = new SchemaValidator(RegisterResponsibleDTO, req.body)
       validateRegisterResponsiblesSchema.exec()
 
       const registerResponsible = new RegisterResponsibleUseCase(
         this.responsibleRepository,
         new FindEntityByIDUseCase(this.entityRepository)
       )
-      const responsible = await registerResponsible.exec(payload)
+      const responsible = await registerResponsible.exec(req.body)
 
       HandleHTTPResponse.Created(res, 'Responsible registered successfully', { id: responsible.id })
     } catch (error) {
@@ -75,19 +73,21 @@ class ResponsibleHandler {
     }
   }
 
-  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(
+    req: FastifyRequest<{ Body: ResponsiblePayload; Params: Record<string, string> }>,
+    res: FastifyReply
+  ): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
-      const payload: ResponsiblePayload = req.body as ResponsiblePayload
 
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const schemaValidator = new SchemaValidator(UpdateResponsibleDTO, payload)
+      const schemaValidator = new SchemaValidator(UpdateResponsibleDTO, req.body)
       schemaValidator.exec()
 
       const updateResponsible = new UpdateResponsibleUseCase(this.responsibleRepository)
-      await updateResponsible.exec(id, payload)
+      await updateResponsible.exec(id, req.body)
 
       HandleHTTPResponse.OK(res, 'Responsible updated successfully', { id })
     } catch (error) {
@@ -111,12 +111,10 @@ class ResponsibleHandler {
     }
   }
 
-  async login(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async login(req: FastifyRequest<{ Body: ResponsiblePayload }>, res: FastifyReply): Promise<void> {
     try {
-      const payload = req.body as ResponsiblePayload
-
       const login = new LoginResponsibleUseCase(this.responsibleRepository)
-      const responsible = await login.exec(payload)
+      const responsible = await login.exec(req.body)
 
       const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(responsible.id, {
