@@ -4,14 +4,12 @@ import type ResponsibleUpdatePayload from '../../domain/payloads/responsible.upd
 import type ResponsibleRepository from '../../domain/repositories/responsible.repository'
 
 class UpdateResponsibleUseCase {
-  constructor(private readonly repository: ResponsibleRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: ResponsibleRepository) {}
 
   async exec(id: string, payload: ResponsibleUpdatePayload): Promise<ResponsibleEntity> {
     const responsibleUpdated = await this.repository.update(id, payload)
     if (responsibleUpdated == null) {
-      throw new ErrorResponsibleNotFound(`Cannot update responsible with id: ${id}`)
+      throw new ErrorResponsibleNotFound(id)
     }
 
     return responsibleUpdated

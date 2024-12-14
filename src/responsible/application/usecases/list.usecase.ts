@@ -3,18 +3,12 @@ import ErrorResponsibleNotFound from '../../domain/errors/responsible-not-found.
 import type ResponsibleRepository from '../../domain/repositories/responsible.repository'
 
 class ListResponsiblesUseCase {
-  constructor(private readonly repository: ResponsibleRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: ResponsibleRepository) {}
 
   async exec(offset: number, limit: number): Promise<ResponsibleEntity[]> {
     const responsiblesFounded = await this.repository.list(offset, limit)
     if (responsiblesFounded == null) {
-      throw new ErrorResponsibleNotFound('Cannot find any responsible when try to list all responsibles')
-    }
-
-    if (responsiblesFounded.length === 0) {
-      throw new ErrorResponsibleNotFound('Cannot find any responsible when try to list all responsibles')
+      throw new ErrorResponsibleNotFound()
     }
 
     return responsiblesFounded

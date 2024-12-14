@@ -5,6 +5,7 @@ import type ResponsibleUpdatePayload from '../../../domain/payloads/responsible.
 import type ResponsibleRepository from '../../../domain/repositories/responsible.repository'
 import ErrorResponsibleNotFound from '../../../domain/errors/responsible-not-found.error'
 import ErrorEntityManagerNotFound from '../../../../shared/domain/errors/entity-manager-not-found.error'
+import type ResponsibleRelationships from '../../../domain/enums/responsible-relationships.enum'
 
 class ResponsibleMikroORMRepository implements ResponsibleRepository {
   async list(offset: number, limit: number): Promise<Nullable<ResponsibleEntity[]>> {
@@ -12,14 +13,12 @@ class ResponsibleMikroORMRepository implements ResponsibleRepository {
     return await em.find(ResponsibleEntity, {}, { limit, offset })
   }
 
-  async find(property: Record<string, string>): Promise<Nullable<ResponsibleEntity>> {
+  async find(
+    where: Record<string, string>,
+    populate?: ResponsibleRelationships[]
+  ): Promise<Nullable<ResponsibleEntity>> {
     const em = this.getEntityManager()
-    return await em.findOne(ResponsibleEntity, property)
-  }
-
-  async findWithPassword(property: Record<string, string>): Promise<Nullable<ResponsibleEntity>> {
-    const em = this.getEntityManager()
-    return await em.findOne(ResponsibleEntity, property, { populate: ['password'] })
+    return await em.findOne(ResponsibleEntity, where, { populate })
   }
 
   async save(newResponsible: ResponsibleEntity): Promise<Nullable<ResponsibleEntity>> {
