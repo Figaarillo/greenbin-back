@@ -7,6 +7,8 @@ import {
   registerSwaggerSchema,
   updateSwaggerSchema
 } from '../swagger-schemas/entity.swagger-schema'
+import type EntityPayload from '../../domain/payloads/entity.payload'
+import type EntityLoginPayload from '../../domain/payloads/entity.login.payload'
 
 class EntityRoute {
   constructor(
@@ -31,13 +33,17 @@ class EntityRoute {
     this.server.get('/api/entity/populate', async (req: FastifyRequest<{ Params: Record<string, string> }>, res) => {
       await this.handler.findAndPopulate(req, res)
     })
-    this.server.post('/api/entity', { schema: registerSwaggerSchema }, async (req, res) => {
-      await this.handler.register(req, res)
-    })
+    this.server.post(
+      '/api/entity',
+      { schema: registerSwaggerSchema },
+      async (req: FastifyRequest<{ Body: EntityPayload }>, res) => {
+        await this.handler.register(req, res)
+      }
+    )
     this.server.put('/api/entity/:id', {
       schema: updateSwaggerSchema,
       preHandler: this.server.auth([this.server.validateAccessToken]),
-      handler: async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+      handler: async (req: FastifyRequest<{ Body: { description: string }; Params: { id: string } }>, res) => {
         await this.handler.update(req, res)
       }
     })
@@ -48,7 +54,7 @@ class EntityRoute {
         await this.handler.delete(req, res)
       }
     })
-    this.server.post('/api/entity/auth/login', async (req, rep) => {
+    this.server.post('/api/entity/auth/login', async (req: FastifyRequest<{ Body: EntityLoginPayload }>, rep) => {
       await this.handler.login(req, rep)
     })
     this.server.get('/api/entity/auth/refresh-token', {

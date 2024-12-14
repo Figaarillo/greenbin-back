@@ -69,15 +69,13 @@ class EntityHandler {
     }
   }
 
-  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest<{ Body: EntityPayload }>, res: FastifyReply): Promise<void> {
     try {
-      const payload: EntityPayload = req.body as EntityPayload
-
-      const validateRegisterEntitiesSchema = new SchemaValidator(RegisterEntityDTO, payload)
+      const validateRegisterEntitiesSchema = new SchemaValidator(RegisterEntityDTO, req.body)
       validateRegisterEntitiesSchema.exec()
 
       const registerEntity = new RegisterEntityUseCase(this.repository)
-      const entity = await registerEntity.exec(payload)
+      const entity = await registerEntity.exec(req.body)
 
       HandleHTTPResponse.Created(res, 'Entity registered successfully', { id: entity.id })
     } catch (error) {
@@ -85,19 +83,20 @@ class EntityHandler {
     }
   }
 
-  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(
+    req: FastifyRequest<{ Body: { description: string }; Params: Record<string, string> }>,
+    res: FastifyReply
+  ): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
-      const payload: { description: string } = req.body as { description: string }
-
       const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const schemaValidator = new SchemaValidator(UpdateEntityDTO, payload)
+      const schemaValidator = new SchemaValidator(UpdateEntityDTO, req.body)
       schemaValidator.exec()
 
       const updateEntity = new UpdateEntityUseCase(this.repository)
-      await updateEntity.exec(id, payload)
+      await updateEntity.exec(id, req.body)
 
       HandleHTTPResponse.OK(res, 'Entity updated successfully', { id })
     } catch (error) {
@@ -121,12 +120,10 @@ class EntityHandler {
     }
   }
 
-  async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+  async login(req: FastifyRequest<{ Body: EntityLoginPayload }>, rep: FastifyReply): Promise<void> {
     try {
-      const payload = req.body as EntityLoginPayload
-
       const login = new LoginEntityUseCase(this.repository)
-      const entity = await login.exec(payload)
+      const entity = await login.exec(req.body)
 
       const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(entity.id, {
