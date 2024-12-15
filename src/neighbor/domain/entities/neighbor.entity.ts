@@ -15,10 +15,9 @@ import { Roles } from '../../../auth/domain/entities/role'
 import EntityEntity from '../../../entity/domain/entities/entity.entity'
 import BaseEntity from '../../../shared/domain/entities/base.entity'
 import type WasteEntity from '../../../waste/domain/entities/waste.entity'
-import NeighborPayload from '../payloads/neighbor.payload'
 import type NeighborUpdatePayload from '../payloads/neighbor.update.payload'
 
-@Entity()
+@Entity({ tableName: 'neighbors' })
 class NeighborEntity extends BaseEntity {
   @Property()
   firstname: string
@@ -56,16 +55,26 @@ class NeighborEntity extends BaseEntity {
   @ManyToOne()
   entity: EntityEntity
 
-  constructor(payload: NeighborPayload, entity: EntityEntity) {
+  constructor(
+    firstname: string,
+    lastname: string,
+    username: string,
+    email: string,
+    password: string,
+    dni: number,
+    phoneNumber: string,
+    birthdate: Date,
+    entity: EntityEntity
+  ) {
     super()
-    this.firstname = payload.firstname
-    this.lastname = payload.lastname
-    this.username = payload.username
-    this.email = payload.email
-    this.password = payload.password
-    this.dni = payload.dni
-    this.birthdate = payload.birthdate
-    this.phoneNumber = payload.phoneNumber
+    this.firstname = firstname
+    this.lastname = lastname
+    this.username = username
+    this.email = email
+    this.password = password
+    this.dni = dni
+    this.birthdate = this.valiadtreBirthdate(birthdate)
+    this.phoneNumber = phoneNumber
     this.entity = entity
   }
 
@@ -110,6 +119,18 @@ class NeighborEntity extends BaseEntity {
 
   async verifyPassword(password: string): Promise<boolean> {
     return await verify(this.password, password)
+  }
+
+  private valiadtreBirthdate(birthdate: Date): Date {
+    if (birthdate.getFullYear() < 1900) {
+      throw new Error('Year must be 1900 or later')
+    }
+
+    if (birthdate > new Date()) {
+      throw new Error('Date cannot be in the future')
+    }
+
+    return birthdate
   }
 }
 

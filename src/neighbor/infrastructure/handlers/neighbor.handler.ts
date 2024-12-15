@@ -4,7 +4,6 @@ import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
-import DateUtils from '../../../shared/utils/date.util'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteNeighborUseCase from '../../application/usecases/delete.usecase'
@@ -72,21 +71,16 @@ class NeighborHandler {
     }
   }
 
-  async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest<{ Body: NeighborPayload }>, rep: FastifyReply): Promise<void> {
     try {
-      const validateRegisterNeighborSchema = new SchemaValidator(RegisterNeighborDTO, req.body as NeighborPayload)
+      const validateRegisterNeighborSchema = new SchemaValidator(RegisterNeighborDTO, req.body)
       validateRegisterNeighborSchema.exec()
-
-      const payload: NeighborPayload = {
-        ...(req.body as any),
-        birthdate: DateUtils.parseDate((req.body as any).birthdate as string)
-      }
 
       const registerNeighbor = new RegisterNeighborUseCase(
         this.neighborRepository,
         new FindEntityByIDUseCase(this.entityRepository)
       )
-      const neighbor = await registerNeighbor.exec(payload)
+      const neighbor = await registerNeighbor.exec(req.body)
 
       const authService = new AuthService(this.jwtStrategy)
       const accessToken = await authService.generateAccessToken(neighbor.id, {
