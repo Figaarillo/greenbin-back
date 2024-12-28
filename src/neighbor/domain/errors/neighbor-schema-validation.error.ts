@@ -1,7 +1,12 @@
 class ErrorNeighborSchemaValidation extends Error {
-  constructor(message: string) {
+  constructor(
+    title?: string,
+    message?: string,
+    public readonly details?: object,
+    public readonly code?: number
+  ) {
     super(message)
-    this.name = ErrorNeighborSchemaValidation.name
+    this.name = title ?? ErrorNeighborSchemaValidation.name
   }
 }
 
