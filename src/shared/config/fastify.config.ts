@@ -1,11 +1,35 @@
-import { fastify, type FastifyInstance } from 'fastify'
+import { fastify, type FastifyReply, type FastifyRequest, type FastifyInstance } from 'fastify'
+
+const envToLogger = {
+  development: {
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        translateTime: 'HH:MM:ss Z',
+        ignore: 'pid,hostname',
+        colorize: true
+      },
+      serializers: {
+        req(req: FastifyRequest) {
+          return { method: req.method, url: req.url }
+        },
+        res(reply: FastifyReply) {
+          return { statusCode: reply.statusCode }
+        }
+      },
+      redact: ['req.headers.authorization']
+    }
+  },
+  production: true,
+  test: false
+}
 
 class FastifyConifg {
   readonly server: FastifyInstance
 
-  constructor(logger?: boolean) {
+  constructor(environment: 'development' | 'production' | 'test') {
     this.server = fastify({
-      logger: logger ?? false
+      logger: envToLogger[environment] ?? true
     })
   }
 
