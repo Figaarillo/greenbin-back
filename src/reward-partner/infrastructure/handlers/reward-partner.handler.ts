@@ -18,7 +18,7 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import LoginRewardPartnerDTO from '../dtos/login-reward-partner.dto'
 import RegisterRewardPartnerDTO from '../dtos/register-reward-partner.dto'
 import UpdateRewardPartnerDTO from '../dtos/update-reward-partner.dto'
-import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import RewardPartnerSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class RewardPartnerHandler {
   constructor(
@@ -31,7 +31,7 @@ class RewardPartnerHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new RewardPartnerSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findRewardPartner = new FindRewardPartnerByIDUseCase(this.rewardPartnerRepository)
@@ -47,7 +47,7 @@ class RewardPartnerHandler {
     try {
       const payload: RewardPartnerPayload = req.body as RewardPartnerPayload
 
-      const validateRegisterRewardPartnerSchema = new SchemaValidator(RegisterRewardPartnerDTO, payload)
+      const validateRegisterRewardPartnerSchema = new RewardPartnerSchemaValidator(RegisterRewardPartnerDTO, payload)
       validateRegisterRewardPartnerSchema.exec()
 
       const registerRewardPartner = new RegisterRewardPartnerUseCase(
@@ -78,10 +78,10 @@ class RewardPartnerHandler {
       const id = GetURLParams(req, 'id')
       const payload: RewardPartnerPayload = req.body as RewardPartnerPayload
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new RewardPartnerSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const schemaValidator = new SchemaValidator(UpdateRewardPartnerDTO, payload)
+      const schemaValidator = new RewardPartnerSchemaValidator(UpdateRewardPartnerDTO, payload)
       schemaValidator.exec()
 
       const updateRewardPartner = new UpdateRewardPartnerUseCase(this.rewardPartnerRepository)
@@ -97,7 +97,7 @@ class RewardPartnerHandler {
     try {
       const payload = req.body as RewardPartnerLoginPayload
 
-      const schemaValidator = new SchemaValidator(LoginRewardPartnerDTO, payload)
+      const schemaValidator = new RewardPartnerSchemaValidator(LoginRewardPartnerDTO, payload)
       schemaValidator.exec()
 
       const login = new LoginRewardPartnerUseCase(this.rewardPartnerRepository)

@@ -1,22 +1,31 @@
 import { ZodError, type ZodType } from 'zod'
-import handleZodError from '../../../shared/utils/hanlde-zod-error.util'
-import type EntityEntity from '../../domain/entities/entity.entity'
+import ErrorSchemaValidation from '../../../shared/domain/errors/schema-validation.error'
+import type ExtendPayload from '../../../shared/domain/types/ext-payload.type'
+import { formatZodErrorsToObject, formatZodErrorsToString } from '../../../shared/utils/hanlde-zod-error.util'
+import type EntityPayload from '../../domain/payloads/entity.payload'
 
-class SchemaValidator<TDTOSchema> {
+class EntitySchemaValidator<TDTOSchema> {
   constructor(
     private readonly schema: ZodType<TDTOSchema>,
-    private readonly payload: Partial<EntityEntity>
+    private readonly payload: Partial<ExtendPayload<EntityPayload>>
   ) {}
 
   exec(): TDTOSchema {
     try {
       return this.schema.parse(this.payload)
     } catch (error) {
-      if (error instanceof ZodError) handleZodError(error)
+      if (error instanceof ZodError) {
+        throw new ErrorSchemaValidation(
+          'Validation errors occurred on entity payload',
+          formatZodErrorsToString(error.errors),
+          formatZodErrorsToObject(error.errors),
+          400
+        )
+      }
 
       throw error
     }
   }
 }
 
-export default SchemaValidator
+export default EntitySchemaValidator

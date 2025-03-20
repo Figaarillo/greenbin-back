@@ -1,6 +1,7 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
+import ErrorSchemaValidation from '../../../shared/domain/errors/schema-validation.error'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteGreenPointUseCase from '../../application/usecases/delete.usecase'
@@ -8,13 +9,12 @@ import FindGreenPointByIDUseCase from '../../application/usecases/find-by-id.use
 import ListGreenPointsUseCase from '../../application/usecases/list.usecase'
 import RegisterGreenPointUseCase from '../../application/usecases/register.usecase'
 import UpdateGreenPointUseCase from '../../application/usecases/update.usecase'
-import ErrorGreenPointSchemaValidation from '../../domain/errors/green-point-schema-validation.error'
 import type GreenPointPayload from '../../domain/payloads/green-point.payload'
 import type GreenPointRepository from '../../domain/repositories/green-point.repository'
 import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterGreenPointDTO from '../dtos/register-green-point.dto'
 import UpdateGreenPointDTO from '../dtos/update-green-point.dto'
-import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import GreenPointSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class GreenPointHandler {
   constructor(
@@ -39,7 +39,7 @@ class GreenPointHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new GreenPointSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findGreenPoint = new FindGreenPointByIDUseCase(this.greenPointRepository)
@@ -55,7 +55,7 @@ class GreenPointHandler {
     try {
       const payload: GreenPointPayload = req.body as GreenPointPayload
 
-      const validateRegisterGreenPointSchema = new SchemaValidator(RegisterGreenPointDTO, payload)
+      const validateRegisterGreenPointSchema = new GreenPointSchemaValidator(RegisterGreenPointDTO, payload)
       validateRegisterGreenPointSchema.exec()
 
       const registerGreenPoint = new RegisterGreenPointUseCase(
@@ -75,10 +75,10 @@ class GreenPointHandler {
       const id = GetURLParams(req, 'id')
       const payload: GreenPointPayload = req.body as GreenPointPayload
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new GreenPointSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const schemaValidator = new SchemaValidator(UpdateGreenPointDTO, payload)
+      const schemaValidator = new GreenPointSchemaValidator(UpdateGreenPointDTO, payload)
       schemaValidator.exec()
 
       const updateGreenPoint = new UpdateGreenPointUseCase(this.greenPointRepository)
@@ -94,7 +94,7 @@ class GreenPointHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      const schemaValidator = new GreenPointSchemaValidator(CheckIdDTO, { id })
       schemaValidator.exec()
 
       const deleteGreenPoint = new DeleteGreenPointUseCase(this.greenPointRepository)
@@ -102,7 +102,7 @@ class GreenPointHandler {
 
       HandleHTTPResponse.OK(res, 'Green point deleted successfully', { id })
     } catch (error) {
-      if (error instanceof ErrorGreenPointSchemaValidation) {
+      if (error instanceof ErrorSchemaValidation) {
         res.status(400).send(error)
       } else {
         res.status(500).send({ error: 'Internal Server Error', message: 'Something went wrong.' })

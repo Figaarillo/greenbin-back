@@ -1,7 +1,12 @@
 class ErrorSchemaValidation extends Error {
-  constructor(message: string) {
+  constructor(
+    title?: string,
+    message?: string,
+    public readonly details?: object,
+    public readonly code?: number
+  ) {
     super(message)
-    this.name = ErrorSchemaValidation.name
+    this.name = title ?? ErrorSchemaValidation.name
   }
 }
 

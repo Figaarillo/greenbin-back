@@ -16,7 +16,7 @@ import type CouponRepository from '../../domain/repositories/coupon.repository'
 import CouponQueryParams from '../dtos/query-params.dto'
 import RegisterCouponDTO from '../dtos/register-coupon.dto'
 import UpdateCouponDTO from '../dtos/update-coupon.dto'
-import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import CouponSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 import ListAvailableCouponUseCase from '../../application/usecases/list-available-coupon.usecase'
 
 class CouponHandler {
@@ -55,7 +55,7 @@ class CouponHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findCoupon = new FindCouponByIDUseCase(this.couponRepository)
@@ -82,7 +82,7 @@ class CouponHandler {
 
   async register(req: FastifyRequest<{ Body: CouponPayload }>, res: FastifyReply): Promise<void> {
     try {
-      const validateRegisterCouponsSchema = new SchemaValidator(RegisterCouponDTO, req.body)
+      const validateRegisterCouponsSchema = new CouponSchemaValidator(RegisterCouponDTO, req.body)
       validateRegisterCouponsSchema.exec()
 
       const findRewardPartner = new FindRewardPartnerByIdUseCase(this.rewardPartnerRepository)
@@ -102,10 +102,10 @@ class CouponHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const schemaValidator = new SchemaValidator(UpdateCouponDTO, req.body)
+      const schemaValidator = new CouponSchemaValidator(UpdateCouponDTO, req.body)
       schemaValidator.exec()
 
       const updateCoupon = new UpdateCouponUseCase(this.couponRepository)
@@ -121,7 +121,7 @@ class CouponHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      const schemaValidator = new CouponSchemaValidator(CheckIdDTO, { id })
       schemaValidator.exec()
 
       const deleteCoupon = new DeleteCouponUseCase(this.couponRepository)

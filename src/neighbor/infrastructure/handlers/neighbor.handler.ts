@@ -22,7 +22,7 @@ import CheckIdDTO from '../dtos/check-id.dto'
 import LoginNeighborDTO from '../dtos/login-neighbor.dto'
 import RegisterNeighborDTO from '../dtos/register-neighbor.dto'
 import UpdateNeighborDTO from '../dtos/update-neighbor.dto'
-import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import NeighborSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class NeighborHandler {
   constructor(
@@ -46,7 +46,7 @@ class NeighborHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new NeighborSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findNeighbor = new FindNeighborByIDUseCase(this.neighborRepository)
@@ -73,7 +73,7 @@ class NeighborHandler {
 
   async register(req: FastifyRequest<{ Body: NeighborPayload }>, rep: FastifyReply): Promise<void> {
     try {
-      const validateRegisterNeighborSchema = new SchemaValidator(RegisterNeighborDTO, req.body)
+      const validateRegisterNeighborSchema = new NeighborSchemaValidator(RegisterNeighborDTO, req.body)
       validateRegisterNeighborSchema.exec()
 
       const registerNeighbor = new RegisterNeighborUseCase(
@@ -109,10 +109,10 @@ class NeighborHandler {
       const id = GetURLParams(req, 'id')
       const payload: NeighborPayload = req.body as NeighborPayload
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new NeighborSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const schemaValidator = new SchemaValidator(UpdateNeighborDTO, payload)
+      const schemaValidator = new NeighborSchemaValidator(UpdateNeighborDTO, payload)
       schemaValidator.exec()
 
       const updateNeighbor = new UpdateNeighborUseCase(this.neighborRepository)
@@ -128,7 +128,7 @@ class NeighborHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      const schemaValidator = new NeighborSchemaValidator(CheckIdDTO, { id })
       schemaValidator.exec()
 
       const deleteNeighbor = new DeleteNeighborUseCase(this.neighborRepository)
@@ -144,7 +144,7 @@ class NeighborHandler {
     try {
       const paylaod = req.body as NeighborLoginPayload
 
-      const schemaValidator = new SchemaValidator(LoginNeighborDTO, paylaod)
+      const schemaValidator = new NeighborSchemaValidator(LoginNeighborDTO, paylaod)
       schemaValidator.exec()
 
       const login = new LoginNeighborUseCase(this.neighborRepository)

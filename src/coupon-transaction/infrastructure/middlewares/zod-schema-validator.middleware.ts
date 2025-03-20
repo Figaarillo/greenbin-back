@@ -1,7 +1,8 @@
 import { ZodError, type ZodType } from 'zod'
-import handleZodError from '../../../shared/utils/hanlde-zod-error.util'
-import type CouponTransactionPayload from '../../domain/payloads/coupon-transaction.payload'
+import ErrorSchemaValidation from '../../../shared/domain/errors/schema-validation.error'
 import type ExtendPayload from '../../../shared/domain/types/ext-payload.type'
+import { formatZodErrorsToObject, formatZodErrorsToString } from '../../../shared/utils/hanlde-zod-error.util'
+import type CouponTransactionPayload from '../../domain/payloads/coupon-transaction.payload'
 import type RedeemCouponPayload from '../../domain/payloads/redeem-coupon.payload'
 
 class CouponTransactionSchemaValidator<TDTOSchema> {
@@ -14,7 +15,14 @@ class CouponTransactionSchemaValidator<TDTOSchema> {
     try {
       return this.schema.parse(this.payload)
     } catch (error) {
-      if (error instanceof ZodError) handleZodError(error)
+      if (error instanceof ZodError) {
+        throw new ErrorSchemaValidation(
+          'Validation error on coupon transaction payload',
+          formatZodErrorsToString(error.errors),
+          formatZodErrorsToObject(error.errors),
+          400
+        )
+      }
 
       throw error
     }

@@ -19,7 +19,7 @@ import type EntityRepository from '../../domain/repositories/entity.repository'
 import EntityQueryParams from '../dtos/query-params.dto'
 import RegisterEntityDTO from '../dtos/register-entity.dto'
 import UpdateEntityDTO from '../dtos/update-entity.dto'
-import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import EntitySchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class EntityHandler {
   constructor(
@@ -44,7 +44,7 @@ class EntityHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new EntitySchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findEntity = new FindEntityByIDUseCase(this.repository)
@@ -71,7 +71,7 @@ class EntityHandler {
 
   async register(req: FastifyRequest<{ Body: EntityPayload }>, res: FastifyReply): Promise<void> {
     try {
-      const validateRegisterEntitiesSchema = new SchemaValidator(RegisterEntityDTO, req.body)
+      const validateRegisterEntitiesSchema = new EntitySchemaValidator(RegisterEntityDTO, req.body)
       validateRegisterEntitiesSchema.exec()
 
       const registerEntity = new RegisterEntityUseCase(this.repository)
@@ -89,10 +89,10 @@ class EntityHandler {
   ): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new EntitySchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const schemaValidator = new SchemaValidator(UpdateEntityDTO, req.body)
+      const schemaValidator = new EntitySchemaValidator(UpdateEntityDTO, req.body)
       schemaValidator.exec()
 
       const updateEntity = new UpdateEntityUseCase(this.repository)
@@ -108,7 +108,7 @@ class EntityHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      const schemaValidator = new EntitySchemaValidator(CheckIdDTO, { id })
       schemaValidator.exec()
 
       const deleteEntity = new DeleteEntityUseCase(this.repository)

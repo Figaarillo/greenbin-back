@@ -18,7 +18,7 @@ import type ResponsibleRepository from '../../domain/repositories/responsible.re
 import CheckIdDTO from '../dtos/check-id.dto'
 import RegisterResponsibleDTO from '../dtos/register-responsible.dto'
 import UpdateResponsibleDTO from '../dtos/update-responsible.dto'
-import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import ResponsibleSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class ResponsibleHandler {
   constructor(
@@ -44,7 +44,7 @@ class ResponsibleHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new ResponsibleSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findResponsible = new FindResponsibleByIDUseCase(this.responsibleRepository)
@@ -58,7 +58,7 @@ class ResponsibleHandler {
 
   async register(req: FastifyRequest<{ Body: ResponsiblePayload }>, res: FastifyReply): Promise<void> {
     try {
-      const validateRegisterResponsiblesSchema = new SchemaValidator(RegisterResponsibleDTO, req.body)
+      const validateRegisterResponsiblesSchema = new ResponsibleSchemaValidator(RegisterResponsibleDTO, req.body)
       validateRegisterResponsiblesSchema.exec()
 
       const registerResponsible = new RegisterResponsibleUseCase(
@@ -80,10 +80,10 @@ class ResponsibleHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new ResponsibleSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
-      const schemaValidator = new SchemaValidator(UpdateResponsibleDTO, req.body)
+      const schemaValidator = new ResponsibleSchemaValidator(UpdateResponsibleDTO, req.body)
       schemaValidator.exec()
 
       const updateResponsible = new UpdateResponsibleUseCase(this.responsibleRepository)
@@ -99,7 +99,7 @@ class ResponsibleHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      const schemaValidator = new ResponsibleSchemaValidator(CheckIdDTO, { id })
       schemaValidator.exec()
 
       const deleteResponsible = new DeleteResponsibleUseCase(this.responsibleRepository)

@@ -11,7 +11,7 @@ import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import RedeemCouponUseCase from '../../application/usecases/redeem-coupon.usecase'
 import type RedeemCouponPayload from '../../domain/payloads/redeem-coupon.payload'
 import type CouponTransactionRepository from '../../domain/repositories/coupon-transaction.repository'
-import SchemaValidator from '../../../coupon/infrastructure/middlewares/zod-schema-validator.middleware'
+import CouponSchemaValidator from '../../../coupon/infrastructure/middlewares/zod-schema-validator.middleware'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import { GetURLParams } from '../../../shared/utils/http.request.util'
 import FindCouponTransactionByIDUseCase from '../../application/usecases/find-by-id.usecase'
@@ -52,7 +52,7 @@ class CouponTransactionHandler {
     try {
       const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findTransaction = new FindCouponTransactionByIDUseCase(this.couponTransactionRepository)
