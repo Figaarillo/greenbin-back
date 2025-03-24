@@ -18,32 +18,32 @@ class GreenPointRoute {
     this.server.get(
       '/api/green-point',
       { schema: listSwaggerSchema },
-      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
-        await this.handler.list(req, res)
+      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
+        await this.handler.list(req, rep)
       }
     )
     this.server.get(
       '/api/green-point/:id',
       { schema: findByIdSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.findByID(req, res)
+      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.findByID(req, rep)
       }
     )
-    this.server.post('/api/green-point', { schema: registerSwaggerSchema }, async (req, res) => {
-      await this.handler.register(req, res)
+    this.server.post('/api/green-point', { schema: registerSwaggerSchema }, async (req, rep) => {
+      await this.handler.register(req, rep)
     })
     this.server.put(
       '/api/green-point/:id',
       { schema: updateSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.update(req, res)
+      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.update(req, rep)
       }
     )
     this.server.delete(
       '/api/green-point/:id',
       { schema: deleteSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.delete(req, res)
+      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.delete(req, rep)
       }
     )
   }

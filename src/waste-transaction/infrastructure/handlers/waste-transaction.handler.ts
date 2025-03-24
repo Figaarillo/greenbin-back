@@ -30,7 +30,7 @@ class WasteTransactionHandler {
     private readonly categoryRepository: WasteCategoryRepository
   ) {}
 
-  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -40,13 +40,13 @@ class WasteTransactionHandler {
       const findWasteTransaction = new FindWasteTransactionByIDUseCase(this.transactionRepository)
       const wasteTransaction = await findWasteTransaction.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Waste transaction retrieved successfully', wasteTransaction)
+      HandleHTTPResponse.OK(rep, 'Waste transaction retrieved successfully', wasteTransaction)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async register(req: FastifyRequest<{ Body: WasteTransactionPayload }>, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest<{ Body: WasteTransactionPayload }>, rep: FastifyReply): Promise<void> {
     try {
       const validateRegisterSchema = new WasteTransactionSchemaValidator(RegisterWasteTransactionDTO, req.body)
       validateRegisterSchema.exec()
@@ -54,13 +54,13 @@ class WasteTransactionHandler {
       const registerWasteTransaction = new RegisterWasteTransactionUseCase(this.transactionRepository)
       const wasteTransaction = await registerWasteTransaction.exec(req.body)
 
-      HandleHTTPResponse.Created(res, 'Waste transaction registered successfully', { id: wasteTransaction.id })
+      HandleHTTPResponse.Created(rep, 'Waste transaction registered successfully', { id: wasteTransaction.id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async registerWasteDelivery(req: FastifyRequest<{ Body: WasteDeliveryPayload }>, res: FastifyReply): Promise<void> {
+  async registerWasteDelivery(req: FastifyRequest<{ Body: WasteDeliveryPayload }>, rep: FastifyReply): Promise<void> {
     try {
       const registerWasteDelivery = new RegisterWasteDeliveryUseCase(
         new RegisterWasteTransactionUseCase(this.transactionRepository),
@@ -76,9 +76,9 @@ class WasteTransactionHandler {
 
       const wasteDelivery = await registerWasteDelivery.exec(req.body)
 
-      HandleHTTPResponse.Created(res, 'Waste delivery registered successfully', { id: wasteDelivery.id })
+      HandleHTTPResponse.Created(rep, 'Waste delivery registered successfully', { id: wasteDelivery.id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 }

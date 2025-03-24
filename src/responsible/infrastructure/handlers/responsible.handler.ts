@@ -27,20 +27,20 @@ class ResponsibleHandler {
     private readonly jwtStrategy: IJWTStrategy
   ) {}
 
-  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
       const listResponsibles = new ListResponsiblesUseCase(this.responsibleRepository)
       const responsibles = await listResponsibles.exec(offset, limit)
 
-      HandleHTTPResponse.OK(res, 'Responsibles retrieved successfully', responsibles)
+      HandleHTTPResponse.OK(rep, 'Responsibles retrieved successfully', responsibles)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -50,13 +50,13 @@ class ResponsibleHandler {
       const findResponsible = new FindResponsibleByIDUseCase(this.responsibleRepository)
       const responsible = await findResponsible.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Responsible retrieved successfully', responsible)
+      HandleHTTPResponse.OK(rep, 'Responsible retrieved successfully', responsible)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async register(req: FastifyRequest<{ Body: ResponsiblePayload }>, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest<{ Body: ResponsiblePayload }>, rep: FastifyReply): Promise<void> {
     try {
       const validateRegisterResponsiblesSchema = new ResponsibleSchemaValidator(RegisterResponsibleDTO, req.body)
       validateRegisterResponsiblesSchema.exec()
@@ -67,15 +67,15 @@ class ResponsibleHandler {
       )
       const responsible = await registerResponsible.exec(req.body)
 
-      HandleHTTPResponse.Created(res, 'Responsible registered successfully', { id: responsible.id })
+      HandleHTTPResponse.Created(rep, 'Responsible registered successfully', { id: responsible.id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
   async update(
     req: FastifyRequest<{ Body: ResponsiblePayload; Params: Record<string, string> }>,
-    res: FastifyReply
+    rep: FastifyReply
   ): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
@@ -89,13 +89,13 @@ class ResponsibleHandler {
       const updateResponsible = new UpdateResponsibleUseCase(this.responsibleRepository)
       await updateResponsible.exec(id, req.body)
 
-      HandleHTTPResponse.OK(res, 'Responsible updated successfully', { id })
+      HandleHTTPResponse.OK(rep, 'Responsible updated successfully', { id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -105,13 +105,13 @@ class ResponsibleHandler {
       const deleteResponsible = new DeleteResponsibleUseCase(this.responsibleRepository)
       await deleteResponsible.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Responsible deleted successfully', { id })
+      HandleHTTPResponse.OK(rep, 'Responsible deleted successfully', { id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async login(req: FastifyRequest<{ Body: ResponsiblePayload }>, res: FastifyReply): Promise<void> {
+  async login(req: FastifyRequest<{ Body: ResponsiblePayload }>, rep: FastifyReply): Promise<void> {
     try {
       const login = new LoginResponsibleUseCase(this.responsibleRepository)
       const responsible = await login.exec(req.body)
@@ -128,13 +128,13 @@ class ResponsibleHandler {
         role: responsible.role
       })
 
-      HandleHTTPResponse.OK(res, 'Responsible logged successfully', {
+      HandleHTTPResponse.OK(rep, 'Responsible logged successfully', {
         id: responsible.id,
         accessToken,
         refreshToken
       })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 

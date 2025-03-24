@@ -20,7 +20,7 @@ class WasteTransactionDetailHandler {
     private readonly wasteRepository: WasteRepository
   ) {}
 
-  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -30,13 +30,13 @@ class WasteTransactionDetailHandler {
       const findWasteTransactionDetail = new FindWasteTransactionDetailByIDUseCase(this.transactionDetailRepository)
       const wasteTransactionDetail = await findWasteTransactionDetail.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Waste transaction detail  retrieved successfully', wasteTransactionDetail)
+      HandleHTTPResponse.OK(rep, 'Waste transaction detail  retrieved successfully', wasteTransactionDetail)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
       const payload: WasteTransactionDetailPayload = req.body as WasteTransactionDetailPayload
 
@@ -53,11 +53,11 @@ class WasteTransactionDetailHandler {
       )
       const WasteTransactionDetail = await registerWasteTransactionDetail.exec(payload)
 
-      HandleHTTPResponse.Created(res, 'Waste transaction detail registered successfully', {
+      HandleHTTPResponse.Created(rep, 'Waste transaction detail registered successfully', {
         id: WasteTransactionDetail.id
       })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 }

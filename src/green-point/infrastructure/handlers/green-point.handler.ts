@@ -22,20 +22,20 @@ class GreenPointHandler {
     private readonly entityRepository: EntityRepository
   ) {}
 
-  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
       const listGreenPoints = new ListGreenPointsUseCase(this.greenPointRepository)
       const greenPoints = await listGreenPoints.exec(offset, limit)
 
-      HandleHTTPResponse.OK(res, 'Green points retrieved successfully', greenPoints)
+      HandleHTTPResponse.OK(rep, 'Green points retrieved successfully', greenPoints)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -45,13 +45,13 @@ class GreenPointHandler {
       const findGreenPoint = new FindGreenPointByIDUseCase(this.greenPointRepository)
       const greenPoint = await findGreenPoint.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Green point retrieved successfully', greenPoint)
+      HandleHTTPResponse.OK(rep, 'Green point retrieved successfully', greenPoint)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
       const payload: GreenPointPayload = req.body as GreenPointPayload
 
@@ -64,13 +64,13 @@ class GreenPointHandler {
       )
       const greenPoint = await registerGreenPoint.exec(payload)
 
-      HandleHTTPResponse.Created(res, 'Green point registered successfully', { id: greenPoint.id })
+      HandleHTTPResponse.Created(rep, 'Green point registered successfully', { id: greenPoint.id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
       const payload: GreenPointPayload = req.body as GreenPointPayload
@@ -84,13 +84,13 @@ class GreenPointHandler {
       const updateGreenPoint = new UpdateGreenPointUseCase(this.greenPointRepository)
       await updateGreenPoint.exec(id, payload)
 
-      HandleHTTPResponse.OK(res, 'Green point updated successfully', { id })
+      HandleHTTPResponse.OK(rep, 'Green point updated successfully', { id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -100,12 +100,12 @@ class GreenPointHandler {
       const deleteGreenPoint = new DeleteGreenPointUseCase(this.greenPointRepository)
       await deleteGreenPoint.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Green point deleted successfully', { id })
+      HandleHTTPResponse.OK(rep, 'Green point deleted successfully', { id })
     } catch (error) {
       if (error instanceof ErrorSchemaValidation) {
-        res.status(400).send(error)
+        rep.status(400).send(error)
       } else {
-        res.status(500).send({ error: 'Internal Server Error', message: 'Something went wrong.' })
+        rep.status(500).send({ error: 'Internal Server Error', message: 'Something went wrong.' })
       }
     }
   }

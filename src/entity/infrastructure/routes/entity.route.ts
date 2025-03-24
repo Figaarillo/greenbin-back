@@ -19,39 +19,39 @@ class EntityRoute {
   setupRoutes(): void {
     this.server.get('/api/entity', {
       schema: listSwaggerSchema,
-      handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
-        await this.handler.list(req, res)
+      handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
+        await this.handler.list(req, rep)
       }
     })
     this.server.get('/api/entity/:id', {
       schema: findByIdSwaggerSchema,
       preHandler: this.server.auth([this.server.validateAccessToken]),
-      handler: async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.findByID(req, res)
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.findByID(req, rep)
       }
     })
-    this.server.get('/api/entity/populate', async (req: FastifyRequest<{ Params: Record<string, string> }>, res) => {
-      await this.handler.findAndPopulate(req, res)
+    this.server.get('/api/entity/populate', async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+      await this.handler.findAndPopulate(req, rep)
     })
     this.server.post(
       '/api/entity',
       { schema: registerSwaggerSchema },
-      async (req: FastifyRequest<{ Body: EntityPayload }>, res) => {
-        await this.handler.register(req, res)
+      async (req: FastifyRequest<{ Body: EntityPayload }>, rep) => {
+        await this.handler.register(req, rep)
       }
     )
     this.server.put('/api/entity/:id', {
       schema: updateSwaggerSchema,
       preHandler: this.server.auth([this.server.validateAccessToken]),
-      handler: async (req: FastifyRequest<{ Body: { description: string }; Params: { id: string } }>, res) => {
-        await this.handler.update(req, res)
+      handler: async (req: FastifyRequest<{ Body: { description: string }; Params: { id: string } }>, rep) => {
+        await this.handler.update(req, rep)
       }
     })
     this.server.delete('/api/entity/:id', {
       schema: deleteSwaggerSchema,
       preHandler: this.server.auth([this.server.validateAccessToken]),
-      handler: async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.delete(req, res)
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.delete(req, rep)
       }
     })
     this.server.post('/api/entity/auth/login', async (req: FastifyRequest<{ Body: EntityLoginPayload }>, rep) => {

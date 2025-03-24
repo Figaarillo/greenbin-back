@@ -27,20 +27,20 @@ class EntityHandler {
     private readonly jwtStrategy: IJWTStrategy
   ) {}
 
-  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const { offset, limit } = GetPaginationParams(req)
 
       const listEntities = new ListEntitiesUseCase(this.repository)
       const entities = await listEntities.exec(offset, limit)
 
-      HandleHTTPResponse.OK(res, 'Entities retrieved successfully', entities)
+      HandleHTTPResponse.OK(rep, 'Entities retrieved successfully', entities)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -50,26 +50,26 @@ class EntityHandler {
       const findEntity = new FindEntityByIDUseCase(this.repository)
       const entity = await findEntity.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Entity retrieved successfully', entity)
+      HandleHTTPResponse.OK(rep, 'Entity retrieved successfully', entity)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async findAndPopulate(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findAndPopulate(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const params = EntityQueryParams.parse(req.query)
 
       const findWithPopulate = new FindEntityWithPopulateUseCase(this.repository)
       const entity = await findWithPopulate.exec(params.id, params.with)
 
-      HandleHTTPResponse.OK(res, 'Entity retrieved successfully', entity)
+      HandleHTTPResponse.OK(rep, 'Entity retrieved successfully', entity)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async register(req: FastifyRequest<{ Body: EntityPayload }>, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest<{ Body: EntityPayload }>, rep: FastifyReply): Promise<void> {
     try {
       const validateRegisterEntitiesSchema = new EntitySchemaValidator(RegisterEntityDTO, req.body)
       validateRegisterEntitiesSchema.exec()
@@ -77,15 +77,15 @@ class EntityHandler {
       const registerEntity = new RegisterEntityUseCase(this.repository)
       const entity = await registerEntity.exec(req.body)
 
-      HandleHTTPResponse.Created(res, 'Entity registered successfully', { id: entity.id })
+      HandleHTTPResponse.Created(rep, 'Entity registered successfully', { id: entity.id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
   async update(
     req: FastifyRequest<{ Body: { description: string }; Params: Record<string, string> }>,
-    res: FastifyReply
+    rep: FastifyReply
   ): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
@@ -98,13 +98,13 @@ class EntityHandler {
       const updateEntity = new UpdateEntityUseCase(this.repository)
       await updateEntity.exec(id, req.body)
 
-      HandleHTTPResponse.OK(res, 'Entity updated successfully', { id })
+      HandleHTTPResponse.OK(rep, 'Entity updated successfully', { id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -114,9 +114,9 @@ class EntityHandler {
       const deleteEntity = new DeleteEntityUseCase(this.repository)
       await deleteEntity.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Entity deleted successfully', { id })
+      HandleHTTPResponse.OK(rep, 'Entity deleted successfully', { id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 

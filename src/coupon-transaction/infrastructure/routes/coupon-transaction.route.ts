@@ -9,13 +9,13 @@ class CouponTransactionRoute {
   ) {}
 
   setupRoutes(): void {
-    this.server.post('/api/redeem-coupon', async (req: FastifyRequest<{ Body: RedeemCouponPayload }>, res) => {
-      await this.handler.redeemCoupon(req, res)
+    this.server.post('/api/redeem-coupon', async (req: FastifyRequest<{ Body: RedeemCouponPayload }>, rep) => {
+      await this.handler.redeemCoupon(req, rep)
     })
     this.server.get(
       '/api/coupon-transaction/:id',
-      async (req: FastifyRequest<{ Params: Record<string, string> }>, res) => {
-        await this.handler.findByID(req, res)
+      async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+        await this.handler.findByID(req, rep)
       }
     )
   }

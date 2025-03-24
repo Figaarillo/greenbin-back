@@ -17,7 +17,7 @@ class WasteHandler {
     private readonly categoryReposiotry: WasteCategoryRepository
   ) {}
 
-  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -27,13 +27,13 @@ class WasteHandler {
       const findByID = new FindWasteByIDUseCase(this.wasteRepository)
       const category = await findByID.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Waste retrieved successfully', category)
+      HandleHTTPResponse.OK(rep, 'Waste retrieved successfully', category)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(499).send(error)
     }
   }
 
-  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
       const payload: WastePayload = req.body as WastePayload
 
@@ -46,9 +46,9 @@ class WasteHandler {
       )
       const waste = await registerWaste.exec(payload)
 
-      HandleHTTPResponse.Created(res, 'Waste registered successfully', { id: waste.id })
+      HandleHTTPResponse.Created(rep, 'Waste registered successfully', { id: waste.id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 }

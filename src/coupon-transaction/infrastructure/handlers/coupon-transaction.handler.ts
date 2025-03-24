@@ -48,7 +48,7 @@ class CouponTransactionHandler {
     }
   }
 
-  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -58,9 +58,9 @@ class CouponTransactionHandler {
       const findTransaction = new FindCouponTransactionByIDUseCase(this.couponTransactionRepository)
       const transaction = await findTransaction.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Coupon transaction retrieved successfully', transaction)
+      HandleHTTPResponse.OK(rep, 'Coupon transaction retrieved successfully', transaction)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 }

@@ -13,7 +13,7 @@ const envToLogger = {
         req(req: FastifyRequest) {
           return { method: req.method, url: req.url }
         },
-        res(reply: FastifyReply) {
+        rep(reply: FastifyReply) {
           return { statusCode: reply.statusCode }
         }
       },

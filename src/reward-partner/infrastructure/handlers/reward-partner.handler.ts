@@ -27,7 +27,7 @@ class RewardPartnerHandler {
     private readonly jwtStrategy: IJWTStrategy
   ) {}
 
-  async findById(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async findById(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
 
@@ -37,13 +37,13 @@ class RewardPartnerHandler {
       const findRewardPartner = new FindRewardPartnerByIDUseCase(this.rewardPartnerRepository)
       const rewardPartner = await findRewardPartner.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Reward partner retrieved successfully', rewardPartner)
+      HandleHTTPResponse.OK(rep, 'Reward partner retrieved successfully', rewardPartner)
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
       const payload: RewardPartnerPayload = req.body as RewardPartnerPayload
 
@@ -63,17 +63,17 @@ class RewardPartnerHandler {
       })
       const refreshToken = await authService.generateRefreshToken(rewardPartner.id, { name: rewardPartner.name })
 
-      HandleHTTPResponse.Created(res, 'Reward partner registered successfully', {
+      HandleHTTPResponse.Created(rep, 'Reward partner registered successfully', {
         id: rewardPartner.id,
         accessToken,
         refreshToken
       })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+  async update(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
       const id = GetURLParams(req, 'id')
       const payload: RewardPartnerPayload = req.body as RewardPartnerPayload
@@ -87,13 +87,13 @@ class RewardPartnerHandler {
       const updateRewardPartner = new UpdateRewardPartnerUseCase(this.rewardPartnerRepository)
       await updateRewardPartner.exec(id, payload)
 
-      HandleHTTPResponse.OK(res, 'Reward partner updated successfully', { id })
+      HandleHTTPResponse.OK(rep, 'Reward partner updated successfully', { id })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
-  async login(req: FastifyRequest, res: FastifyReply): Promise<void> {
+  async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     try {
       const payload = req.body as RewardPartnerLoginPayload
 
@@ -115,13 +115,13 @@ class RewardPartnerHandler {
         role: rewardPartner.role
       })
 
-      HandleHTTPResponse.OK(res, 'Reward partner logged in successfully', {
+      HandleHTTPResponse.OK(rep, 'Reward partner logged in successfully', {
         id: rewardPartner.id,
         accessToken,
         refreshToken
       })
     } catch (error) {
-      res.status(500).send(error)
+      rep.status(500).send(error)
     }
   }
 
