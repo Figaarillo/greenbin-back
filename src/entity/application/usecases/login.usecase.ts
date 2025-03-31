@@ -1,7 +1,6 @@
+import ErrorInvalidCredentialsProvided from '../../../shared/domain/errors/invalid-credentials.error'
 import type EntityEntity from '../../domain/entities/entity.entity'
 import { EntityRelationships } from '../../domain/enums/entity.enum'
-import ErrorEntityNotFound from '../../domain/errors/entity-not-found.error'
-import ErrorInvalidPassword from '../../domain/errors/invalid-password.error'
 import type EntityLoginPayload from '../../domain/payloads/entity.login.payload'
 import type EntityRepository from '../../domain/repositories/entity.repository'
 
@@ -11,12 +10,12 @@ class LoginEntityUseCase {
   async exec(payload: EntityLoginPayload): Promise<EntityEntity> {
     const entity = await this.findEntity(payload)
     if (entity == null) {
-      throw new ErrorEntityNotFound(undefined, payload.email, payload.name)
+      throw new ErrorInvalidCredentialsProvided()
     }
 
     const passwordValid = await entity.verifyPassword(payload.password)
     if (!passwordValid) {
-      throw new ErrorInvalidPassword()
+      throw new ErrorInvalidCredentialsProvided()
     }
 
     return entity
