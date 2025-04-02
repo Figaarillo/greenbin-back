@@ -32,191 +32,153 @@ class NeighborHandler {
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = GetPaginationParams(req)
 
-      const listNeighbor = new ListNeighborsUseCase(this.neighborRepository)
-      const neighbors = await listNeighbor.exec(offset, limit)
+    const listNeighbor = new ListNeighborsUseCase(this.neighborRepository)
+    const neighbors = await listNeighbor.exec(offset, limit)
 
-      HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
-    } catch (error) {}
+    HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
   }
 
   async findById(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new NeighborSchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new NeighborSchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const findNeighbor = new FindNeighborByIDUseCase(this.neighborRepository)
-      const neighbor = await findNeighbor.exec(id)
+    const findNeighbor = new FindNeighborByIDUseCase(this.neighborRepository)
+    const neighbor = await findNeighbor.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
   }
 
   async findByDni(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const dni = GetURLParams(req, 'dni')
+    const dni = GetURLParams(req, 'dni')
 
-      const findByDNI = new FindNeighborByDNIUseCase(this.neighborRepository)
-      const neighbor = await findByDNI.exec(dni)
+    const findByDNI = new FindNeighborByDNIUseCase(this.neighborRepository)
+    const neighbor = await findByDNI.exec(dni)
 
-      HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Neighbor retrieved successfully', neighbor)
   }
 
   async register(req: FastifyRequest<{ Body: NeighborPayload }>, rep: FastifyReply): Promise<void> {
-    try {
-      const validateRegisterNeighborSchema = new NeighborSchemaValidator(RegisterNeighborDTO, req.body)
-      validateRegisterNeighborSchema.exec()
+    const validateRegisterNeighborSchema = new NeighborSchemaValidator(RegisterNeighborDTO, req.body)
+    validateRegisterNeighborSchema.exec()
 
-      const registerNeighbor = new RegisterNeighborUseCase(
-        this.neighborRepository,
-        new FindEntityByIDUseCase(this.entityRepository)
-      )
-      const neighbor = await registerNeighbor.exec(req.body)
+    const registerNeighbor = new RegisterNeighborUseCase(
+      this.neighborRepository,
+      new FindEntityByIDUseCase(this.entityRepository)
+    )
+    const neighbor = await registerNeighbor.exec(req.body)
 
-      const authService = new AuthService(this.jwtStrategy)
-      const accessToken = await authService.generateAccessToken(neighbor.id, {
-        username: neighbor.username,
-        email: neighbor.email,
-        role: neighbor.role
-      })
-      const refreshToken = await authService.generateRefreshToken(neighbor.id, {
-        username: neighbor.username,
-        email: neighbor.email,
-        role: neighbor.role
-      })
+    const authService = new AuthService(this.jwtStrategy)
+    const accessToken = await authService.generateAccessToken(neighbor.id, {
+      username: neighbor.username,
+      email: neighbor.email,
+      role: neighbor.role
+    })
+    const refreshToken = await authService.generateRefreshToken(neighbor.id, {
+      username: neighbor.username,
+      email: neighbor.email,
+      role: neighbor.role
+    })
 
-      HandleHTTPResponse.Created(rep, 'Neighbor registered successfully', {
-        id: neighbor.id,
-        accessToken,
-        refreshToken
-      })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.Created(rep, 'Neighbor registered successfully', {
+      id: neighbor.id,
+      accessToken,
+      refreshToken
+    })
   }
 
   async update(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
-      const payload: NeighborPayload = req.body as NeighborPayload
+    const id = GetURLParams(req, 'id')
+    const payload: NeighborPayload = req.body as NeighborPayload
 
-      const validateIDSchema = new NeighborSchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new NeighborSchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const schemaValidator = new NeighborSchemaValidator(UpdateNeighborDTO, payload)
-      schemaValidator.exec()
+    const schemaValidator = new NeighborSchemaValidator(UpdateNeighborDTO, payload)
+    schemaValidator.exec()
 
-      const updateNeighbor = new UpdateNeighborUseCase(this.neighborRepository)
-      await updateNeighbor.exec(id, payload)
+    const updateNeighbor = new UpdateNeighborUseCase(this.neighborRepository)
+    await updateNeighbor.exec(id, payload)
 
-      HandleHTTPResponse.OK(rep, 'Neighbor updated successfully', { id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Neighbor updated successfully', { id })
   }
 
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const schemaValidator = new NeighborSchemaValidator(CheckIdDTO, { id })
-      schemaValidator.exec()
+    const schemaValidator = new NeighborSchemaValidator(CheckIdDTO, { id })
+    schemaValidator.exec()
 
-      const deleteNeighbor = new DeleteNeighborUseCase(this.neighborRepository)
-      await deleteNeighbor.exec(id)
+    const deleteNeighbor = new DeleteNeighborUseCase(this.neighborRepository)
+    await deleteNeighbor.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Neighbor deleted successfully', { id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Neighbor deleted successfully', { id })
   }
 
   async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    try {
-      const paylaod = req.body as NeighborLoginPayload
+    const paylaod = req.body as NeighborLoginPayload
 
-      const schemaValidator = new NeighborSchemaValidator(LoginNeighborDTO, paylaod)
-      schemaValidator.exec()
+    const schemaValidator = new NeighborSchemaValidator(LoginNeighborDTO, paylaod)
+    schemaValidator.exec()
 
-      const login = new LoginNeighborUseCase(this.neighborRepository)
-      const neighbor = await login.exec(paylaod)
+    const login = new LoginNeighborUseCase(this.neighborRepository)
+    const neighbor = await login.exec(paylaod)
 
-      const authService = new AuthService(this.jwtStrategy)
-      const accessToken = await authService.generateAccessToken(neighbor.id, {
-        username: neighbor.username,
-        email: neighbor.email,
-        role: neighbor.role
-      })
-      const refreshToken = await authService.generateRefreshToken(neighbor.id, {
-        username: neighbor.username,
-        email: neighbor.email,
-        role: neighbor.role
-      })
+    const authService = new AuthService(this.jwtStrategy)
+    const accessToken = await authService.generateAccessToken(neighbor.id, {
+      username: neighbor.username,
+      email: neighbor.email,
+      role: neighbor.role
+    })
+    const refreshToken = await authService.generateRefreshToken(neighbor.id, {
+      username: neighbor.username,
+      email: neighbor.email,
+      role: neighbor.role
+    })
 
-      HandleHTTPResponse.OK(rep, 'Login successfully', {
-        id: neighbor.id,
-        accessToken,
-        refreshToken
-      })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Login successfully', {
+      id: neighbor.id,
+      accessToken,
+      refreshToken
+    })
   }
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    try {
-      const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
+    const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
 
-      const findByEmail = new FindByEmailUseCase(this.neighborRepository)
-      const neighbor = await findByEmail.exec(tokenNeighbor.email)
+    const findByEmail = new FindByEmailUseCase(this.neighborRepository)
+    const neighbor = await findByEmail.exec(tokenNeighbor.email)
 
-      const authService = new AuthService(this.jwtStrategy)
-      const accessToken = await authService.generateAccessToken(req.neighbor.id, {
-        username: neighbor.username,
-        email: neighbor.email,
-        role: neighbor.role
-      })
+    const authService = new AuthService(this.jwtStrategy)
+    const accessToken = await authService.generateAccessToken(req.neighbor.id, {
+      username: neighbor.username,
+      email: neighbor.email,
+      role: neighbor.role
+    })
 
-      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
-        accessToken
-      })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
+      accessToken
+    })
   }
 
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    try {
-      const tokenEntity = req.tokenRole
-      if (tokenEntity !== Roles.NEIGHBOR) {
-        throw new Error('Invalid role')
-      }
-      HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
-    } catch (error) {
-      rep.status(500).send(error)
+    const tokenEntity = req.tokenRole
+    if (tokenEntity !== Roles.NEIGHBOR) {
+      throw new Error('Invalid role')
     }
+    HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
   }
 
   async getWastes(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const getWastes = new GetWatesOfNeighborUseCase(this.neighborRepository)
-      const wastes = await getWastes.exec(id)
+    const getWastes = new GetWatesOfNeighborUseCase(this.neighborRepository)
+    const wastes = await getWastes.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Wastes retrieved successfully', wastes)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Wastes retrieved successfully', wastes)
   }
 }
 
