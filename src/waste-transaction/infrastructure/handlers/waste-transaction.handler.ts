@@ -31,55 +31,43 @@ class WasteTransactionHandler {
   ) {}
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new WasteTransactionSchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new WasteTransactionSchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const findWasteTransaction = new FindWasteTransactionByIDUseCase(this.transactionRepository)
-      const wasteTransaction = await findWasteTransaction.exec(id)
+    const findWasteTransaction = new FindWasteTransactionByIDUseCase(this.transactionRepository)
+    const wasteTransaction = await findWasteTransaction.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Waste transaction retrieved successfully', wasteTransaction)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Waste transaction retrieved successfully', wasteTransaction)
   }
 
   async register(req: FastifyRequest<{ Body: WasteTransactionPayload }>, rep: FastifyReply): Promise<void> {
-    try {
-      const validateRegisterSchema = new WasteTransactionSchemaValidator(RegisterWasteTransactionDTO, req.body)
-      validateRegisterSchema.exec()
+    const validateRegisterSchema = new WasteTransactionSchemaValidator(RegisterWasteTransactionDTO, req.body)
+    validateRegisterSchema.exec()
 
-      const registerWasteTransaction = new RegisterWasteTransactionUseCase(this.transactionRepository)
-      const wasteTransaction = await registerWasteTransaction.exec(req.body)
+    const registerWasteTransaction = new RegisterWasteTransactionUseCase(this.transactionRepository)
+    const wasteTransaction = await registerWasteTransaction.exec(req.body)
 
-      HandleHTTPResponse.Created(rep, 'Waste transaction registered successfully', { id: wasteTransaction.id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.Created(rep, 'Waste transaction registered successfully', { id: wasteTransaction.id })
   }
 
   async registerWasteDelivery(req: FastifyRequest<{ Body: WasteDeliveryPayload }>, rep: FastifyReply): Promise<void> {
-    try {
-      const registerWasteDelivery = new RegisterWasteDeliveryUseCase(
-        new RegisterWasteTransactionUseCase(this.transactionRepository),
-        new UpdateWasteTransactionUseCase(this.transactionRepository),
-        new RegisterWasteTransactionDetailUseCase(
-          this.transactionDetailRepository,
-          new FindWasteTransactionByIDUseCase(this.transactionRepository),
-          new FindWasteByIDUseCase(this.wasteRepository)
-        ),
-        new RegisterWasteUseCase(this.wasteRepository, new FindWasteCategoryByIDUseCase(this.categoryRepository)),
-        new FindNeighborByIDUseCase(this.neighborRepository)
-      )
+    const registerWasteDelivery = new RegisterWasteDeliveryUseCase(
+      new RegisterWasteTransactionUseCase(this.transactionRepository),
+      new UpdateWasteTransactionUseCase(this.transactionRepository),
+      new RegisterWasteTransactionDetailUseCase(
+        this.transactionDetailRepository,
+        new FindWasteTransactionByIDUseCase(this.transactionRepository),
+        new FindWasteByIDUseCase(this.wasteRepository)
+      ),
+      new RegisterWasteUseCase(this.wasteRepository, new FindWasteCategoryByIDUseCase(this.categoryRepository)),
+      new FindNeighborByIDUseCase(this.neighborRepository)
+    )
 
-      const wasteDelivery = await registerWasteDelivery.exec(req.body)
+    const wasteDelivery = await registerWasteDelivery.exec(req.body)
 
-      HandleHTTPResponse.Created(rep, 'Waste delivery registered successfully', { id: wasteDelivery.id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.Created(rep, 'Waste delivery registered successfully', { id: wasteDelivery.id })
   }
 }
 
