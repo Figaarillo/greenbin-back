@@ -18,38 +18,30 @@ class WasteHandler {
   ) {}
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new WasteSchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new WasteSchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const findByID = new FindWasteByIDUseCase(this.wasteRepository)
-      const category = await findByID.exec(id)
+    const findByID = new FindWasteByIDUseCase(this.wasteRepository)
+    const category = await findByID.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Waste retrieved successfully', category)
-    } catch (error) {
-      rep.status(499).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Waste retrieved successfully', category)
   }
 
   async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    try {
-      const payload: WastePayload = req.body as WastePayload
+    const payload: WastePayload = req.body as WastePayload
 
-      const validateRegisterWasteSchema = new WasteSchemaValidator(RegisterWasteDTO, payload)
-      validateRegisterWasteSchema.exec()
+    const validateRegisterWasteSchema = new WasteSchemaValidator(RegisterWasteDTO, payload)
+    validateRegisterWasteSchema.exec()
 
-      const registerWaste = new RegisterWasteUseCase(
-        this.wasteRepository,
-        new FindWasteCategoryByIDUseCase(this.categoryReposiotry)
-      )
-      const waste = await registerWaste.exec(payload)
+    const registerWaste = new RegisterWasteUseCase(
+      this.wasteRepository,
+      new FindWasteCategoryByIDUseCase(this.categoryReposiotry)
+    )
+    const waste = await registerWaste.exec(payload)
 
-      HandleHTTPResponse.Created(rep, 'Waste registered successfully', { id: waste.id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.Created(rep, 'Waste registered successfully', { id: waste.id })
   }
 }
 
