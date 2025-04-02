@@ -17,84 +17,64 @@ class WasteCategoryHandler {
   constructor(private readonly repository: WasteCategoryRepository) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = GetPaginationParams(req)
 
-      const listCategories = new ListCategoriesUseCase(this.repository)
-      const entities = await listCategories.exec(offset, limit)
+    const listCategories = new ListCategoriesUseCase(this.repository)
+    const entities = await listCategories.exec(offset, limit)
 
-      HandleHTTPResponse.OK(rep, 'Waste Categories retrieved successfully', entities)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Waste Categories retrieved successfully', entities)
   }
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new WasteCategorySchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new WasteCategorySchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const findCategory = new FindWasteCategoryByIDUseCase(this.repository)
-      const category = await findCategory.exec(id)
+    const findCategory = new FindWasteCategoryByIDUseCase(this.repository)
+    const category = await findCategory.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Waste Category retrieved successfully', category)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Waste Category retrieved successfully', category)
   }
 
   async register(req: FastifyRequest<{ Body: WasteCategoryPayload }>, rep: FastifyReply): Promise<void> {
-    try {
-      const validateRegisterCategoriesSchema = new WasteCategorySchemaValidator(RegisterWasteCategoryDTO, req.body)
-      validateRegisterCategoriesSchema.exec()
+    const validateRegisterCategoriesSchema = new WasteCategorySchemaValidator(RegisterWasteCategoryDTO, req.body)
+    validateRegisterCategoriesSchema.exec()
 
-      const registerCategory = new RegisterWasteCategoryUseCase(this.repository)
-      const category = await registerCategory.exec(req.body)
+    const registerCategory = new RegisterWasteCategoryUseCase(this.repository)
+    const category = await registerCategory.exec(req.body)
 
-      HandleHTTPResponse.Created(rep, 'Waste Category registered successfully', { id: category.id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.Created(rep, 'Waste Category registered successfully', { id: category.id })
   }
 
   async update(
     req: FastifyRequest<{ Params: Record<string, string>; Body: WasteCategoryPayload }>,
     rep: FastifyReply
   ): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new WasteCategorySchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new WasteCategorySchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const schemaValidator = new WasteCategorySchemaValidator(UpdateWasteCategoryDTO, req.body)
-      schemaValidator.exec()
+    const schemaValidator = new WasteCategorySchemaValidator(UpdateWasteCategoryDTO, req.body)
+    schemaValidator.exec()
 
-      const updateCategory = new UpdateCategoryUseCase(this.repository)
-      await updateCategory.exec(id, req.body)
+    const updateCategory = new UpdateCategoryUseCase(this.repository)
+    await updateCategory.exec(id, req.body)
 
-      HandleHTTPResponse.OK(rep, 'Waste Category updated successfully', { id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Waste Category updated successfully', { id })
   }
 
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const schemaValidator = new WasteCategorySchemaValidator(CheckIdDTO, { id })
-      schemaValidator.exec()
+    const schemaValidator = new WasteCategorySchemaValidator(CheckIdDTO, { id })
+    schemaValidator.exec()
 
-      const deleteCategory = new DeleteCategoryUseCase(this.repository)
-      await deleteCategory.exec(id)
+    const deleteCategory = new DeleteCategoryUseCase(this.repository)
+    await deleteCategory.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Waste Category deleted successfully', { id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Waste Category deleted successfully', { id })
   }
 }
 
