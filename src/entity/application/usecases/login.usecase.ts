@@ -1,4 +1,5 @@
 import ErrorInvalidCredentialsProvided from '../../../shared/domain/errors/invalid-credentials.error'
+import ErrorMissingFields from '../../../shared/domain/errors/missing-filds.error'
 import type EntityEntity from '../../domain/entities/entity.entity'
 import { EntityRelationships } from '../../domain/enums/entity.enum'
 import type EntityLoginPayload from '../../domain/payloads/entity.login.payload'
@@ -30,7 +31,7 @@ class LoginEntityUseCase {
       return await this.repository.find({ name: payload.name }, [EntityRelationships.PASSWORD])
     }
 
-    throw new Error('Email or name is required')
+    throw new ErrorMissingFields(['email'])
   }
 }
 

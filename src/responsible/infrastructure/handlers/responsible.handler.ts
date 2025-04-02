@@ -28,148 +28,116 @@ class ResponsibleHandler {
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = GetPaginationParams(req)
 
-      const listResponsibles = new ListResponsiblesUseCase(this.responsibleRepository)
-      const responsibles = await listResponsibles.exec(offset, limit)
+    const listResponsibles = new ListResponsiblesUseCase(this.responsibleRepository)
+    const responsibles = await listResponsibles.exec(offset, limit)
 
-      HandleHTTPResponse.OK(rep, 'Responsibles retrieved successfully', responsibles)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Responsibles retrieved successfully', responsibles)
   }
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new ResponsibleSchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new ResponsibleSchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const findResponsible = new FindResponsibleByIDUseCase(this.responsibleRepository)
-      const responsible = await findResponsible.exec(id)
+    const findResponsible = new FindResponsibleByIDUseCase(this.responsibleRepository)
+    const responsible = await findResponsible.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Responsible retrieved successfully', responsible)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Responsible retrieved successfully', responsible)
   }
 
   async register(req: FastifyRequest<{ Body: ResponsiblePayload }>, rep: FastifyReply): Promise<void> {
-    try {
-      const validateRegisterResponsiblesSchema = new ResponsibleSchemaValidator(RegisterResponsibleDTO, req.body)
-      validateRegisterResponsiblesSchema.exec()
+    const validateRegisterResponsiblesSchema = new ResponsibleSchemaValidator(RegisterResponsibleDTO, req.body)
+    validateRegisterResponsiblesSchema.exec()
 
-      const registerResponsible = new RegisterResponsibleUseCase(
-        this.responsibleRepository,
-        new FindEntityByIDUseCase(this.entityRepository)
-      )
-      const responsible = await registerResponsible.exec(req.body)
+    const registerResponsible = new RegisterResponsibleUseCase(
+      this.responsibleRepository,
+      new FindEntityByIDUseCase(this.entityRepository)
+    )
+    const responsible = await registerResponsible.exec(req.body)
 
-      HandleHTTPResponse.Created(rep, 'Responsible registered successfully', { id: responsible.id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.Created(rep, 'Responsible registered successfully', { id: responsible.id })
   }
 
   async update(
     req: FastifyRequest<{ Body: ResponsiblePayload; Params: Record<string, string> }>,
     rep: FastifyReply
   ): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new ResponsibleSchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new ResponsibleSchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const schemaValidator = new ResponsibleSchemaValidator(UpdateResponsibleDTO, req.body)
-      schemaValidator.exec()
+    const schemaValidator = new ResponsibleSchemaValidator(UpdateResponsibleDTO, req.body)
+    schemaValidator.exec()
 
-      const updateResponsible = new UpdateResponsibleUseCase(this.responsibleRepository)
-      await updateResponsible.exec(id, req.body)
+    const updateResponsible = new UpdateResponsibleUseCase(this.responsibleRepository)
+    await updateResponsible.exec(id, req.body)
 
-      HandleHTTPResponse.OK(rep, 'Responsible updated successfully', { id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Responsible updated successfully', { id })
   }
 
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const schemaValidator = new ResponsibleSchemaValidator(CheckIdDTO, { id })
-      schemaValidator.exec()
+    const schemaValidator = new ResponsibleSchemaValidator(CheckIdDTO, { id })
+    schemaValidator.exec()
 
-      const deleteResponsible = new DeleteResponsibleUseCase(this.responsibleRepository)
-      await deleteResponsible.exec(id)
+    const deleteResponsible = new DeleteResponsibleUseCase(this.responsibleRepository)
+    await deleteResponsible.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Responsible deleted successfully', { id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Responsible deleted successfully', { id })
   }
 
   async login(req: FastifyRequest<{ Body: ResponsiblePayload }>, rep: FastifyReply): Promise<void> {
-    try {
-      const login = new LoginResponsibleUseCase(this.responsibleRepository)
-      const responsible = await login.exec(req.body)
+    const login = new LoginResponsibleUseCase(this.responsibleRepository)
+    const responsible = await login.exec(req.body)
 
-      const authService = new AuthService(this.jwtStrategy)
-      const accessToken = await authService.generateAccessToken(responsible.id, {
-        username: responsible.username,
-        email: responsible.email,
-        role: responsible.role
-      })
-      const refreshToken = await authService.generateRefreshToken(responsible.id, {
-        username: responsible.username,
-        email: responsible.email,
-        role: responsible.role
-      })
+    const authService = new AuthService(this.jwtStrategy)
+    const accessToken = await authService.generateAccessToken(responsible.id, {
+      username: responsible.username,
+      email: responsible.email,
+      role: responsible.role
+    })
+    const refreshToken = await authService.generateRefreshToken(responsible.id, {
+      username: responsible.username,
+      email: responsible.email,
+      role: responsible.role
+    })
 
-      HandleHTTPResponse.OK(rep, 'Responsible logged successfully', {
-        id: responsible.id,
-        accessToken,
-        refreshToken
-      })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Responsible logged successfully', {
+      id: responsible.id,
+      accessToken,
+      refreshToken
+    })
   }
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    try {
-      const tokenResponsible = req.responsible as { username: string; email: string; role: string }
+    const tokenResponsible = req.responsible as { username: string; email: string; role: string }
 
-      const findByEmail = new FindByEmailUseCase(this.responsibleRepository)
-      const responsible = await findByEmail.exec(tokenResponsible.email)
+    const findByEmail = new FindByEmailUseCase(this.responsibleRepository)
+    const responsible = await findByEmail.exec(tokenResponsible.email)
 
-      const authService = new AuthService(this.jwtStrategy)
-      const accessToken = await authService.generateAccessToken(req.responsible.id, {
-        username: responsible.username,
-        email: responsible.email,
-        role: responsible.role
-      })
+    const authService = new AuthService(this.jwtStrategy)
+    const accessToken = await authService.generateAccessToken(req.responsible.id, {
+      username: responsible.username,
+      email: responsible.email,
+      role: responsible.role
+    })
 
-      HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
-        accessToken
-      })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Access token refreshed successfully', {
+      accessToken
+    })
   }
 
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    try {
-      const tokenEntity = req.tokenRole
-      if (tokenEntity !== Roles.RESPONSIBLE) {
-        throw new Error('Invalid role')
-      }
-      HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
-    } catch (error) {
-      rep.status(500).send(error)
+    const tokenEntity = req.tokenRole
+    if (tokenEntity !== Roles.RESPONSIBLE) {
+      throw new Error('Invalid role')
     }
+    HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
   }
 }
 

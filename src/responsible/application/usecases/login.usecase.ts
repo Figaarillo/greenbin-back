@@ -1,8 +1,7 @@
-import ErrorInvalidPassword from '../../../neighbor/domain/errors/invalid-password.error'
+import ErrorInvalidCredentialsProvided from '../../../shared/domain/errors/invalid-credentials.error'
+import ErrorMissingFields from '../../../shared/domain/errors/missing-filds.error'
 import type ResponsibleEntity from '../../domain/entities/responsible.entity'
 import ResponsibleRelationships from '../../domain/enums/responsible-relationships.enum'
-import ErrorMissingFilds from '../../domain/errors/missing-filds.error'
-import ErrorResponsibleNotFound from '../../domain/errors/responsible-not-found.error'
 import type ResponsibleLoginPayload from '../../domain/payloads/responsible.login.payload'
 import type ResponsibleRepository from '../../domain/repositories/responsible.repository'
 
@@ -12,12 +11,12 @@ class LoginResponsibleUseCase {
   async exec(payload: ResponsibleLoginPayload): Promise<ResponsibleEntity> {
     const responsible = await this.findResponsible(payload)
     if (responsible == null) {
-      throw new ErrorResponsibleNotFound(undefined, payload.email, payload.username)
+      throw new ErrorInvalidCredentialsProvided()
     }
 
     const passwordValid = await responsible.verifyPassword(payload.password)
     if (!passwordValid) {
-      throw new ErrorInvalidPassword()
+      throw new ErrorInvalidCredentialsProvided()
     }
 
     return responsible
@@ -32,7 +31,7 @@ class LoginResponsibleUseCase {
       return await this.repository.find({ username: payload.username }, [ResponsibleRelationships.PASSWORD])
     }
 
-    throw new ErrorMissingFilds(['email', 'username'])
+    throw new ErrorMissingFields(['email', 'username'])
   }
 }
 
