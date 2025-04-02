@@ -18,8 +18,7 @@ class CouponSchemaValidator<TDTOSchema> {
         throw new ErrorSchemaValidation(
           'Validation error on coupon payload',
           formatZodErrorsToString(error.errors),
-          formatZodErrorsToObject(error.errors),
-          400
+          formatZodErrorsToObject(error.errors)
         )
       }
 

@@ -18,8 +18,7 @@ class WasteCategorySchemaValidator<TDTOSchema> {
         throw new ErrorSchemaValidation(
           'Validation errors occurred on waste category payload',
           formatZodErrorsToString(error.errors),
-          formatZodErrorsToObject(error.errors),
-          400
+          formatZodErrorsToObject(error.errors)
         )
       }
 

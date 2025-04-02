@@ -18,8 +18,7 @@ class GreenPointSchemaValidator<TDTOSchema> {
         throw new ErrorSchemaValidation(
           'Validation errors occurred on green point payload',
           formatZodErrorsToString(error.errors),
-          formatZodErrorsToObject(error.errors),
-          400
+          formatZodErrorsToObject(error.errors)
         )
       }
 
