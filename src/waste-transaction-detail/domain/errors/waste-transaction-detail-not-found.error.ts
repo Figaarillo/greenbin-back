@@ -1,4 +1,6 @@
 class ErrorWasteTransactionDetailNotFound extends Error {
+  readonly code: number = 404
+
   constructor(id?: string) {
     const message =
       id != null

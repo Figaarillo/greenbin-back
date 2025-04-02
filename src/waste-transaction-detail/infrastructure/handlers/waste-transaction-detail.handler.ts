@@ -21,44 +21,33 @@ class WasteTransactionDetailHandler {
   ) {}
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new WasteTransactionDetailSchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new WasteTransactionDetailSchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const findWasteTransactionDetail = new FindWasteTransactionDetailByIDUseCase(this.transactionDetailRepository)
-      const wasteTransactionDetail = await findWasteTransactionDetail.exec(id)
+    const findWasteTransactionDetail = new FindWasteTransactionDetailByIDUseCase(this.transactionDetailRepository)
+    const wasteTransactionDetail = await findWasteTransactionDetail.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Waste transaction detail  retrieved successfully', wasteTransactionDetail)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Waste transaction detail  retrieved successfully', wasteTransactionDetail)
   }
 
   async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    try {
-      const payload: WasteTransactionDetailPayload = req.body as WasteTransactionDetailPayload
+    const payload: WasteTransactionDetailPayload = req.body as WasteTransactionDetailPayload
 
-      const validateRegisterSchema = new WasteTransactionDetailSchemaValidator(
-        RegisterWasteTransactionDetailDTO,
-        payload
-      )
-      validateRegisterSchema.exec()
+    const validateRegisterSchema = new WasteTransactionDetailSchemaValidator(RegisterWasteTransactionDetailDTO, payload)
+    validateRegisterSchema.exec()
 
-      const registerWasteTransactionDetail = new RegisterWasteTransactionDetailUseCase(
-        this.transactionDetailRepository,
-        new FindWasteTransactionByIDUseCase(this.transactionRepository),
-        new FindWasteByIDUseCase(this.wasteRepository)
-      )
-      const WasteTransactionDetail = await registerWasteTransactionDetail.exec(payload)
+    const registerWasteTransactionDetail = new RegisterWasteTransactionDetailUseCase(
+      this.transactionDetailRepository,
+      new FindWasteTransactionByIDUseCase(this.transactionRepository),
+      new FindWasteByIDUseCase(this.wasteRepository)
+    )
+    const WasteTransactionDetail = await registerWasteTransactionDetail.exec(payload)
 
-      HandleHTTPResponse.Created(rep, 'Waste transaction detail registered successfully', {
-        id: WasteTransactionDetail.id
-      })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.Created(rep, 'Waste transaction detail registered successfully', {
+      id: WasteTransactionDetail.id
+    })
   }
 }
 
