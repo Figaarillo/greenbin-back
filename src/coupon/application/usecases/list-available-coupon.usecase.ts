@@ -1,4 +1,5 @@
 import type CouponEntity from '../../domain/entities/coupon.entity'
+import ErrorNoCouponsAvailable from '../../domain/errors/no-coupons-available.error'
 import type CouponRepository from '../../domain/repositories/coupon.repository'
 
 class ListAvailableCouponUseCase {
@@ -7,7 +8,7 @@ class ListAvailableCouponUseCase {
   async exec(offset: number, limit: number): Promise<CouponEntity[]> {
     const coupons = await this.couponRepository.list({ isAvailable: true }, offset, limit)
     if (coupons == null) {
-      throw new Error('No coupons available found')
+      throw new ErrorNoCouponsAvailable()
     }
 
     return coupons

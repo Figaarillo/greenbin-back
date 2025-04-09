@@ -26,111 +26,83 @@ class CouponHandler {
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = GetPaginationParams(req)
 
-      const listCoupons = new ListCouponsUseCase(this.couponRepository)
-      const coupons = await listCoupons.exec(offset, limit)
+    const listCoupons = new ListCouponsUseCase(this.couponRepository)
+    const coupons = await listCoupons.exec(offset, limit)
 
-      HandleHTTPResponse.OK(rep, 'Coupons retrieved successfully', coupons)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Coupons retrieved successfully', coupons)
   }
 
   async listAvailables(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = GetPaginationParams(req)
 
-      const listAvailableCoupons = new ListAvailableCouponUseCase(this.couponRepository)
-      const coupons = await listAvailableCoupons.exec(offset, limit)
+    const listAvailableCoupons = new ListAvailableCouponUseCase(this.couponRepository)
+    const coupons = await listAvailableCoupons.exec(offset, limit)
 
-      HandleHTTPResponse.OK(rep, 'Coupons availables retrieved successfully', coupons)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Coupons availables retrieved successfully', coupons)
   }
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const findCoupon = new FindCouponByIDUseCase(this.couponRepository)
-      const coupon = await findCoupon.exec(id)
+    const findCoupon = new FindCouponByIDUseCase(this.couponRepository)
+    const coupon = await findCoupon.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Coupon retrieved successfully', coupon)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Coupon retrieved successfully', coupon)
   }
 
   async findAndPopulate(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const params = CouponQueryParams.parse(req.query)
+    const params = CouponQueryParams.parse(req.query)
 
-      const findWithPopulate = new FindCouponWithPopulateUseCase(this.couponRepository)
-      const coupon = await findWithPopulate.exec(params.id, params.with)
+    const findWithPopulate = new FindCouponWithPopulateUseCase(this.couponRepository)
+    const coupon = await findWithPopulate.exec(params.id, params.with)
 
-      HandleHTTPResponse.OK(rep, 'Coupon retrieved successfully', coupon)
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Coupon retrieved successfully', coupon)
   }
 
   async register(req: FastifyRequest<{ Body: CouponPayload }>, rep: FastifyReply): Promise<void> {
-    try {
-      const validateRegisterCouponsSchema = new CouponSchemaValidator(RegisterCouponDTO, req.body)
-      validateRegisterCouponsSchema.exec()
+    const validateRegisterCouponsSchema = new CouponSchemaValidator(RegisterCouponDTO, req.body)
+    validateRegisterCouponsSchema.exec()
 
-      const findRewardPartner = new FindRewardPartnerByIdUseCase(this.rewardPartnerRepository)
-      const registerCoupon = new RegisterCouponUseCase(this.couponRepository, findRewardPartner)
-      const coupon = await registerCoupon.exec(req.body)
+    const findRewardPartner = new FindRewardPartnerByIdUseCase(this.rewardPartnerRepository)
+    const registerCoupon = new RegisterCouponUseCase(this.couponRepository, findRewardPartner)
+    const coupon = await registerCoupon.exec(req.body)
 
-      HandleHTTPResponse.Created(rep, 'Coupon registered successfully', { id: coupon.id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.Created(rep, 'Coupon registered successfully', { id: coupon.id })
   }
 
   async update(
     req: FastifyRequest<{ Params: Record<string, string>; Body: CouponUpdatePayload }>,
     rep: FastifyReply
   ): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const schemaValidator = new CouponSchemaValidator(UpdateCouponDTO, req.body)
-      schemaValidator.exec()
+    const schemaValidator = new CouponSchemaValidator(UpdateCouponDTO, req.body)
+    schemaValidator.exec()
 
-      const updateCoupon = new UpdateCouponUseCase(this.couponRepository)
-      await updateCoupon.exec(id, req.body)
+    const updateCoupon = new UpdateCouponUseCase(this.couponRepository)
+    await updateCoupon.exec(id, req.body)
 
-      HandleHTTPResponse.OK(rep, 'Coupon updated successfully', { id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Coupon updated successfully', { id })
   }
 
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+    const id = GetURLParams(req, 'id')
 
-      const schemaValidator = new CouponSchemaValidator(CheckIdDTO, { id })
-      schemaValidator.exec()
+    const schemaValidator = new CouponSchemaValidator(CheckIdDTO, { id })
+    schemaValidator.exec()
 
-      const deleteCoupon = new DeleteCouponUseCase(this.couponRepository)
-      await deleteCoupon.exec(id)
+    const deleteCoupon = new DeleteCouponUseCase(this.couponRepository)
+    await deleteCoupon.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Coupon deleted successfully', { id })
-    } catch (error) {
-      rep.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Coupon deleted successfully', { id })
   }
 }
 
