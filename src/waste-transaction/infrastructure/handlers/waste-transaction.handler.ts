@@ -3,7 +3,7 @@ import FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find
 import type NeighborRepository from '../../../neighbor/domain/repositories/neighbor.repository'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetURLParams } from '../../../shared/utils/http.request.util'
+import { getURLParams } from '../../../shared/utils/http.request.util'
 import FindWasteCategoryByIDUseCase from '../../../waste-category/application/usecases/find-by-id.usecase'
 import type WasteCategoryRepository from '../../../waste-category/domain/repositories/waste-category.repository'
 import RegisterWasteTransactionDetailUseCase from '../../../waste-transaction-detail/application/usecases/register.usecase'
@@ -31,7 +31,7 @@ class WasteTransactionHandler {
   ) {}
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new WasteTransactionSchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()

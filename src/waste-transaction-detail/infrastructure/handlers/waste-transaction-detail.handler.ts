@@ -1,7 +1,7 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetURLParams } from '../../../shared/utils/http.request.util'
+import { getURLParams } from '../../../shared/utils/http.request.util'
 import FindWasteTransactionByIDUseCase from '../../../waste-transaction/application/usecases/find-by-id.usecase'
 import type WasteTransactionRepository from '../../../waste-transaction/domain/repositories/waste-transaction.repository'
 import FindWasteByIDUseCase from '../../../waste/application/usecases/find-by-id.usecase'
@@ -21,7 +21,7 @@ class WasteTransactionDetailHandler {
   ) {}
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new WasteTransactionDetailSchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()

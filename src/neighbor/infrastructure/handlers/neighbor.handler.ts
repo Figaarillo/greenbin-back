@@ -5,7 +5,7 @@ import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.str
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
 import DeleteNeighborUseCase from '../../application/usecases/delete.usecase'
 import FindNeighborByDNIUseCase from '../../application/usecases/find-by-dni.usecase'
 import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
@@ -32,7 +32,7 @@ class NeighborHandler {
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = getPaginationParams(req)
 
     const listNeighbor = new ListNeighborsUseCase(this.neighborRepository)
     const neighbors = await listNeighbor.exec(offset, limit)
@@ -41,7 +41,7 @@ class NeighborHandler {
   }
 
   async findById(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new NeighborSchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
@@ -53,7 +53,7 @@ class NeighborHandler {
   }
 
   async findByDni(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const dni = GetURLParams(req, 'dni')
+    const dni = getURLParams(req, 'dni')
 
     const findByDNI = new FindNeighborByDNIUseCase(this.neighborRepository)
     const neighbor = await findByDNI.exec(dni)
@@ -91,7 +91,7 @@ class NeighborHandler {
   }
 
   async update(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
     const payload: NeighborPayload = req.body as NeighborPayload
 
     const validateIDSchema = new NeighborSchemaValidator(CheckIdDTO, { id })
@@ -107,7 +107,7 @@ class NeighborHandler {
   }
 
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const schemaValidator = new NeighborSchemaValidator(CheckIdDTO, { id })
     schemaValidator.exec()
@@ -173,7 +173,7 @@ class NeighborHandler {
   }
 
   async getWastes(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const getWastes = new GetWatesOfNeighborUseCase(this.neighborRepository)
     const wastes = await getWastes.exec(id)

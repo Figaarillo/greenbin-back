@@ -13,7 +13,7 @@ import type RedeemCouponPayload from '../../domain/payloads/redeem-coupon.payloa
 import type CouponTransactionRepository from '../../domain/repositories/coupon-transaction.repository'
 import CouponSchemaValidator from '../../../coupon/infrastructure/middlewares/zod-schema-validator.middleware'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
-import { GetURLParams } from '../../../shared/utils/http.request.util'
+import { getURLParams } from '../../../shared/utils/http.request.util'
 import FindCouponTransactionByIDUseCase from '../../application/usecases/find-by-id.usecase'
 
 class CouponTransactionHandler {
@@ -50,7 +50,7 @@ class CouponTransactionHandler {
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     try {
-      const id = GetURLParams(req, 'id')
+      const id = getURLParams(req, 'id')
 
       const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()

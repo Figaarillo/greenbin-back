@@ -2,7 +2,7 @@ import { type FastifyReply, type FastifyRequest } from 'fastify'
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
 import DeleteGreenPointUseCase from '../../application/usecases/delete.usecase'
 import FindGreenPointByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import ListGreenPointsUseCase from '../../application/usecases/list.usecase'
@@ -22,7 +22,7 @@ class GreenPointHandler {
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = getPaginationParams(req)
 
     const listGreenPoints = new ListGreenPointsUseCase(this.greenPointRepository)
     const greenPoints = await listGreenPoints.exec(offset, limit)
@@ -31,7 +31,7 @@ class GreenPointHandler {
   }
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new GreenPointSchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
@@ -58,7 +58,7 @@ class GreenPointHandler {
   }
 
   async update(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
     const payload: GreenPointPayload = req.body as GreenPointPayload
 
     const validateIDSchema = new GreenPointSchemaValidator(CheckIdDTO, { id })
@@ -74,7 +74,7 @@ class GreenPointHandler {
   }
 
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const schemaValidator = new GreenPointSchemaValidator(CheckIdDTO, { id })
     schemaValidator.exec()

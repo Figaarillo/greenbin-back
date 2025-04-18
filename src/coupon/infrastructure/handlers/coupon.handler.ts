@@ -3,7 +3,7 @@ import FindRewardPartnerByIdUseCase from '../../../reward-partner/application/us
 import type RewardPartnerRepository from '../../../reward-partner/domain/repositories/reward-partner.repository'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
 import DeleteCouponUseCase from '../../application/usecases/delete.usecase'
 import FindCouponWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
 import FindCouponByIDUseCase from '../../application/usecases/find-by-id.usecase'
@@ -26,7 +26,7 @@ class CouponHandler {
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = getPaginationParams(req)
 
     const listCoupons = new ListCouponsUseCase(this.couponRepository)
     const coupons = await listCoupons.exec(offset, limit)
@@ -35,7 +35,7 @@ class CouponHandler {
   }
 
   async listAvailables(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = getPaginationParams(req)
 
     const listAvailableCoupons = new ListAvailableCouponUseCase(this.couponRepository)
     const coupons = await listAvailableCoupons.exec(offset, limit)
@@ -44,7 +44,7 @@ class CouponHandler {
   }
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
@@ -79,7 +79,7 @@ class CouponHandler {
     req: FastifyRequest<{ Params: Record<string, string>; Body: CouponUpdatePayload }>,
     rep: FastifyReply
   ): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
@@ -94,7 +94,7 @@ class CouponHandler {
   }
 
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const schemaValidator = new CouponSchemaValidator(CheckIdDTO, { id })
     schemaValidator.exec()

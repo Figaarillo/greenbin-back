@@ -5,7 +5,7 @@ import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.str
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
 import DeleteResponsibleUseCase from '../../application/usecases/delete.usecase'
 import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
 import FindResponsibleByIDUseCase from '../../application/usecases/find-by-id.usecase'
@@ -28,7 +28,7 @@ class ResponsibleHandler {
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = getPaginationParams(req)
 
     const listResponsibles = new ListResponsiblesUseCase(this.responsibleRepository)
     const responsibles = await listResponsibles.exec(offset, limit)
@@ -37,7 +37,7 @@ class ResponsibleHandler {
   }
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new ResponsibleSchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
@@ -65,7 +65,7 @@ class ResponsibleHandler {
     req: FastifyRequest<{ Body: ResponsiblePayload; Params: Record<string, string> }>,
     rep: FastifyReply
   ): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new ResponsibleSchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
@@ -80,7 +80,7 @@ class ResponsibleHandler {
   }
 
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const schemaValidator = new ResponsibleSchemaValidator(CheckIdDTO, { id })
     schemaValidator.exec()

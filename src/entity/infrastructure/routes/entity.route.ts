@@ -9,6 +9,7 @@ import {
 } from '../swagger-schemas/entity.swagger-schema'
 import type EntityPayload from '../../domain/payloads/entity.payload'
 import type EntityLoginPayload from '../../domain/payloads/entity.login.payload'
+import { Roles } from '../../../auth/domain/entities/role'
 
 class EntityRoute {
   constructor(
@@ -69,6 +70,15 @@ class EntityRoute {
         await this.handler.validateRole(req, rep)
       }
     })
+    this.server.get(
+      '/api/entity/auth/test-role',
+      {
+        config: { allowedRoles: [Roles.ENTITY] }
+      },
+      async (_req, rep) => {
+        rep.send('OK')
+      }
+    )
   }
 }
 

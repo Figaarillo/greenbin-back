@@ -4,7 +4,7 @@ import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
 import DeleteEntityUseCase from '../../application/usecases/delete.usecase'
 import FindEntityWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
 import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
@@ -28,7 +28,7 @@ class EntityHandler {
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = getPaginationParams(req)
 
     const listEntities = new ListEntitiesUseCase(this.repository)
     const entities = await listEntities.exec(offset, limit)
@@ -37,7 +37,7 @@ class EntityHandler {
   }
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new EntitySchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
@@ -71,7 +71,7 @@ class EntityHandler {
     req: FastifyRequest<{ Body: { description: string }; Params: Record<string, string> }>,
     rep: FastifyReply
   ): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
     const validateIDSchema = new EntitySchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
 
@@ -85,7 +85,7 @@ class EntityHandler {
   }
 
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const schemaValidator = new EntitySchemaValidator(CheckIdDTO, { id })
     schemaValidator.exec()

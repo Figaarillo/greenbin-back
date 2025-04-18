@@ -1,6 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
+import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
 import DeleteCategoryUseCase from '../../application/usecases/delete.usecase'
 import FindWasteCategoryByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import ListCategoriesUseCase from '../../application/usecases/list.usecase'
@@ -17,7 +17,7 @@ class WasteCategoryHandler {
   constructor(private readonly repository: WasteCategoryRepository) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const { offset, limit } = GetPaginationParams(req)
+    const { offset, limit } = getPaginationParams(req)
 
     const listCategories = new ListCategoriesUseCase(this.repository)
     const entities = await listCategories.exec(offset, limit)
@@ -26,7 +26,7 @@ class WasteCategoryHandler {
   }
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new WasteCategorySchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
@@ -51,7 +51,7 @@ class WasteCategoryHandler {
     req: FastifyRequest<{ Params: Record<string, string>; Body: WasteCategoryPayload }>,
     rep: FastifyReply
   ): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new WasteCategorySchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
@@ -66,7 +66,7 @@ class WasteCategoryHandler {
   }
 
   async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const schemaValidator = new WasteCategorySchemaValidator(CheckIdDTO, { id })
     schemaValidator.exec()

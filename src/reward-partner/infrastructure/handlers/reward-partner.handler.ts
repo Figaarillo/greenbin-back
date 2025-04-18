@@ -5,7 +5,7 @@ import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.str
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetURLParams } from '../../../shared/utils/http.request.util'
+import { getURLParams } from '../../../shared/utils/http.request.util'
 import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
 import FindRewardPartnerByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import LoginRewardPartnerUseCase from '../../application/usecases/login.usecase'
@@ -28,7 +28,7 @@ class RewardPartnerHandler {
   ) {}
 
   async findById(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
 
     const validateIDSchema = new RewardPartnerSchemaValidator(CheckIdDTO, { id })
     validateIDSchema.exec()
@@ -66,7 +66,7 @@ class RewardPartnerHandler {
   }
 
   async update(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = GetURLParams(req, 'id')
+    const id = getURLParams(req, 'id')
     const payload: RewardPartnerPayload = req.body as RewardPartnerPayload
 
     const validateIDSchema = new RewardPartnerSchemaValidator(CheckIdDTO, { id })
