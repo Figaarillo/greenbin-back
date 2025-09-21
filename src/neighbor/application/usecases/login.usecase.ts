@@ -1,23 +1,21 @@
+import ErrorInvalidCredentialsProvided from '../../../shared/domain/errors/invalid-credentials.error'
+import ErrorMissingFields from '../../../shared/domain/errors/missing-filds.error'
 import type NeighborEntity from '../../domain/entities/neighbor.entity'
-import ErrorInvalidPassword from '../../domain/errors/invalid-password.error'
-import ErrorNeighborNotFound from '../../domain/errors/neighbor-not-found.error'
 import type NeighborLoginPayload from '../../domain/payloads/neighbor.login.payload'
 import type NeighborRepository from '../../domain/repositories/neighbor.repository'
 
 class LoginNeighborUseCase {
-  constructor(private readonly repository: NeighborRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: NeighborRepository) {}
 
   async exec(payload: NeighborLoginPayload): Promise<NeighborEntity> {
     const neighbor = await this.findNeighbor(payload)
     if (neighbor == null) {
-      throw new ErrorNeighborNotFound(undefined, payload.email, payload.username)
+      throw new ErrorInvalidCredentialsProvided()
     }
 
     const passwordValid = await neighbor.verifyPassword(payload.password)
     if (!passwordValid) {
-      throw new ErrorInvalidPassword()
+      throw new ErrorInvalidCredentialsProvided()
     }
 
     return neighbor
@@ -32,7 +30,7 @@ class LoginNeighborUseCase {
       return await this.repository.findWithPassword({ username: payload.username })
     }
 
-    throw new Error('Email or username is required')
+    throw new ErrorMissingFields(['email', 'username'])
   }
 }
 

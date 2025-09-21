@@ -1,6 +1,7 @@
-import { type FastifyReply, type FastifyInstance, type FastifyRequest } from 'fastify'
+import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
+import type NeighborPayload from '../../domain/payloads/neighbor.payload'
 import type NeighborHandler from '../handlers/neighbor.handler'
-import { registerSwaggerSchema, updateSwaggerSchema } from '../swagger-schemas/neighbor.swagger-schema'
+import { updateSwaggerSchema } from '../swagger-schemas/neighbor.swagger-schema'
 
 class NeighborRoute {
   constructor(
@@ -28,7 +29,7 @@ class NeighborRoute {
         await this.handler.findByDni(req, rep)
       }
     })
-    this.server.post('/api/neighbor', { schema: registerSwaggerSchema }, async (req, rep) => {
+    this.server.post('/api/neighbor', async (req: FastifyRequest<{ Body: NeighborPayload }>, rep) => {
       await this.handler.register(req, rep)
     })
 

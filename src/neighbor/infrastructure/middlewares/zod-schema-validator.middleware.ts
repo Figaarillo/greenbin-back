@@ -1,22 +1,25 @@
 import { ZodError, type ZodType } from 'zod'
-import type NeighborEntity from '../../domain/entities/neighbor.entity'
-import ErrorNeighborSchemaValidation from '../../domain/errors/neighbor-schema-validation.error'
+import ErrorSchemaValidation from '../../../shared/domain/errors/schema-validation.error'
+import type ExtendPayload from '../../../shared/domain/types/ext-payload.type'
+import { formatZodErrorsToObject, formatZodErrorsToString } from '../../../shared/utils/hanlde-zod-error.util'
+import type NeighborPayload from '../../domain/payloads/neighbor.payload'
 
-class SchemaValidator<TDTOSchema> {
-  private readonly schema: ZodType<TDTOSchema>
-  private readonly payload: Partial<NeighborEntity>
-
-  constructor(schema: ZodType<TDTOSchema>, payload: Partial<NeighborEntity>) {
-    this.schema = schema
-    this.payload = payload
-  }
+class NeighborSchemaValidator<TDTOSchema> {
+  constructor(
+    private readonly schema: ZodType<TDTOSchema>,
+    private readonly payload: Partial<ExtendPayload<NeighborPayload>>
+  ) {}
 
   exec(): TDTOSchema {
     try {
       return this.schema.parse(this.payload)
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new ErrorNeighborSchemaValidation(error.errors.map(err => err.message).join('\n'))
+        throw new ErrorSchemaValidation(
+          'Validation errors occurred on neighbor payload',
+          formatZodErrorsToString(error.errors),
+          formatZodErrorsToObject(error.errors)
+        )
       }
 
       throw error
@@ -24,4 +27,4 @@ class SchemaValidator<TDTOSchema> {
   }
 }
 
-export default SchemaValidator
+export default NeighborSchemaValidator

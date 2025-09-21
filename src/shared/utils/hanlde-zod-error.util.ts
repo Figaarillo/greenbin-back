@@ -2,7 +2,7 @@ import { type ZodError, type ZodIssue } from 'zod'
 import ErrorSchemaValidation from '../domain/errors/schema-validation.error'
 
 function handleZodError(error: ZodError): Error {
-  const detailedErrors = formatZodErrors(error.errors)
+  const detailedErrors = formatZodErrorsToString(error.errors)
   throw new ErrorSchemaValidation(
     JSON.stringify({
       message: 'Validation errors occurred',
@@ -11,11 +11,15 @@ function handleZodError(error: ZodError): Error {
   )
 }
 
-function formatZodErrors(errors: ZodIssue[]): Array<{ field: string; error: string }> {
+const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1)
+
+export const formatZodErrorsToString = (errors: ZodIssue[]): string =>
+  errors.reduce((msg, err) => `${msg}${capitalize(err.path.join('.'))}: ${err.message}. `, '')
+
+export const formatZodErrorsToObject = (errors: ZodIssue[]): object => {
   return errors.map(err => ({
     field: err.path.join('.'),
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    error: err.message || 'Invalid value'
+    error: err.message
   }))
 }
 

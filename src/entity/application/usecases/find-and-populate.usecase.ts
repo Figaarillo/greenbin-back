@@ -7,7 +7,7 @@ class FindEntityWithPopulateUseCase {
   constructor(private readonly repository: EntityRepository) {}
 
   async exec(id: string, populateWith: EntityRelationships[]): Promise<EntityEntity> {
-    const entityFound = await this.repository.findWithPopulate({ id }, populateWith)
+    const entityFound = await this.repository.find({ id }, populateWith)
     if (entityFound == null) {
       throw new ErrorEntityNotFound(id)
     }

@@ -1,4 +1,6 @@
 class ErrorCategoryNotFound extends Error {
+  readonly code: number = 404
+
   constructor(id?: string, name?: string) {
     const fields = [id != null ? `id: ${id}` : null, name != null ? `name: ${name}` : null].filter(Boolean)
 

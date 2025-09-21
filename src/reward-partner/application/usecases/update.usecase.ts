@@ -4,9 +4,7 @@ import type RewardPartnerUpdatePayload from '../../domain/payloads/reward-partne
 import type RewardPartnerRepository from '../../domain/repositories/reward-partner.repository'
 
 class UpdateRewardPartnerUseCase {
-  constructor(private readonly repository: RewardPartnerRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: RewardPartnerRepository) {}
 
   async exec(id: string, payload: RewardPartnerUpdatePayload): Promise<RewardPartnerEntity> {
     const rewardPartnerUpdated = await this.repository.update(id, payload)

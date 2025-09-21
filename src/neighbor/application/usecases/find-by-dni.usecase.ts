@@ -3,13 +3,14 @@ import ErrorNeighborNotFound from '../../domain/errors/neighbor-not-found.error'
 import type NeighborRepository from '../../domain/repositories/neighbor.repository'
 
 class FindNeighborByDNIUseCase {
-  constructor(private readonly repository: NeighborRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: NeighborRepository) {}
 
   async exec(dni: string): Promise<NeighborEntity> {
     const neighbor = await this.repository.find({ dni })
-    if (neighbor == null) throw new ErrorNeighborNotFound(undefined, undefined, undefined, dni)
+    if (neighbor == null) {
+      throw new ErrorNeighborNotFound(undefined, undefined, undefined, dni)
+    }
+
     return neighbor
   }
 }

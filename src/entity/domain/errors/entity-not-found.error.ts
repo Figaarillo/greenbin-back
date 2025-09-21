@@ -1,4 +1,6 @@
 class ErrorEntityNotFound extends Error {
+  public readonly code: number = 404
+
   constructor(id?: string, name?: string, email?: string) {
     const fields = [
       id != null ? `id: ${id}` : null,
