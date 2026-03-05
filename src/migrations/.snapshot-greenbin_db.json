@@ -94,6 +94,15 @@
           "length": 255,
           "mappedType": "string"
         },
+        "coordinates": {
+          "name": "coordinates",
+          "type": "jsonb",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "json"
+        },
         "role": {
           "name": "role",
           "type": "text",
@@ -111,7 +120,7 @@
           "mappedType": "enum"
         }
       },
-      "name": "entity_entity",
+      "name": "entities",
       "schema": "public",
       "indexes": [
         {
@@ -119,7 +128,7 @@
             "name"
           ],
           "composite": false,
-          "keyName": "entity_entity_name_unique",
+          "keyName": "entities_name_unique",
           "constraint": true,
           "primary": false,
           "unique": true
@@ -129,13 +138,23 @@
             "email"
           ],
           "composite": false,
-          "keyName": "entity_entity_email_unique",
+          "keyName": "entities_email_unique",
           "constraint": true,
           "primary": false,
           "unique": true
         },
         {
-          "keyName": "entity_entity_pkey",
+          "columnNames": [
+            "coordinates"
+          ],
+          "composite": false,
+          "keyName": "entities_coordinates_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "entities_pkey",
           "columnNames": [
             "id"
           ],
@@ -283,7 +302,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.entity_entity",
+          "referencedTableName": "public.entities",
           "updateRule": "cascade"
         }
       },
@@ -435,7 +454,7 @@
           "mappedType": "uuid"
         }
       },
-      "name": "neighbor_entity",
+      "name": "neighbors",
       "schema": "public",
       "indexes": [
         {
@@ -443,7 +462,7 @@
             "username"
           ],
           "composite": false,
-          "keyName": "neighbor_entity_username_unique",
+          "keyName": "neighbors_username_unique",
           "constraint": true,
           "primary": false,
           "unique": true
@@ -453,13 +472,13 @@
             "email"
           ],
           "composite": false,
-          "keyName": "neighbor_entity_email_unique",
+          "keyName": "neighbors_email_unique",
           "constraint": true,
           "primary": false,
           "unique": true
         },
         {
-          "keyName": "neighbor_entity_pkey",
+          "keyName": "neighbors_pkey",
           "columnNames": [
             "id"
           ],
@@ -471,16 +490,16 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "neighbor_entity_entity_id_foreign": {
-          "constraintName": "neighbor_entity_entity_id_foreign",
+        "neighbors_entity_id_foreign": {
+          "constraintName": "neighbors_entity_id_foreign",
           "columnNames": [
             "entity_id"
           ],
-          "localTableName": "public.neighbor_entity",
+          "localTableName": "public.neighbors",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.entity_entity",
+          "referencedTableName": "public.entities",
           "updateRule": "cascade"
         }
       },
@@ -657,7 +676,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.entity_entity",
+          "referencedTableName": "public.entities",
           "updateRule": "cascade"
         }
       },
@@ -874,7 +893,328 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.entity_entity",
+          "referencedTableName": "public.entities",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "discount": {
+          "name": "discount",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "is_available": {
+          "name": "is_available",
+          "type": "boolean",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "boolean"
+        },
+        "state": {
+          "name": "state",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "valid_days": {
+          "name": "valid_days",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "cost_in_points": {
+          "name": "cost_in_points",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "reward_partner_id": {
+          "name": "reward_partner_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "coupon",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "coupon_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "coupon_reward_partner_id_foreign": {
+          "constraintName": "coupon_reward_partner_id_foreign",
+          "columnNames": [
+            "reward_partner_id"
+          ],
+          "localTableName": "public.coupon",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.reward_partner_entity",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 255,
+          "mappedType": "string"
+        },
+        "adquisition_date": {
+          "name": "adquisition_date",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "redeem_date": {
+          "name": "redeem_date",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "expiration_date": {
+          "name": "expiration_date",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "mappedType": "datetime"
+        },
+        "cost_in_points": {
+          "name": "cost_in_points",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "coupon_id": {
+          "name": "coupon_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "neighbor_id": {
+          "name": "neighbor_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        },
+        "reward_partner_id": {
+          "name": "reward_partner_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "uuid"
+        }
+      },
+      "name": "coupon_transactions",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "coupon_id"
+          ],
+          "composite": false,
+          "keyName": "coupon_transactions_coupon_id_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "coupon_transactions_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "coupon_transactions_coupon_id_foreign": {
+          "constraintName": "coupon_transactions_coupon_id_foreign",
+          "columnNames": [
+            "coupon_id"
+          ],
+          "localTableName": "public.coupon_transactions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.coupon",
+          "updateRule": "cascade"
+        },
+        "coupon_transactions_neighbor_id_foreign": {
+          "constraintName": "coupon_transactions_neighbor_id_foreign",
+          "columnNames": [
+            "neighbor_id"
+          ],
+          "localTableName": "public.coupon_transactions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.neighbors",
+          "updateRule": "cascade"
+        },
+        "coupon_transactions_reward_partner_id_foreign": {
+          "constraintName": "coupon_transactions_reward_partner_id_foreign",
+          "columnNames": [
+            "reward_partner_id"
+          ],
+          "localTableName": "public.coupon_transactions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.reward_partner_entity",
           "updateRule": "cascade"
         }
       },
@@ -938,6 +1278,15 @@
           "primary": false,
           "nullable": false,
           "mappedType": "text"
+        },
+        "co2": {
+          "name": "co2",
+          "type": "real",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "float"
         }
       },
       "name": "waste_categories",
@@ -1020,12 +1369,12 @@
         },
         "weight": {
           "name": "weight",
-          "type": "int",
+          "type": "real",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "mappedType": "float"
         },
         "points_per_weight": {
           "name": "points_per_weight",
@@ -1089,11 +1438,11 @@
           "mappedType": "uuid"
         }
       },
-      "name": "neighbor_entity_wastes",
+      "name": "neighbors_wastes",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "neighbor_entity_wastes_pkey",
+          "keyName": "neighbors_wastes_pkey",
           "columnNames": [
             "neighbor_entity_id",
             "waste_entity_id"
@@ -1106,25 +1455,25 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "neighbor_entity_wastes_neighbor_entity_id_foreign": {
-          "constraintName": "neighbor_entity_wastes_neighbor_entity_id_foreign",
+        "neighbors_wastes_neighbor_entity_id_foreign": {
+          "constraintName": "neighbors_wastes_neighbor_entity_id_foreign",
           "columnNames": [
             "neighbor_entity_id"
           ],
-          "localTableName": "public.neighbor_entity_wastes",
+          "localTableName": "public.neighbors_wastes",
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.neighbor_entity",
+          "referencedTableName": "public.neighbors",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         },
-        "neighbor_entity_wastes_waste_entity_id_foreign": {
-          "constraintName": "neighbor_entity_wastes_waste_entity_id_foreign",
+        "neighbors_wastes_waste_entity_id_foreign": {
+          "constraintName": "neighbors_wastes_waste_entity_id_foreign",
           "columnNames": [
             "waste_entity_id"
           ],
-          "localTableName": "public.neighbor_entity_wastes",
+          "localTableName": "public.neighbors_wastes",
           "referencedColumnNames": [
             "id"
           ],
@@ -1195,7 +1544,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.neighbor_entity",
+          "referencedTableName": "public.neighbors",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }
@@ -1318,7 +1667,7 @@
           "referencedColumnNames": [
             "id"
           ],
-          "referencedTableName": "public.neighbor_entity",
+          "referencedTableName": "public.neighbors",
           "updateRule": "cascade"
         },
         "wastes_transactions_green_point_id_foreign": {

@@ -19,36 +19,36 @@ class WasteCategoryRoute {
     this.server.get(
       '/api/waste-category',
       { schema: listSwaggerSchema },
-      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
-        await this.handler.list(req, res)
+      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
+        await this.handler.list(req, rep)
       }
     )
     this.server.get(
       '/api/waste-category/:id',
       { schema: findByIdSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.findByID(req, res)
+      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.findByID(req, rep)
       }
     )
     this.server.post(
       '/api/waste-category',
       { schema: registerSwaggerSchema },
-      async (req: FastifyRequest<{ Body: WasteCategoryPayload }>, res) => {
-        await this.handler.register(req, res)
+      async (req: FastifyRequest<{ Body: WasteCategoryPayload }>, rep) => {
+        await this.handler.register(req, rep)
       }
     )
     this.server.put(
       '/api/waste-category/:id',
       { schema: updateSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string }; Body: WasteCategoryPayload }>, res) => {
-        await this.handler.update(req, res)
+      async (req: FastifyRequest<{ Params: { id: string }; Body: WasteCategoryPayload }>, rep) => {
+        await this.handler.update(req, rep)
       }
     )
     this.server.delete(
       '/api/waste-category/:id',
       { schema: deleteSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
-        await this.handler.delete(req, res)
+      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.delete(req, rep)
       }
     )
   }

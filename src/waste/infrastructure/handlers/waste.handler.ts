@@ -1,7 +1,7 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { GetURLParams } from '../../../shared/utils/http.request.util'
+import { getURLParams } from '../../../shared/utils/http.request.util'
 import FindWasteCategoryByIDUseCase from '../../../waste-category/application/usecases/find-by-id.usecase'
 import type WasteCategoryRepository from '../../../waste-category/domain/repositories/waste-category.repository'
 import FindWasteByIDUseCase from '../../application/usecases/find-by-id.usecase'
@@ -17,39 +17,31 @@ class WasteHandler {
     private readonly categoryReposiotry: WasteCategoryRepository
   ) {}
 
-  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
-    try {
-      const id = GetURLParams(req, 'id')
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    const id = getURLParams(req, 'id')
 
-      const validateIDSchema = new WasteSchemaValidator(CheckIdDTO, { id })
-      validateIDSchema.exec()
+    const validateIDSchema = new WasteSchemaValidator(CheckIdDTO, { id })
+    validateIDSchema.exec()
 
-      const findByID = new FindWasteByIDUseCase(this.wasteRepository)
-      const category = await findByID.exec(id)
+    const findByID = new FindWasteByIDUseCase(this.wasteRepository)
+    const category = await findByID.exec(id)
 
-      HandleHTTPResponse.OK(res, 'Waste retrieved successfully', category)
-    } catch (error) {
-      res.status(500).send(error)
-    }
+    HandleHTTPResponse.OK(rep, 'Waste retrieved successfully', category)
   }
 
-  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
-    try {
-      const payload: WastePayload = req.body as WastePayload
+  async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    const payload: WastePayload = req.body as WastePayload
 
-      const validateRegisterWasteSchema = new WasteSchemaValidator(RegisterWasteDTO, payload)
-      validateRegisterWasteSchema.exec()
+    const validateRegisterWasteSchema = new WasteSchemaValidator(RegisterWasteDTO, payload)
+    validateRegisterWasteSchema.exec()
 
-      const registerWaste = new RegisterWasteUseCase(
-        this.wasteRepository,
-        new FindWasteCategoryByIDUseCase(this.categoryReposiotry)
-      )
-      const waste = await registerWaste.exec(payload)
+    const registerWaste = new RegisterWasteUseCase(
+      this.wasteRepository,
+      new FindWasteCategoryByIDUseCase(this.categoryReposiotry)
+    )
+    const waste = await registerWaste.exec(payload)
 
-      HandleHTTPResponse.Created(res, 'Waste registered successfully', { id: waste.id })
-    } catch (error) {
-      res.status(500).send(error)
-    }
+    HandleHTTPResponse.Created(rep, 'Waste registered successfully', { id: waste.id })
   }
 }
 

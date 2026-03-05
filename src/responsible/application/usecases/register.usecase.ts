@@ -16,7 +16,7 @@ class RegisterResponsibleUseCase {
 
     const responsible = await this.repository.save(newResponsible)
     if (responsible == null) {
-      throw new ErrorCannotSaveResponsible('Cannot save new responsible')
+      throw new ErrorCannotSaveResponsible()
     }
 
     return responsible

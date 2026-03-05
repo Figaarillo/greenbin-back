@@ -3,9 +3,7 @@ import ErrorRewardPartnerNotFound from '../../domain/errors/reward-partner-not-f
 import type RewardPartnerRepository from '../../domain/repositories/reward-partner.repository'
 
 class ListRewardPartnerUseCase {
-  constructor(private readonly repository: RewardPartnerRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: RewardPartnerRepository) {}
 
   async exec(offset: number, limit: number): Promise<RewardPartnerEntity[]> {
     const rewardPartner = await this.repository.list(offset, limit)

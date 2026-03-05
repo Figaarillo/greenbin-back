@@ -1,4 +1,6 @@
 class ErrorNeighborNotFound extends Error {
+  readonly code: number = 404
+
   constructor(id?: string, username?: string, email?: string, dni?: string) {
     const fields = [
       id != null ? `id: ${id}` : null,

@@ -6,7 +6,7 @@ class ListCouponsUseCase {
   constructor(private readonly repository: CouponRepository) {}
 
   async exec(offset: number, limit: number): Promise<CouponEntity[]> {
-    const coupons = await this.repository.list(offset, limit)
+    const coupons = await this.repository.list({}, offset, limit)
     if (coupons == null) {
       throw new ErrorCouponNotFound()
     }

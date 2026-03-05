@@ -4,9 +4,7 @@ import type NeighborUpdatePayload from '../../domain/payloads/neighbor.update.pa
 import type NeighborRepository from '../../domain/repositories/neighbor.repository'
 
 class UpdateNeighborUseCase {
-  constructor(private readonly repository: NeighborRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: NeighborRepository) {}
 
   async exec(id: string, payload: NeighborUpdatePayload): Promise<NeighborEntity> {
     const neighborUpdated = await this.repository.update(id, payload)

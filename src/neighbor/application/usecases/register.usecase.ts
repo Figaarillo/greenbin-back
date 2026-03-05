@@ -1,4 +1,5 @@
 import type FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
+import DateUtils from '../../../shared/utils/date.util'
 import NeighborEntity from '../../domain/entities/neighbor.entity'
 import ErrorCannotSaveNeighbor from '../../domain/errors/cannot-save-neighbor.error'
 import type NeighborPayload from '../../domain/payloads/neighbor.payload'
@@ -11,21 +12,19 @@ class RegisterNeighborUseCase {
   ) {}
 
   async exec(payload: NeighborPayload): Promise<NeighborEntity> {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (!payload.birthdate) {
-      throw new Error('Birthdate is required')
-    }
-
-    if (payload.birthdate.getFullYear() < 1900) {
-      throw new Error('Year must be 1900 or later')
-    }
-
-    if (payload.birthdate > new Date()) {
-      throw new Error('Date cannot be in the future')
-    }
-
     const entity = await this.findEntityById.exec(payload.entityId)
-    const newNeighbor = new NeighborEntity(payload, entity)
+
+    const newNeighbor = new NeighborEntity(
+      payload.firstname,
+      payload.lastname,
+      payload.username,
+      payload.email,
+      payload.password,
+      payload.dni,
+      payload.phoneNumber,
+      DateUtils.parseDate(payload.birthdate),
+      entity
+    )
 
     const neighbor = await this.neighborRepository.save(newNeighbor)
     if (neighbor == null) {

@@ -1,20 +1,19 @@
+import ErrorInvalidCredentialsProvided from '../../../shared/domain/errors/invalid-credentials.error'
+import ErrorMissingFields from '../../../shared/domain/errors/missing-filds.error'
 import type RewardPartnerEntity from '../../domain/entities/reward-partner.entity'
-import ErrorInvalidPassword from '../../domain/errors/invalid-password.error'
 import ErrorRewardPartnerNotFound from '../../domain/errors/reward-partner-not-found.error'
 import type RewardPartnerLoginPayload from '../../domain/payloads/reward-partner.login.payload'
 import type RewardPartnerRepository from '../../domain/repositories/reward-partner.repository'
 
 class LoginRewardPartnerUseCase {
-  constructor(private readonly repository: RewardPartnerRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: RewardPartnerRepository) {}
 
   async exec(payload: RewardPartnerLoginPayload): Promise<RewardPartnerEntity> {
     const rewardPartner = await this.findRewardPartner(payload)
 
     const passwordValid = await rewardPartner.verifyPassword(payload.password)
     if (!passwordValid) {
-      throw new ErrorInvalidPassword()
+      throw new ErrorInvalidCredentialsProvided()
     }
 
     return rewardPartner
@@ -45,7 +44,7 @@ class LoginRewardPartnerUseCase {
       rewardPartnerByUsername != null &&
       rewardPartnerByEmail.id !== rewardPartnerByUsername.id
     ) {
-      throw new ErrorRewardPartnerNotFound(undefined, undefined, undefined)
+      throw new ErrorMissingFields(['email', 'username'])
     }
 
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-non-null-assertion

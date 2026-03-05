@@ -7,7 +7,10 @@ class FindByEmailUseCase {
 
   async exec(email: string): Promise<NeighborEntity> {
     const neighbor = await this.repository.find({ email })
-    if (neighbor == null) throw new ErrorNeighborNotFound(undefined, undefined, email)
+    if (neighbor == null) {
+      throw new ErrorNeighborNotFound(undefined, undefined, email)
+    }
+
     return neighbor
   }
 }
