@@ -15,6 +15,7 @@ import CouponSchemaValidator from '../../../coupon/infrastructure/middlewares/zo
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import { getURLParams } from '../../../shared/utils/http.request.util'
 import FindCouponTransactionByIDUseCase from '../../application/usecases/find-by-id.usecase'
+import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
 
 class CouponTransactionHandler {
   constructor(
@@ -59,6 +60,19 @@ class CouponTransactionHandler {
       const transaction = await findTransaction.exec(id)
 
       HandleHTTPResponse.OK(rep, 'Coupon transaction retrieved successfully', transaction)
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async listByNeighbor(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const neighborId = getURLParams(req, 'neighborId')
+
+      const listByNeighborUseCase = new ListByNeighborUseCase(this.couponTransactionRepository)
+      const transactions = await listByNeighborUseCase.exec(neighborId)
+
+      HandleHTTPResponse.OK(rep, 'Coupon transactions retrieved successfully', transactions)
     } catch (error) {
       rep.status(500).send(error)
     }

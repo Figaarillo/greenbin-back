@@ -18,6 +18,12 @@ class CouponTransactionRoute {
         await this.handler.findByID(req, rep)
       }
     )
+    this.server.get(
+      '/api/coupon-transaction/neighbor/:neighborId',
+      async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+        await this.handler.listByNeighbor(req, rep)
+      }
+    )
   }
 }
 
