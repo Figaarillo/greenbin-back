@@ -17,6 +17,11 @@ class CouponTransactionMikroORMRepository implements CouponTransactionRepository
     return await em.find(CouponTransactionEntity, { neighbor: neighborId }, { populate: ['coupon', 'rewardPartner'] })
   }
 
+  async findByCode(code: string): Promise<Nullable<CouponTransactionEntity>> {
+    const em = this.getEntityManager()
+    return await em.findOne(CouponTransactionEntity, { code }, { populate: ['coupon', 'rewardPartner', 'neighbor'] })
+  }
+
   async save(transaction: CouponTransactionEntity): Promise<Nullable<CouponTransactionEntity>> {
     const em = this.getEntityManager()
     await em.persist(transaction).flush()
@@ -26,11 +31,14 @@ class CouponTransactionMikroORMRepository implements CouponTransactionRepository
   async update(id: string, transaction: CouponTransactionEntity): Promise<Nullable<CouponTransactionEntity>> {
     const em = this.getEntityManager()
 
-    const entity = em.getReference(CouponTransactionEntity, id)
+    const entity = await em.findOne(CouponTransactionEntity, { id })
     if (entity == null) return null
 
-    await em.persist(transaction).flush()
-    return transaction
+    entity.status = transaction.status
+    entity.redeemDate = transaction.redeemDate
+    await em.flush()
+
+    return entity
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
