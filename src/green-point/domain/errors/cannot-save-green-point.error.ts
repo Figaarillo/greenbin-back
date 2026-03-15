@@ -1,8 +1,6 @@
 class ErrorCannotSaveGreenPoint extends Error {
-  readonly code: number = 400
-
   constructor() {
-    super('Cannot save new green point')
+    super('Cannot save new GreenPoint')
     this.name = ErrorCannotSaveGreenPoint.name
   }
 }

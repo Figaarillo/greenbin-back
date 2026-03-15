@@ -12,8 +12,7 @@ class NeighborMikroORMRepository implements NeighborRepository {
     return await em.find(NeighborEntity, {}, { limit, offset })
   }
 
-  async find(property: Record<string, any>): Promise<Nullable<NeighborEntity>> {
-    // FIX: acepta any para permitir buscar por number (dni) además de string
+  async find(property: Record<string, string>): Promise<Nullable<NeighborEntity>> {
     const em = this.getEntityManager()
     return await em.findOne(NeighborEntity, property)
   }
@@ -37,12 +36,11 @@ class NeighborMikroORMRepository implements NeighborRepository {
   async update(id: string, payload: NeighborUpdatePayload): Promise<Nullable<NeighborEntity>> {
     const em = this.getEntityManager()
 
-    // FIX: usar findOne en lugar de getReference para asegurar que la entidad existe
-    const neighbor = await em.findOne(NeighborEntity, { id })
+    const neighbor = em.getReference(NeighborEntity, id)
     if (neighbor == null) return null
 
     neighbor.update(payload)
-    await em.flush() // ya estaba, pero ahora sobre entidad real (no referencia)
+    await em.flush()
 
     return neighbor
   }

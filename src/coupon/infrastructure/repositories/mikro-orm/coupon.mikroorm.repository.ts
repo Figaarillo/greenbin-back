@@ -29,23 +29,19 @@ class CouponMikroORMRepository implements CouponRepository {
     return await em.findOne(CouponEntity, property, { populate })
   }
 
-  async save(newCoupon: CouponEntity): Promise<Nullable<CouponEntity>> {
+  async save(newCategory: CouponEntity): Promise<Nullable<CouponEntity>> {
     const em = this.getEntityManager()
-    await em.persist(newCoupon).flush()
-    return newCoupon
+    await em.persist(newCategory).flush()
+    return newCategory
   }
 
   async update(id: string, payload: CouponUpdatePayload): Promise<Nullable<CouponEntity>> {
     const em = this.getEntityManager()
 
-    // FIX: usar findOne en lugar de getReference para garantizar que la entidad existe
-    // y que los cambios se persisten correctamente con flush()
-    const coupon = await em.findOne(CouponEntity, { id })
+    const coupon = em.getReference(CouponEntity, id)
     if (coupon == null) return null
 
     coupon.update(payload)
-    await em.flush() // FIX: faltaba el flush, los cambios de estado no se guardaban
-
     return coupon
   }
 
@@ -70,4 +66,5 @@ class CouponMikroORMRepository implements CouponRepository {
     return em
   }
 }
+
 export default CouponMikroORMRepository

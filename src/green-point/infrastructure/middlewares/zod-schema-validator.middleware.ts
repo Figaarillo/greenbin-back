@@ -1,13 +1,11 @@
-import { ZodError, type ZodType } from 'zod'
-import ErrorSchemaValidation from '../../../shared/domain/errors/schema-validation.error'
-import type ExtendPayload from '../../../shared/domain/types/ext-payload.type'
-import { formatZodErrorsToObject, formatZodErrorsToString } from '../../../shared/utils/hanlde-zod-error.util'
-import type GreenPointPayload from '../../domain/payloads/green-point.payload'
+import { ZodError, type ZodIssue, type ZodType } from 'zod'
+import type GreenPointEntity from '../../domain/entities/green-point.entity'
+import ErrorGreenPointSchemaValidation from '../../domain/errors/green-point-schema-validation.error'
 
-class GreenPointSchemaValidator<TDTOSchema> {
+class SchemaValidator<TDTOSchema> {
   constructor(
     private readonly schema: ZodType<TDTOSchema>,
-    private readonly payload: Partial<ExtendPayload<GreenPointPayload>>
+    private readonly payload: Partial<GreenPointEntity>
   ) {}
 
   exec(): TDTOSchema {
@@ -15,16 +13,25 @@ class GreenPointSchemaValidator<TDTOSchema> {
       return this.schema.parse(this.payload)
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new ErrorSchemaValidation(
-          'Validation errors occurred on green point payload',
-          formatZodErrorsToString(error.errors),
-          formatZodErrorsToObject(error.errors)
+        const detailedErrors = this.formatZodErrors(error.errors)
+        throw new ErrorGreenPointSchemaValidation(
+          JSON.stringify({
+            message: 'Validation errors occurred',
+            errors: detailedErrors
+          })
         )
       }
-
       throw error
     }
   }
+
+  private formatZodErrors(errors: ZodIssue[]): Array<{ field: string; error: string }> {
+    return errors.map(err => ({
+      field: err.path.join('.'),
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      error: err.message || 'Invalid value'
+    }))
+  }
 }
 
-export default GreenPointSchemaValidator
+export default SchemaValidator

@@ -6,12 +6,12 @@ class ListGreenPointsUseCase {
   constructor(private readonly repository: GreenPointRepository) {}
 
   async exec(offset: number, limit: number): Promise<GreenPointEntity[]> {
-    const greenPoints = await this.repository.list(offset, limit)
-    if (greenPoints == null) {
-      throw new ErrorGreenPointNotFound()
+    const greenPointsFounded = await this.repository.list(offset, limit)
+    if (greenPointsFounded == null || greenPointsFounded.length === 0) {
+      throw new ErrorGreenPointNotFound(undefined, undefined)
     }
 
-    return greenPoints
+    return greenPointsFounded
   }
 }
 

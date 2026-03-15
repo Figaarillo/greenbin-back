@@ -12,11 +12,15 @@ class EntityMikroORMRepository implements EntityRepository {
 
     if (limit == null) return await em.find(EntityEntity, {})
     if (offset == null) return await em.find(EntityEntity, {}, { limit })
-
     return await em.find(EntityEntity, {}, { limit, offset })
   }
 
-  async find(where: Record<string, any>, populate?: EntityRelationships[]): Promise<Nullable<EntityEntity>> {
+  async find(property: Record<string, string>): Promise<Nullable<EntityEntity>> {
+    const em = this.getEntityManager()
+    return await em.findOne(EntityEntity, property)
+  }
+
+  async findWithPopulate(where: Record<string, any>, populate: EntityRelationships[]): Promise<Nullable<EntityEntity>> {
     const em = this.getEntityManager()
     return await em.findOne(EntityEntity, where, { populate })
   }

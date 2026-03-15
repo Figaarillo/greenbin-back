@@ -1,30 +1,22 @@
 import { ZodError, type ZodType } from 'zod'
-import ErrorSchemaValidation from '../../../shared/domain/errors/schema-validation.error'
-import type ExtendPayload from '../../../shared/domain/types/ext-payload.type'
-import { formatZodErrorsToObject, formatZodErrorsToString } from '../../../shared/utils/hanlde-zod-error.util'
-import type CouponPayload from '../../domain/payloads/coupon.payload'
+import handleZodError from '../../../shared/utils/hanlde-zod-error.util'
+import type CouponEntity from '../../domain/entities/coupon.entity'
 
-class CouponSchemaValidator<TDTOSchema> {
+class SchemaValidator<TDTOSchema> {
   constructor(
     private readonly schema: ZodType<TDTOSchema>,
-    private readonly payload: Partial<ExtendPayload<CouponPayload>>
+    private readonly payload: Partial<CouponEntity>
   ) {}
 
   exec(): TDTOSchema {
     try {
       return this.schema.parse(this.payload)
     } catch (error) {
-      if (error instanceof ZodError) {
-        throw new ErrorSchemaValidation(
-          'Validation error on coupon payload',
-          formatZodErrorsToString(error.errors),
-          formatZodErrorsToObject(error.errors)
-        )
-      }
+      if (error instanceof ZodError) handleZodError(error)
 
       throw error
     }
   }
 }
 
-export default CouponSchemaValidator
+export default SchemaValidator

@@ -6,7 +6,6 @@ declare module 'fastify' {
     validateAccessToken: (req: FastifyRequest, rep: FastifyReply) => Promise<void>
     validateRefreshToken: (req: FastifyRequest, rep: FastifyReply) => Promise<void>
     getTokenRole: (req: FastifyRequest, rep: FastifyReply) => Promise<void>
-    authenticate: (req: FastifyRequest, rep: FastifyReply) => Promise<void>
   }
 
   interface FastifyRequest {
@@ -17,9 +16,5 @@ declare module 'fastify' {
     admin: Record<strign, string>
     user: Record<strign, string>
     tokenRole: string
-  }
-
-  interface FastifyContextConfig {
-    allowedRoles?: string[]
   }
 }

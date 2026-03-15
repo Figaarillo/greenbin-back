@@ -7,12 +7,12 @@ class UpdateGreenPointUseCase {
   constructor(private readonly repository: GreenPointRepository) {}
 
   async exec(id: string, payload: GreenPointUpdatePayload): Promise<GreenPointEntity> {
-    const greenPoint = await this.repository.update(id, payload)
-    if (greenPoint == null) {
+    const GreenPointUpdated = await this.repository.update(id, payload)
+    if (GreenPointUpdated == null) {
       throw new ErrorGreenPointNotFound(id)
     }
 
-    return greenPoint
+    return GreenPointUpdated
   }
 }
 

@@ -1,6 +1,4 @@
 class ErrorCouponNotFound extends Error {
-  readonly code: number = 404
-
   constructor(id?: string) {
     const message =
       id != null ? `Cannot find coupon with id: ${id}` : 'Cannot find any coupon when try to list all coupons'

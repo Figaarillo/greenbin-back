@@ -1,6 +1,4 @@
 class ErrorRewardPartnerNotFound extends Error {
-  readonly code: number = 404
-
   constructor(id?: string, username?: string, email?: string) {
     const fields = [
       id != null ? `id: ${id}` : null,

@@ -8,7 +8,7 @@ class FindGreenPointByIDUseCase {
   async exec(id: string): Promise<GreenPointEntity> {
     const greenPoint = await this.repository.find({ id })
     if (greenPoint == null) {
-      throw new ErrorGreenPointNotFound(id)
+      throw new ErrorGreenPointNotFound(undefined, undefined)
     }
 
     return greenPoint

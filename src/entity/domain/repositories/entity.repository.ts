@@ -4,7 +4,8 @@ import { type EntityRelationships } from '../enums/entity.enum'
 
 interface EntityRepository {
   list: (offset?: number, limit?: number) => Promise<Nullable<EntityEntity[]>>
-  find: (where: Record<string, any>, populate?: EntityRelationships[]) => Promise<Nullable<EntityEntity>>
+  find: (property: Record<string, string>) => Promise<Nullable<EntityEntity>>
+  findWithPopulate: (where: Record<string, any>, populate: EntityRelationships[]) => Promise<Nullable<EntityEntity>>
   save: (entity: EntityEntity) => Promise<Nullable<EntityEntity>>
   update: (id: string, description: string) => Promise<Nullable<EntityEntity>>
   delete: (id: string) => Promise<void>

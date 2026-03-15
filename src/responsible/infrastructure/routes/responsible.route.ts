@@ -7,7 +7,6 @@ import {
   registerSwaggerSchema,
   updateSwaggerSchema
 } from '../swagger-schemas/responsible.swagger-schema'
-import type ResponsiblePayload from '../../domain/payloads/responsible.payload'
 
 class ResponsibleRoute {
   constructor(
@@ -19,51 +18,47 @@ class ResponsibleRoute {
     this.server.get('/api/responsible', {
       schema: listSwaggerSchema,
       preHandler: this.server.auth([this.server.validateAccessToken]),
-      handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
-        await this.handler.list(req, rep)
+      handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
+        await this.handler.list(req, res)
       }
     })
     this.server.get('/api/responsible/:id', {
       schema: findByIdSwaggerSchema,
       preHandler: this.server.auth([this.server.validateAccessToken]),
-      handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
-        await this.handler.findByID(req, rep)
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+        await this.handler.findByID(req, res)
       }
     })
-    this.server.post(
-      '/api/responsible',
-      { schema: registerSwaggerSchema },
-      async (req: FastifyRequest<{ Body: ResponsiblePayload }>, rep) => {
-        await this.handler.register(req, rep)
-      }
-    )
+    this.server.post('/api/responsible', { schema: registerSwaggerSchema }, async (req, res) => {
+      await this.handler.register(req, res)
+    })
     this.server.put(
       '/api/responsible/:id',
       { schema: updateSwaggerSchema },
-      async (req: FastifyRequest<{ Body: ResponsiblePayload; Params: { id: string } }>, rep) => {
-        await this.handler.update(req, rep)
+      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+        await this.handler.update(req, res)
       }
     )
     this.server.delete(
       '/api/responsible/:id',
       { schema: deleteSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
-        await this.handler.delete(req, rep)
+      async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+        await this.handler.delete(req, res)
       }
     )
-    this.server.post('/api/responsible/auth/login', async (req: FastifyRequest<{ Body: ResponsiblePayload }>, rep) => {
-      await this.handler.login(req, rep)
+    this.server.post('/api/responsible/auth/login', async (req, res) => {
+      await this.handler.login(req, res)
     })
     this.server.get('/api/responsible/auth/refresh-token', {
       preHandler: this.server.auth([this.server.validateRefreshToken]),
-      handler: async (req: FastifyRequest, rep: FastifyReply) => {
-        await this.handler.refreshToken(req, rep)
+      handler: async (req: FastifyRequest, res: FastifyReply) => {
+        await this.handler.refreshToken(req, res)
       }
     })
     this.server.get('/api/responsible/auth/validate-role', {
       preHandler: this.server.auth([this.server.getTokenRole]),
-      handler: async (req, rep) => {
-        await this.handler.validateRole(req, rep)
+      handler: async (req, res) => {
+        await this.handler.validateRole(req, res)
       }
     })
   }

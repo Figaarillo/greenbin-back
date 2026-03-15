@@ -9,32 +9,32 @@ class CouponRoute {
   ) {}
 
   setupRoutes(): void {
-    this.server.get('/api/coupon', async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
-      await this.handler.list(req, rep)
+    this.server.get('/api/coupon', async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
+      await this.handler.list(req, res)
     })
     this.server.get(
       '/api/coupon/available',
-      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
-        await this.handler.listAvailables(req, rep)
+      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, res) => {
+        await this.handler.listAvailables(req, res)
       }
     )
-    this.server.get('/api/coupon/:id', async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
-      await this.handler.findByID(req, rep)
+    this.server.get('/api/coupon/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+      await this.handler.findByID(req, res)
     })
-    this.server.get('/api/coupon/populate', async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
-      await this.handler.findAndPopulate(req, rep)
+    this.server.get('/api/coupon/populate', async (req: FastifyRequest<{ Params: Record<string, string> }>, res) => {
+      await this.handler.findAndPopulate(req, res)
     })
-    this.server.post('/api/coupon', async (req: FastifyRequest<{ Body: CouponPayload }>, rep) => {
-      await this.handler.register(req, rep)
+    this.server.post('/api/coupon', async (req: FastifyRequest<{ Body: CouponPayload }>, res) => {
+      await this.handler.register(req, res)
     })
     this.server.put(
       '/api/coupon/:id',
-      async (req: FastifyRequest<{ Params: Record<string, string>; Body: CouponPayload }>, rep) => {
-        await this.handler.update(req, rep)
+      async (req: FastifyRequest<{ Params: Record<string, string>; Body: CouponPayload }>, res) => {
+        await this.handler.update(req, res)
       }
     )
-    this.server.delete('/api/coupon/:id', async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
-      await this.handler.delete(req, rep)
+    this.server.delete('/api/coupon/:id', async (req: FastifyRequest<{ Params: { id: string } }>, res) => {
+      await this.handler.delete(req, res)
     })
   }
 }

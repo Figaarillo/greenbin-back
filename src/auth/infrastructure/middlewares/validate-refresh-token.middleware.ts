@@ -1,7 +1,7 @@
 /* eslint-disable indent */
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { getHeader } from '../../../shared/utils/http.request.util'
+import { GetHeader } from '../../../shared/utils/http.request.util'
 import AuthService from '../../application/service/auth.service'
 import type IJWTStrategy from '../../domain/strategies/jwt.interface.strategy'
 
@@ -11,7 +11,7 @@ const validateRefreshToken = async (
   jwtStrategy: IJWTStrategy
 ): Promise<void> => {
   const authService = new AuthService(jwtStrategy)
-  const headerToken = getHeader(req, 'authorization').split(' ')[1]
+  const headerToken = GetHeader(req, 'authorization').split(' ')[1]
 
   if (headerToken === '') {
     HandleHTTPResponse.Unauthorized(rep, 'Invalid token. Token is empty')

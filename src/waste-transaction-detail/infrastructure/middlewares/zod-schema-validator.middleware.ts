@@ -1,8 +1,7 @@
 import { ZodError, type ZodType } from 'zod'
-import ErrorSchemaValidation from '../../../shared/domain/errors/schema-validation.error'
 import type ExtendPayload from '../../../shared/domain/types/ext-payload.type'
-import { formatZodErrorsToObject, formatZodErrorsToString } from '../../../shared/utils/hanlde-zod-error.util'
 import type WasteTransactionDetailPayload from '../../domain/payloads/waste-transaction-detail.payload'
+import handleZodError from '../../../shared/utils/hanlde-zod-error.util'
 
 class WasteTransactionDetailSchemaValidator<TDTOSchema> {
   constructor(
@@ -14,13 +13,7 @@ class WasteTransactionDetailSchemaValidator<TDTOSchema> {
     try {
       return this.schema.parse(this.payload)
     } catch (error) {
-      if (error instanceof ZodError) {
-        throw new ErrorSchemaValidation(
-          'Validation errors occurred on waste transaction detail payload',
-          formatZodErrorsToString(error.errors),
-          formatZodErrorsToObject(error.errors)
-        )
-      }
+      if (error instanceof ZodError) handleZodError(error)
 
       throw error
     }

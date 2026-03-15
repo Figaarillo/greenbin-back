@@ -4,7 +4,7 @@ import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
+import { GetPaginationParams, GetURLParams } from '../../../shared/utils/http.request.util'
 import DeleteEntityUseCase from '../../application/usecases/delete.usecase'
 import FindEntityWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
 import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
@@ -19,7 +19,7 @@ import type EntityRepository from '../../domain/repositories/entity.repository'
 import EntityQueryParams from '../dtos/query-params.dto'
 import RegisterEntityDTO from '../dtos/register-entity.dto'
 import UpdateEntityDTO from '../dtos/update-entity.dto'
-import EntitySchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import SchemaValidator from '../middlewares/zod-schema-validator.middleware'
 
 class EntityHandler {
   constructor(
@@ -27,120 +27,159 @@ class EntityHandler {
     private readonly jwtStrategy: IJWTStrategy
   ) {}
 
-  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const { offset, limit } = getPaginationParams(req)
+  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, res: FastifyReply): Promise<void> {
+    try {
+      const { offset, limit } = GetPaginationParams(req)
 
-    const listEntities = new ListEntitiesUseCase(this.repository)
-    const entities = await listEntities.exec(offset, limit)
+      const listEntities = new ListEntitiesUseCase(this.repository)
+      const entities = await listEntities.exec(offset, limit)
 
-    HandleHTTPResponse.OK(rep, 'Entities retrieved successfully', entities)
+      HandleHTTPResponse.OK(res, 'Entities retrieved successfully', entities)
+    } catch (error) {
+      res.status(500).send(error)
+    }
   }
 
-  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const id = getURLParams(req, 'id')
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
 
-    const validateIDSchema = new EntitySchemaValidator(CheckIdDTO, { id })
-    validateIDSchema.exec()
+      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      validateIDSchema.exec()
 
-    const findEntity = new FindEntityByIDUseCase(this.repository)
-    const entity = await findEntity.exec(id)
+      const findEntity = new FindEntityByIDUseCase(this.repository)
+      const entity = await findEntity.exec(id)
 
-    HandleHTTPResponse.OK(rep, 'Entity retrieved successfully', entity)
+      HandleHTTPResponse.OK(res, 'Entity retrieved successfully', entity)
+    } catch (error) {
+      res.status(500).send(error)
+    }
   }
 
-  async findAndPopulate(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    const params = EntityQueryParams.parse(req.query)
+  async findAndPopulate(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+    try {
+      const params = EntityQueryParams.parse(req.query)
 
-    const findWithPopulate = new FindEntityWithPopulateUseCase(this.repository)
-    const entity = await findWithPopulate.exec(params.id, params.with)
+      const findWithPopulate = new FindEntityWithPopulateUseCase(this.repository)
+      const entity = await findWithPopulate.exec(params.id, params.with)
 
-    HandleHTTPResponse.OK(rep, 'Entity retrieved successfully', entity)
+      HandleHTTPResponse.OK(res, 'Entity retrieved successfully', entity)
+    } catch (error) {
+      res.status(500).send(error)
+    }
   }
 
-  async register(req: FastifyRequest<{ Body: EntityPayload }>, rep: FastifyReply): Promise<void> {
-    const validateRegisterEntitiesSchema = new EntitySchemaValidator(RegisterEntityDTO, req.body)
-    validateRegisterEntitiesSchema.exec()
+  async register(req: FastifyRequest, res: FastifyReply): Promise<void> {
+    try {
+      const payload: EntityPayload = req.body as EntityPayload
 
-    const registerEntity = new RegisterEntityUseCase(this.repository)
-    const entity = await registerEntity.exec(req.body)
+      const validateRegisterEntitiesSchema = new SchemaValidator(RegisterEntityDTO, payload)
+      validateRegisterEntitiesSchema.exec()
 
-    HandleHTTPResponse.Created(rep, 'Entity registered successfully', { id: entity.id })
+      const registerEntity = new RegisterEntityUseCase(this.repository)
+      const entity = await registerEntity.exec(payload)
+
+      HandleHTTPResponse.Created(res, 'Entity registered successfully', { id: entity.id })
+    } catch (error) {
+      res.status(500).send(error)
+    }
   }
 
-  async update(
-    req: FastifyRequest<{ Body: { description: string }; Params: Record<string, string> }>,
-    rep: FastifyReply
-  ): Promise<void> {
-    const id = getURLParams(req, 'id')
-    const validateIDSchema = new EntitySchemaValidator(CheckIdDTO, { id })
-    validateIDSchema.exec()
+  async update(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
+      const payload: { description: string } = req.body as { description: string }
 
-    const schemaValidator = new EntitySchemaValidator(UpdateEntityDTO, req.body)
-    schemaValidator.exec()
+      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
+      validateIDSchema.exec()
 
-    const updateEntity = new UpdateEntityUseCase(this.repository)
-    await updateEntity.exec(id, req.body)
+      const schemaValidator = new SchemaValidator(UpdateEntityDTO, payload)
+      schemaValidator.exec()
 
-    HandleHTTPResponse.OK(rep, 'Entity updated successfully', { id })
+      const updateEntity = new UpdateEntityUseCase(this.repository)
+      await updateEntity.exec(id, payload)
+
+      HandleHTTPResponse.OK(res, 'Entity updated successfully', { id })
+    } catch (error) {
+      res.status(500).send(error)
+    }
   }
 
-  async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
-    const id = getURLParams(req, 'id')
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, res: FastifyReply): Promise<void> {
+    try {
+      const id = GetURLParams(req, 'id')
 
-    const schemaValidator = new EntitySchemaValidator(CheckIdDTO, { id })
-    schemaValidator.exec()
+      const schemaValidator = new SchemaValidator(CheckIdDTO, { id })
+      schemaValidator.exec()
 
-    const deleteEntity = new DeleteEntityUseCase(this.repository)
-    await deleteEntity.exec(id)
+      const deleteEntity = new DeleteEntityUseCase(this.repository)
+      await deleteEntity.exec(id)
 
-    HandleHTTPResponse.OK(rep, 'Entity deleted successfully', { id })
+      HandleHTTPResponse.OK(res, 'Entity deleted successfully', { id })
+    } catch (error) {
+      res.status(500).send(error)
+    }
   }
 
-  async login(req: FastifyRequest<{ Body: EntityLoginPayload }>, rep: FastifyReply): Promise<void> {
-    const login = new LoginEntityUseCase(this.repository)
-    const entity = await login.exec(req.body)
+  async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    try {
+      const payload = req.body as EntityLoginPayload
 
-    const authService = new AuthService(this.jwtStrategy)
-    const accessToken = await authService.generateAccessToken(entity.id, {
-      name: entity.name,
-      email: entity.email,
-      role: entity.role
-    })
-    const refreshToken = await authService.generateRefreshToken(entity.id, {
-      name: entity.name,
-      email: entity.email,
-      role: entity.role
-    })
+      const login = new LoginEntityUseCase(this.repository)
+      const entity = await login.exec(payload)
 
-    HandleHTTPResponse.Created(rep, 'Entity logged in successfully', {
-      id: entity.id,
-      accessToken,
-      refreshToken
-    })
+      const authService = new AuthService(this.jwtStrategy)
+      const accessToken = await authService.generateAccessToken(entity.id, {
+        name: entity.name,
+        email: entity.email,
+        role: entity.role
+      })
+      const refreshToken = await authService.generateRefreshToken(entity.id, {
+        name: entity.name,
+        email: entity.email,
+        role: entity.role
+      })
+
+      HandleHTTPResponse.Created(rep, 'Entity logged in successfully', {
+        id: entity.id,
+        accessToken,
+        refreshToken
+      })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
   }
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenEntity = req.entity as { name: string; email: string; role: string }
+    try {
+      const tokenEntity = req.entity as { name: string; email: string; role: string }
 
-    const findByEmail = new FindByEmailUseCase(this.repository)
-    const entity = await findByEmail.exec(tokenEntity.email)
+      const findByEmail = new FindByEmailUseCase(this.repository)
+      const entity = await findByEmail.exec(tokenEntity.email)
 
-    const authService = new AuthService(this.jwtStrategy)
-    const accessToken = await authService.generateAccessToken(req.entity.id, {
-      name: entity.name,
-      email: entity.email,
-      role: entity.role
-    })
+      const authService = new AuthService(this.jwtStrategy)
+      const accessToken = await authService.generateAccessToken(req.entity.id, {
+        name: entity.name,
+        email: entity.email,
+        role: entity.role
+      })
 
-    HandleHTTPResponse.OK(rep, 'Token refreshed successfully', { accessToken })
+      HandleHTTPResponse.OK(rep, 'Token refreshed successfully', { accessToken })
+    } catch (error) {
+      rep.status(500).send(error)
+    }
   }
 
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenEntity = req.tokenRole
-    if (tokenEntity !== Roles.ENTITY) {
-      throw new Error('Invalid role')
+    try {
+      const tokenEntity = req.tokenRole
+      if (tokenEntity !== Roles.ENTITY) {
+        throw new Error('Invalid role')
+      }
+      HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
+    } catch (error) {
+      rep.status(500).send(error)
     }
-    HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
   }
 }
 

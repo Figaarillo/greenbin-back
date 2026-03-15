@@ -5,7 +5,7 @@ interface NeighborPayload {
   email: string
   password: string
   dni: number
-  birthdate: string
+  birthdate: Date
   phoneNumber: string
   entityId: string
 }

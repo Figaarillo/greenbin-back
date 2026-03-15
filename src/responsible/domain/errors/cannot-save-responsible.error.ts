@@ -1,8 +1,6 @@
 class ErrorCannotSaveResponsible extends Error {
-  readonly code: number = 400
-
-  constructor() {
-    super('Cannot save new responsible')
+  constructor(message: string) {
+    super(message)
     this.name = ErrorCannotSaveResponsible.name
   }
 }

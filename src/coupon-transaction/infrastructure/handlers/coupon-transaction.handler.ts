@@ -11,11 +11,10 @@ import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import RedeemCouponUseCase from '../../application/usecases/redeem-coupon.usecase'
 import type RedeemCouponPayload from '../../domain/payloads/redeem-coupon.payload'
 import type CouponTransactionRepository from '../../domain/repositories/coupon-transaction.repository'
-import CouponSchemaValidator from '../../../coupon/infrastructure/middlewares/zod-schema-validator.middleware'
+import SchemaValidator from '../../../coupon/infrastructure/middlewares/zod-schema-validator.middleware'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
-import { getURLParams } from '../../../shared/utils/http.request.util'
+import { GetURLParams } from '../../../shared/utils/http.request.util'
 import FindCouponTransactionByIDUseCase from '../../application/usecases/find-by-id.usecase'
-import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
 
 class CouponTransactionHandler {
   constructor(
@@ -49,32 +48,19 @@ class CouponTransactionHandler {
     }
   }
 
-  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+  async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, res: FastifyReply): Promise<void> {
     try {
-      const id = getURLParams(req, 'id')
+      const id = GetURLParams(req, 'id')
 
-      const validateIDSchema = new CouponSchemaValidator(CheckIdDTO, { id })
+      const validateIDSchema = new SchemaValidator(CheckIdDTO, { id })
       validateIDSchema.exec()
 
       const findTransaction = new FindCouponTransactionByIDUseCase(this.couponTransactionRepository)
       const transaction = await findTransaction.exec(id)
 
-      HandleHTTPResponse.OK(rep, 'Coupon transaction retrieved successfully', transaction)
+      HandleHTTPResponse.OK(res, 'Coupon transaction retrieved successfully', transaction)
     } catch (error) {
-      rep.status(500).send(error)
-    }
-  }
-
-  async listByNeighbor(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
-    try {
-      const neighborId = getURLParams(req, 'neighborId')
-
-      const listByNeighborUseCase = new ListByNeighborUseCase(this.couponTransactionRepository)
-      const transactions = await listByNeighborUseCase.exec(neighborId)
-
-      HandleHTTPResponse.OK(rep, 'Coupon transactions retrieved successfully', transactions)
-    } catch (error) {
-      rep.status(500).send(error)
+      res.status(500).send(error)
     }
   }
 }

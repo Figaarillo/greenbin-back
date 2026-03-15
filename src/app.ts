@@ -24,11 +24,10 @@ import bootstrapWasteCategory from './waste-category/waste-category.bootstrap'
 import bootstrapWasteTransactionDetail from './waste-transaction-detail/waste-transaction-detail.bootstrap'
 import bootstrapWasteTransaction from './waste-transaction/waste-transaction.bootstrap'
 import bootstrapWaste from './waste/waste.bootstrap'
-import errorMiddleware from './shared/infrastructure/middlewares/error.middleware'
 
 async function bootstrapApp(port: number, options?: Options): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM(options)
-  const fastify = new FastifyConifg(EnvVar.server.nodeEnv)
+  const fastify = new FastifyConifg(EnvVar.server.nodeEnv === 'development')
   const app = fastify.server
 
   /* Register Swagger */
@@ -101,8 +100,6 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapWasteTransactionDetail(app)
   bootstrapCoupon(app)
   bootstrapCouponTransaction(app)
-
-  app.setErrorHandler(errorMiddleware)
 
   /* Start the server */
   const url: string = await fastify.start(port)

@@ -1,25 +1,22 @@
 import { ZodError, type ZodType } from 'zod'
-import ErrorSchemaValidation from '../../../shared/domain/errors/schema-validation.error'
-import type ExtendPayload from '../../../shared/domain/types/ext-payload.type'
-import { formatZodErrorsToObject, formatZodErrorsToString } from '../../../shared/utils/hanlde-zod-error.util'
-import type ResponsiblePayload from '../../domain/payloads/responsible.payload'
+import type ResponsibleEntity from '../../domain/entities/responsible.entity'
+import ErrorResponsibleSchemaValidation from '../../domain/errors/responsible-schema-validation.error'
 
-class ResponsibleSchemaValidator<TDTOSchema> {
-  constructor(
-    private readonly schema: ZodType<TDTOSchema>,
-    private readonly payload: Partial<ExtendPayload<ResponsiblePayload>>
-  ) {}
+class SchemaValidator<TDTOSchema> {
+  private readonly schema: ZodType<TDTOSchema>
+  private readonly payload: Partial<ResponsibleEntity>
+
+  constructor(schema: ZodType<TDTOSchema>, payload: Partial<ResponsibleEntity>) {
+    this.schema = schema
+    this.payload = payload
+  }
 
   exec(): TDTOSchema {
     try {
       return this.schema.parse(this.payload)
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new ErrorSchemaValidation(
-          'Validation errors occurred on responsible payload',
-          formatZodErrorsToString(error.errors),
-          formatZodErrorsToObject(error.errors)
-        )
+        throw new ErrorResponsibleSchemaValidation(error.errors.map(err => err.message).join('\n'))
       }
 
       throw error
@@ -27,4 +24,4 @@ class ResponsibleSchemaValidator<TDTOSchema> {
   }
 }
 
-export default ResponsibleSchemaValidator
+export default SchemaValidator

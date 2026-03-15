@@ -3,7 +3,9 @@ import ErrorResponsibleNotFound from '../../domain/errors/responsible-not-found.
 import type ResponsibleRepository from '../../domain/repositories/responsible.repository'
 
 class FindResponsibleByIDUseCase {
-  constructor(private readonly repository: ResponsibleRepository) {}
+  constructor(private readonly repository: ResponsibleRepository) {
+    this.repository = repository
+  }
 
   async exec(id: string): Promise<ResponsibleEntity> {
     const responsibleFound = await this.repository.find({ id })
