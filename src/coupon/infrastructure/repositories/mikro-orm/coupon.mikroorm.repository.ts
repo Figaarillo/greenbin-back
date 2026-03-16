@@ -38,10 +38,12 @@ class CouponMikroORMRepository implements CouponRepository {
   async update(id: string, payload: CouponUpdatePayload): Promise<Nullable<CouponEntity>> {
     const em = this.getEntityManager()
 
-    const coupon = em.getReference(CouponEntity, id)
+    const coupon = await em.findOne(CouponEntity, { id })
     if (coupon == null) return null
 
     coupon.update(payload)
+    await em.flush()
+
     return coupon
   }
 

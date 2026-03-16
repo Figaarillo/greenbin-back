@@ -13,19 +13,7 @@ class RewardPartnerRoute {
   ) {}
 
   setupRoutes(): void {
-    this.server.get('/api/reward-partner/:id', async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
-      await this.handler.findById(req, rep)
-    })
-    this.server.post('/api/reward-partner', { schema: registerSwaggerSchema }, async (req, rep) => {
-      await this.handler.register(req, rep)
-    })
-    this.server.put('/api/reward-partner/:id', {
-      schema: updateSwaggerSchema,
-      preHandler: this.server.auth([this.server.validateAccessToken]),
-      handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
-        await this.handler.update(req, rep)
-      }
-    })
+    // Rutas estáticas primero
     this.server.post('/api/reward-partner/auth/login', { schema: loginSwaggerSchema }, async (req, rep) => {
       await this.handler.login(req, rep)
     })
@@ -39,6 +27,33 @@ class RewardPartnerRoute {
       preHandler: this.server.auth([this.server.getTokenRole]),
       handler: async (req, rep) => {
         await this.handler.validateRole(req, rep)
+      }
+    })
+    this.server.get('/api/reward-partner', {
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
+        await this.handler.list(req, rep)
+      }
+    })
+    this.server.post('/api/reward-partner', { schema: registerSwaggerSchema }, async (req, rep) => {
+      await this.handler.register(req, rep)
+    })
+
+    // Rutas con parámetros dinámicos después
+    this.server.get('/api/reward-partner/:id', async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+      await this.handler.findById(req, rep)
+    })
+    this.server.put('/api/reward-partner/:id', {
+      schema: updateSwaggerSchema,
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.update(req, rep)
+      }
+    })
+    this.server.delete('/api/reward-partner/:id', {
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+        await this.handler.delete(req, rep)
       }
     })
   }

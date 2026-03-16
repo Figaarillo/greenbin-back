@@ -57,6 +57,13 @@ class RewardPartnerEntity extends BaseEntity {
   @OneToMany(() => CouponEntity, coupon => coupon.rewardPartner)
   neighbors = new Collection<CouponEntity>(this)
 
+  @Property({ default: true })
+  isActive: boolean = true
+
+  softDelete(): void {
+    this.isActive = false
+  }
+
   constructor(payload: RewardPartnerPayload, entity: EntityEntity) {
     super()
     this.name = payload.name
