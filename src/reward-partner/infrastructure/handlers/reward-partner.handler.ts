@@ -5,7 +5,7 @@ import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.str
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
-import { getURLParams } from '../../../shared/utils/http.request.util'
+import { getURLParams, getPaginationParams } from '../../../shared/utils/http.request.util'
 import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
 import FindRewardPartnerByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import LoginRewardPartnerUseCase from '../../application/usecases/login.usecase'
@@ -19,6 +19,7 @@ import LoginRewardPartnerDTO from '../dtos/login-reward-partner.dto'
 import RegisterRewardPartnerDTO from '../dtos/register-reward-partner.dto'
 import UpdateRewardPartnerDTO from '../dtos/update-reward-partner.dto'
 import RewardPartnerSchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import ListRewardPartnersUseCase from '../../application/usecases/list.usecase'
 import DeleteRewardPartnerUseCase from '../../application/usecases/delete.usecase'
 
 class RewardPartnerHandler {
@@ -91,6 +92,10 @@ class RewardPartnerHandler {
     const login = new LoginRewardPartnerUseCase(this.rewardPartnerRepository)
     const rewardPartner = await login.exec(payload)
 
+    if (!rewardPartner.isActive) {
+      throw new Error('La cuenta está deshabilitada.')
+    }
+
     const authService = new AuthService(this.jwtStrategy)
     const accessToken = await authService.generateAccessToken(rewardPartner.id, {
       username: rewardPartner.username,
@@ -146,6 +151,15 @@ class RewardPartnerHandler {
     await deleteRewardPartner.exec(id)
 
     HandleHTTPResponse.OK(rep, 'Reward partner deleted successfully', { id })
+  }
+
+  async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    const { offset, limit } = getPaginationParams(req)
+
+    const listRewardPartners = new ListRewardPartnersUseCase(this.rewardPartnerRepository)
+    const rewardPartners = await listRewardPartners.exec(offset, limit)
+
+    HandleHTTPResponse.OK(rep, 'Reward partners retrieved successfully', rewardPartners)
   }
 }
 

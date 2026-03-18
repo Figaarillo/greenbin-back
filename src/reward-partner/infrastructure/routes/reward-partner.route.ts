@@ -14,6 +14,7 @@ class RewardPartnerRoute {
 
   setupRoutes(): void {
     // Rutas estáticas primero
+    // Rutas estáticas primero
     this.server.post('/api/reward-partner/auth/login', { schema: loginSwaggerSchema }, async (req, rep) => {
       await this.handler.login(req, rep)
     })
@@ -29,13 +30,19 @@ class RewardPartnerRoute {
         await this.handler.validateRole(req, rep)
       }
     })
+    this.server.get('/api/reward-partner', {
+      preHandler: this.server.auth([this.server.validateAccessToken]),
+      handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
+        await this.handler.list(req, rep)
+      }
+    })
+    this.server.post('/api/reward-partner', { schema: registerSwaggerSchema }, async (req, rep) => {
+      await this.handler.register(req, rep)
+    })
 
     // Rutas con parámetros dinámicos después
     this.server.get('/api/reward-partner/:id', async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
       await this.handler.findById(req, rep)
-    })
-    this.server.post('/api/reward-partner', { schema: registerSwaggerSchema }, async (req, rep) => {
-      await this.handler.register(req, rep)
     })
     this.server.put('/api/reward-partner/:id', {
       schema: updateSwaggerSchema,

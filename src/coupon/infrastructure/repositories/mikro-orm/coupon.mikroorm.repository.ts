@@ -38,13 +38,11 @@ class CouponMikroORMRepository implements CouponRepository {
   async update(id: string, payload: CouponUpdatePayload): Promise<Nullable<CouponEntity>> {
     const em = this.getEntityManager()
 
-    // FIX: usar findOne en lugar de getReference para garantizar que la entidad existe
-    // y que los cambios se persisten correctamente con flush()
     const coupon = await em.findOne(CouponEntity, { id })
     if (coupon == null) return null
 
     coupon.update(payload)
-    await em.flush() // FIX: faltaba el flush, los cambios de estado no se guardaban
+    await em.flush()
 
     return coupon
   }

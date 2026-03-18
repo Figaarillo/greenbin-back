@@ -45,12 +45,13 @@ class RewardPartnerMikroORMRepository implements RewardPartnerRepository {
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 
-    const rewardPartner = em.getReference(RewardPartnerEntity, id)
+    const rewardPartner = await em.findOne(RewardPartnerEntity, { id })
     if (rewardPartner == null) {
       throw new ErrorRewardPartnerNotFound(id, undefined, undefined)
     }
 
-    await em.remove(rewardPartner).flush()
+    rewardPartner.softDelete()
+    await em.flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
