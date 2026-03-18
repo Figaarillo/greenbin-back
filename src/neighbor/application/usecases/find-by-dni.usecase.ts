@@ -6,7 +6,14 @@ class FindNeighborByDNIUseCase {
   constructor(private readonly repository: NeighborRepository) {}
 
   async exec(dni: string): Promise<NeighborEntity> {
-    const neighbor = await this.repository.find({ dni })
+    // FIX: dni llega como string desde la URL pero está guardado como number en la BD
+    const dniAsNumber = parseInt(dni, 10)
+
+    if (isNaN(dniAsNumber)) {
+      throw new ErrorNeighborNotFound(undefined, undefined, undefined, dni)
+    }
+
+    const neighbor = await this.repository.find({ dni: dniAsNumber as any })
     if (neighbor == null) {
       throw new ErrorNeighborNotFound(undefined, undefined, undefined, dni)
     }

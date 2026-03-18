@@ -19,6 +19,7 @@ import LoginRewardPartnerDTO from '../dtos/login-reward-partner.dto'
 import RegisterRewardPartnerDTO from '../dtos/register-reward-partner.dto'
 import UpdateRewardPartnerDTO from '../dtos/update-reward-partner.dto'
 import RewardPartnerSchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import DeleteRewardPartnerUseCase from '../../application/usecases/delete.usecase'
 
 class RewardPartnerHandler {
   constructor(
@@ -133,6 +134,18 @@ class RewardPartnerHandler {
       throw new Error('Invalid role')
     }
     HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
+  }
+
+  async delete(req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply): Promise<void> {
+    const id = getURLParams(req, 'id')
+
+    const schemaValidator = new RewardPartnerSchemaValidator(CheckIdDTO, { id })
+    schemaValidator.exec()
+
+    const deleteRewardPartner = new DeleteRewardPartnerUseCase(this.rewardPartnerRepository)
+    await deleteRewardPartner.exec(id)
+
+    HandleHTTPResponse.OK(rep, 'Reward partner deleted successfully', { id })
   }
 }
 
