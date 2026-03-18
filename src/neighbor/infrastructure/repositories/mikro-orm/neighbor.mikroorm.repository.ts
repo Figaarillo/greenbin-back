@@ -7,12 +7,8 @@ import type NeighborUpdatePayload from '../../../domain/payloads/neighbor.update
 import type NeighborRepository from '../../../domain/repositories/neighbor.repository'
 
 class NeighborMikroORMRepository implements NeighborRepository {
-  async list(offset: number, limit: number): Promise<Nullable<NeighborEntity[]>> {
-    const em = this.getEntityManager()
-    return await em.find(NeighborEntity, {}, { limit, offset })
-  }
-
-  async find(property: Record<string, string>): Promise<Nullable<NeighborEntity>> {
+  async find(property: Record<string, any>): Promise<Nullable<NeighborEntity>> {
+    // FIX: acepta any para permitir buscar por number (dni) además de string
     const em = this.getEntityManager()
     return await em.findOne(NeighborEntity, property)
   }
@@ -36,24 +32,31 @@ class NeighborMikroORMRepository implements NeighborRepository {
   async update(id: string, payload: NeighborUpdatePayload): Promise<Nullable<NeighborEntity>> {
     const em = this.getEntityManager()
 
-    const neighbor = em.getReference(NeighborEntity, id)
+    // FIX: usar findOne en lugar de getReference para asegurar que la entidad existe
+    const neighbor = await em.findOne(NeighborEntity, { id })
     if (neighbor == null) return null
 
     neighbor.update(payload)
-    await em.flush()
+    await em.flush() // ya estaba, pero ahora sobre entidad real (no referencia)
 
     return neighbor
+  }
+
+  async list(offset: number, limit: number): Promise<Nullable<NeighborEntity[]>> {
+    const em = this.getEntityManager()
+    return await em.find(NeighborEntity, {}, { limit, offset, orderBy: { createdAt: 'ASC' } })
   }
 
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 
-    const neighbor = em.getReference(NeighborEntity, id)
+    const neighbor = await em.findOne(NeighborEntity, { id })
     if (neighbor == null) {
       throw new ErrorNeighborNotFound(id, undefined, undefined)
     }
 
-    await em.remove(neighbor).flush()
+    neighbor.softDelete()
+    await em.flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
