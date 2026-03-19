@@ -48,12 +48,13 @@ class NeighborMikroORMRepository implements NeighborRepository {
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 
-    const neighbor = em.getReference(NeighborEntity, id)
+    const neighbor = await em.findOne(NeighborEntity, { id })
     if (neighbor == null) {
       throw new ErrorNeighborNotFound(id, undefined, undefined)
     }
 
-    await em.remove(neighbor).flush()
+    neighbor.softDelete()
+    await em.flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
