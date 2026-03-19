@@ -44,6 +44,20 @@ services:
     networks:
       - dev-network
 
+  # ############# PGADMIN ############## #
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - '${PGADMIN_PORT}:80'
+    depends_on:
+      - database
+    networks:
+      - dev-network
+
 volumes:
   pgdata:
     driver: local
