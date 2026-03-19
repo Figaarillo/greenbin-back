@@ -22,7 +22,8 @@
     "mikro-orm": "mikro-orm",
     "migration:initial": "pnpm run mikro-orm migration:create --initial",
     "migration:create": "pnpm run mikro-orm migration:create",
-    "migration:up": "pnpm run mikro-orm migration:up"
+    "migration:up": "pnpm run mikro-orm migration:up",
+    "seed": "NODE_ENV=development ts-node ./src/seed.ts"
   },
   "keywords": [],
   "author": "Figarillo",

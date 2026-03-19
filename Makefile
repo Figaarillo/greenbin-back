@@ -1,4 +1,4 @@
-.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations migrations.up migrations.create
+.PHONY: docker docker.db docker.build docker.db.test docker.stop docker.clean run run.dev migrations migrations.up migrations.create seed dev.setup
 
 # ############ VARIABLES ############ #
 DB_HOST=localhost
@@ -97,6 +97,17 @@ migrations.initial: migrations.delete docker.clean docker.db
 	@echo " ╰────────────────────────────────────────╯ "
 	sleep 1
 	DATABASE_HOST=$(DB_HOST) pnpm run migration:initial
+
+seed: docker.db migrations.up
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │         SEEDING DATABASE (DEV)         │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm run seed
+
+dev.setup: docker.clean docker.db migrations.up seed
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │    DEV ENVIRONMENT READY  ✓            │ "
+	@echo " ╰────────────────────────────────────────╯ "
 
 pgadmin: docker.db
 	@echo " ╭────────────────────────────────────────╮ "
