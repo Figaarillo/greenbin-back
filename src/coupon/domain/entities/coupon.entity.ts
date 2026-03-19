@@ -20,7 +20,10 @@ class CouponEntity extends BaseEntity {
   isAvailable: boolean
 
   @Property()
-  state: string = 'CREADO'
+  state: string = 'AVAILABLE' // Cambiado de 'CREADO' para coincidir con la lógica
+
+  @Property({ nullable: true, length: 6 })
+  redemptionCode?: string
 
   @Property()
   validDays: number

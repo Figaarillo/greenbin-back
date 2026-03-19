@@ -15,6 +15,10 @@ import CouponSchemaValidator from '../../../coupon/infrastructure/middlewares/zo
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import { getURLParams } from '../../../shared/utils/http.request.util'
 import FindCouponTransactionByIDUseCase from '../../application/usecases/find-by-id.usecase'
+import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
+import UseCouponUseCase from '../../application/usecases/use-coupon.usecase'
+import type UseCouponPayload from '../../domain/payloads/use-coupon.payload'
+import UseCouponDTO from '../dtos/use-coupon.dto'
 
 class CouponTransactionHandler {
   constructor(
@@ -61,6 +65,40 @@ class CouponTransactionHandler {
       HandleHTTPResponse.OK(rep, 'Coupon transaction retrieved successfully', transaction)
     } catch (error) {
       rep.status(500).send(error)
+    }
+  }
+
+  async listByNeighbor(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const neighborId = getURLParams(req, 'neighborId')
+
+      const listByNeighborUseCase = new ListByNeighborUseCase(this.couponTransactionRepository)
+      const transactions = await listByNeighborUseCase.exec(neighborId)
+
+      HandleHTTPResponse.OK(rep, 'Coupon transactions retrieved successfully', transactions)
+    } catch (error) {
+      rep.status(500).send(error)
+    }
+  }
+
+  async useCoupon(req: FastifyRequest<{ Body: UseCouponPayload }>, rep: FastifyReply): Promise<void> {
+    try {
+      const payload = req.body
+
+      const schemaValidator = new CouponSchemaValidator(UseCouponDTO, payload)
+      schemaValidator.exec()
+
+      const useCoupon = new UseCouponUseCase(this.couponTransactionRepository)
+      const result = await useCoupon.exec(payload)
+
+      HandleHTTPResponse.OK(rep, 'Coupon used successfully', {
+        transactionId: result.transaction.id,
+        couponTitle: result.transaction.coupon.title,
+        discount: result.transaction.coupon.discount,
+        finalAmount: result.finalAmount
+      })
+    } catch (error: any) {
+      rep.status(500).send({ message: error.message })
     }
   }
 }
