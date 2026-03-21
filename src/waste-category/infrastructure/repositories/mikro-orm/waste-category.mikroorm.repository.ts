@@ -28,7 +28,7 @@ class CategoryMikroORMRepository implements WasteCategoryRepository {
   async update(id: string, payload: WasteCategoryPayload): Promise<Nullable<WasteCategoryEntity>> {
     const em = this.getEntityManager()
 
-    const category = em.getReference(WasteCategoryEntity, id)
+    const category = await em.findOne(WasteCategoryEntity, { id })
     if (category == null) return null
 
     category.update(payload)
@@ -40,12 +40,13 @@ class CategoryMikroORMRepository implements WasteCategoryRepository {
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 
-    const category = em.getReference(WasteCategoryEntity, id)
+    const category = await em.findOne(WasteCategoryEntity, { id })
     if (category == null) {
       throw new Error('Error when try to delete waste category. Waste category not found')
     }
 
-    await em.remove(category).flush()
+    category.softDelete()
+    await em.flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

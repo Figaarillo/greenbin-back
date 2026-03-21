@@ -3,6 +3,7 @@ interface WasteCategoryPayload {
   pointsPerWeight: number
   description: string
   co2: number
+  isActive?: boolean
 }
 
 export default WasteCategoryPayload

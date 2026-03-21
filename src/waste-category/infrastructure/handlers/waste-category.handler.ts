@@ -22,7 +22,20 @@ class WasteCategoryHandler {
     const listCategories = new ListCategoriesUseCase(this.repository)
     const entities = await listCategories.exec(offset, limit)
 
-    HandleHTTPResponse.OK(rep, 'Waste Categories retrieved successfully', entities)
+    const mapped = entities?.map(c => ({
+      id: c.id,
+      name: c.name,
+      description: c.description,
+      pointsPerWeight: c.pointsPerWeight,
+      co2: c.co2,
+      isActive: c.isActive,
+      createdAt: c.createdAt,
+      updatedAt: c.updatedAt
+    }))
+
+    console.log('mapped:', JSON.stringify(mapped))
+
+    HandleHTTPResponse.OK(rep, 'Waste Categories retrieved successfully', mapped)
   }
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
