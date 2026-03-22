@@ -1,5 +1,5 @@
-import type CouponTransactionEntity from '../../domain/entities/coupon-transaction.entity'
 import type CouponTransactionRepository from '../../domain/repositories/coupon-transaction.repository'
+import type CouponTransactionEntity from '../../domain/entities/coupon-transaction.entity'
 
 class ListByNeighborUseCase {
   constructor(private readonly repository: CouponTransactionRepository) {}

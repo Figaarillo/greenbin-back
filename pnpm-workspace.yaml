@@ -1,3 +1,5 @@
+packages:
+  - '.'
 onlyBuiltDependencies:
   - argon2
   - bcrypt

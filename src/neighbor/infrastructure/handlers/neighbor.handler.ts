@@ -126,6 +126,9 @@ class NeighborHandler {
 
     const login = new LoginNeighborUseCase(this.neighborRepository)
     const neighbor = await login.exec(paylaod)
+    if (!neighbor.isActive) {
+      throw new Error('La cuenta está deshabilitada.')
+    }
 
     if (!neighbor.isActive) {
       throw new Error('La cuenta está deshabilitada.')

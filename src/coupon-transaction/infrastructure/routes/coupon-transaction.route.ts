@@ -23,8 +23,6 @@ class CouponTransactionRoute {
         await this.handler.listByNeighbor(req, rep)
       }
     )
-
-    // Rutas con parámetros dinámicos después
     this.server.get(
       '/api/coupon-transaction/:id',
       async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
