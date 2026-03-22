@@ -29,10 +29,10 @@ class CouponMikroORMRepository implements CouponRepository {
     return await em.findOne(CouponEntity, property, { populate })
   }
 
-  async save(newCategory: CouponEntity): Promise<Nullable<CouponEntity>> {
+  async save(newCoupon: CouponEntity): Promise<Nullable<CouponEntity>> {
     const em = this.getEntityManager()
-    await em.persist(newCategory).flush()
-    return newCategory
+    await em.persist(newCoupon).flush()
+    return newCoupon
   }
 
   async update(id: string, payload: CouponUpdatePayload): Promise<Nullable<CouponEntity>> {
@@ -68,5 +68,4 @@ class CouponMikroORMRepository implements CouponRepository {
     return em
   }
 }
-
 export default CouponMikroORMRepository

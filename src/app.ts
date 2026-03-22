@@ -25,9 +25,14 @@ import bootstrapWasteTransactionDetail from './waste-transaction-detail/waste-tr
 import bootstrapWasteTransaction from './waste-transaction/waste-transaction.bootstrap'
 import bootstrapWaste from './waste/waste.bootstrap'
 import errorMiddleware from './shared/infrastructure/middlewares/error.middleware'
+import runSeeders from './shared/database/seeders/database.seeder'
 
 async function bootstrapApp(port: number, options?: Options): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM(options)
+
+  if (EnvVar.server.nodeEnv === 'development') {
+    await runSeeders(db.em)
+  }
   const fastify = new FastifyConifg(EnvVar.server.nodeEnv)
   const app = fastify.server
 

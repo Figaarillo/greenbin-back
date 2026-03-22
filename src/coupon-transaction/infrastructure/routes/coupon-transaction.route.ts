@@ -10,6 +10,7 @@ class CouponTransactionRoute {
   ) {}
 
   setupRoutes(): void {
+    // Rutas estáticas primero
     this.server.post('/api/redeem-coupon', async (req: FastifyRequest<{ Body: RedeemCouponPayload }>, rep) => {
       await this.handler.redeemCoupon(req, rep)
     })

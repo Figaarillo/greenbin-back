@@ -33,7 +33,7 @@ class RewardPartnerMikroORMRepository implements RewardPartnerRepository {
   async update(id: string, payload: RewardPartnerUpdatePayload): Promise<Nullable<RewardPartnerEntity>> {
     const em = this.getEntityManager()
 
-    const rewardPartner = em.getReference(RewardPartnerEntity, id)
+    const rewardPartner = await em.findOne(RewardPartnerEntity, { id })
     if (rewardPartner == null) return null
 
     rewardPartner.update(payload)

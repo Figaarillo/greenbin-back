@@ -1,4 +1,3 @@
-// src/reward-partner/application/usecases/delete.usecase.ts
 import type RewardPartnerRepository from '../../domain/repositories/reward-partner.repository'
 
 class DeleteRewardPartnerUseCase {

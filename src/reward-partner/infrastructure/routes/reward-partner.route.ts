@@ -14,6 +14,7 @@ class RewardPartnerRoute {
 
   setupRoutes(): void {
     // Rutas estáticas primero
+    // Rutas estáticas primero
     this.server.post('/api/reward-partner/auth/login', { schema: loginSwaggerSchema }, async (req, rep) => {
       await this.handler.login(req, rep)
     })
