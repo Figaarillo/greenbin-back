@@ -56,7 +56,7 @@ export const updateSwaggerSchema = {
       email: { type: 'string', description: 'Email of the neighbor.' },
       phoneNumber: { type: 'string', description: 'Phone number of the neighbor.' }
     },
-    required: ['firstname', 'lastname', 'email', 'username', 'phoneNumber']
+    required: []
   },
   response: {
     200: {

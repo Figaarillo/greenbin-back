@@ -130,6 +130,15 @@ export async function createNeighbor(
   return res.json().data
 }
 
+export async function createNeighborWithToken(
+  app: FastifyInstance,
+  entityId: string,
+  overrides = {}
+): Promise<{ id: string; token: string }> {
+  const data = await createNeighbor(app, entityId, overrides)
+  return { id: data.id, token: data.accessToken }
+}
+
 export async function createResponsible(
   app: FastifyInstance,
   entityId: string,
