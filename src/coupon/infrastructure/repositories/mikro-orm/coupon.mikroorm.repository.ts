@@ -2,6 +2,7 @@ import { RequestContext } from '@mikro-orm/core'
 import ErrorEntityManagerNotFound from '../../../../shared/domain/errors/entity-manager-not-found.error'
 import type Nullable from '../../../../shared/domain/types/nullable.type'
 import CouponEntity from '../../../domain/entities/coupon.entity'
+import ErrorCouponNotFound from '../../../domain/errors/coupon-not-found.error'
 import { type CouponRelationship } from '../../../domain/enums/coupon.enum'
 import type CouponRepository from '../../../domain/repositories/coupon.repository'
 import type CouponUpdatePayload from '../../../domain/payloads/coupon.update.payload'
@@ -50,9 +51,9 @@ class CouponMikroORMRepository implements CouponRepository {
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 
-    const coupon = em.getReference(CouponEntity, id)
+    const coupon = await em.findOne(CouponEntity, { id })
     if (coupon == null) {
-      throw new Error('Error when try to delete coupon. Coupon not found')
+      throw new ErrorCouponNotFound(id)
     }
 
     await em.remove(coupon).flush()

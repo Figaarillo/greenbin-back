@@ -30,7 +30,7 @@ class EntityMikroORMRepository implements EntityRepository {
   async update(id: string, description: string): Promise<Nullable<EntityEntity>> {
     const em = this.getEntityManager()
 
-    const entity = em.getReference(EntityEntity, id)
+    const entity = await em.findOne(EntityEntity, { id })
     if (entity == null) return null
 
     entity.update(description)
@@ -42,7 +42,7 @@ class EntityMikroORMRepository implements EntityRepository {
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 
-    const entity = em.getReference(EntityEntity, id)
+    const entity = await em.findOne(EntityEntity, { id })
     if (entity == null) {
       throw new ErrorEntityNotFound(id, undefined, undefined)
     }

@@ -4,7 +4,7 @@ export const addressDTO = z
   .string()
   .min(2, { message: 'The address must be at least 2 characters long' })
   .max(500, { message: 'The length of address must be less than 500' })
-  .regex(/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑüÜ]+$/, { message: 'The address must only contain letters, numbers, and spaces' })
+  .regex(/^[a-zA-Z0-9\s/\-°.,áéíóúÁÉÍÓÚñÑüÜ]+$/, { message: 'The address contains invalid characters' })
   .refine((name: string) => name.trim().length > 0, { message: 'The address cannot be empty' })
 
 export const birthdateDTO = z

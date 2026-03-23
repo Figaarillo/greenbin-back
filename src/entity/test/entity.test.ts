@@ -1,74 +1,253 @@
 /* eslint-disable no-console */
 import { describe, expect, it } from 'vitest'
 import { app } from '../../shared/test/test.setup'
+import { createEntity, createEntityWithToken, ENTITY_FIXTURE, ENTITY_FIXTURE_2 } from '../../shared/test/test-helpers'
 
-let entityId: string
-
-describe('Entity API Integration Tests', () => {
-  it('should create a new entity successfully', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/entity',
-      body: {
-        name: 'Test Entity',
-        description: 'Test Entity description',
-        password: 'Test123@#.',
-        city: 'test city',
-        province: 'test province'
-      }
+describe('Entity — integration tests', () => {
+  describe('POST /api/entity', () => {
+    it('crea una entidad correctamente y devuelve su id', async () => {
+      const res = await app.inject({ method: 'POST', url: '/api/entity', body: ENTITY_FIXTURE })
+      expect(res.statusCode).toBe(201)
+      const body = res.json()
+      expect(body).toMatchObject({ message: 'Entity registered successfully' })
+      expect(body.data.id).toBeTruthy()
     })
 
-    expect(response.statusCode).toBe(201)
-    const body = response.json()
-    expect(body).toMatchObject({ message: 'Entity registered successfully' })
-    expect(body.data.id).toBeTruthy()
+    it('devuelve 409 al crear una entidad con nombre duplicado', async () => {
+      await createEntity(app)
+      const res = await app.inject({ method: 'POST', url: '/api/entity', body: ENTITY_FIXTURE })
+      expect(res.statusCode).toBe(409)
+    })
 
-    entityId = response.json().data.id
+    it('devuelve 409 al crear una entidad con email duplicado', async () => {
+      await createEntity(app)
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/entity',
+        body: { ...ENTITY_FIXTURE, name: 'Otro Nombre' }
+      })
+      expect(res.statusCode).toBe(409)
+    })
+
+    it('devuelve 400 con body vacío', async () => {
+      const res = await app.inject({ method: 'POST', url: '/api/entity', body: {} })
+      expect(res.statusCode).toBe(400)
+    })
+
+    it('devuelve 400 con password débil', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/entity',
+        body: { ...ENTITY_FIXTURE, password: '123' }
+      })
+      expect(res.statusCode).toBe(400)
+    })
   })
 
-  it('should get an entity', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: `/api/entity/${entityId}`
+  describe('GET /api/entity/:id', () => {
+    it('obtiene una entidad por id', async () => {
+      const { id, token } = await createEntityWithToken(app)
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/entity/${id}`,
+        headers: { authorization: `Bearer ${token}` }
+      })
+      expect(res.statusCode).toBe(200)
+      expect(res.json().data.id).toBe(id)
     })
 
-    expect(response.statusCode).toBe(200)
-    const body = response.json()
-    expect(body).toMatchObject({ message: 'Entity retrieved successfully' })
+    it('devuelve 404 con id inexistente', async () => {
+      const { token } = await createEntityWithToken(app)
+      const res = await app.inject({
+        method: 'GET',
+        url: '/api/entity/00000000-0000-0000-0000-000000000000',
+        headers: { authorization: `Bearer ${token}` }
+      })
+      expect(res.statusCode).toBe(404)
+    })
+
+    it('devuelve 401 sin token de autenticación', async () => {
+      const entity = await createEntity(app)
+      const res = await app.inject({ method: 'GET', url: `/api/entity/${entity.id}` })
+      expect(res.statusCode).toBe(401)
+    })
+
+    it('devuelve 400 con id con formato inválido', async () => {
+      const { token } = await createEntityWithToken(app)
+      const res = await app.inject({
+        method: 'GET',
+        url: '/api/entity/id-invalido',
+        headers: { authorization: `Bearer ${token}` }
+      })
+      expect(res.statusCode).toBe(400)
+    })
   })
 
-  it('should update an description of an existing entity successfully', async () => {
-    const response = await app.inject({
-      method: 'PUT',
-      url: `/api/entity/${entityId}`,
-      body: { description: 'Updated description' }
+  describe('GET /api/entity', () => {
+    it('lista entidades con paginación', async () => {
+      await createEntity(app)
+      await createEntity(app, ENTITY_FIXTURE_2)
+      const res = await app.inject({ method: 'GET', url: '/api/entity?offset=0&limit=10' })
+      expect(res.statusCode).toBe(200)
+      expect(res.json().data.length).toBeGreaterThanOrEqual(2)
     })
 
-    expect(response.statusCode).toBe(200)
-    const body = response.json()
-    expect(body).toMatchObject({ message: 'Entity updated successfully' })
+    it('respeta el límite de paginación', async () => {
+      await createEntity(app)
+      await createEntity(app, ENTITY_FIXTURE_2)
+      const res = await app.inject({ method: 'GET', url: '/api/entity?offset=0&limit=1' })
+      expect(res.statusCode).toBe(200)
+      expect(res.json().data.length).toBe(1)
+    })
   })
 
-  it('should retrieve the description updated from an entity successfully', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: `/api/entity/${entityId}`
+  describe('GET /api/entity/populate', () => {
+    it('devuelve la entidad con sus vecinos populados', async () => {
+      const entity = await createEntity(app)
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/entity/populate?id=${entity.id}&with=neighbors`
+      })
+      expect(res.statusCode).toBe(200)
+      expect(res.json().data).toHaveProperty('neighbors')
     })
 
-    expect(response.statusCode).toBe(200)
-    const body = response.json()
-    expect(body).toMatchObject({ message: 'Entity retrieved successfully' })
-    expect(body.data.description).toBe('Updated description')
+    it('devuelve la entidad con sus puntos verdes populados', async () => {
+      const entity = await createEntity(app)
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/entity/populate?id=${entity.id}&with=greenPoints`
+      })
+      expect(res.statusCode).toBe(200)
+      expect(res.json().data).toHaveProperty('greenPoints')
+    })
   })
 
-  it('should delete an existing entity successfully', async () => {
-    const response = await app.inject({
-      method: 'DELETE',
-      url: `/api/entity/${entityId}`
+  describe('PUT /api/entity/:id', () => {
+    it('actualiza la descripción de una entidad', async () => {
+      const { id, token } = await createEntityWithToken(app)
+      const res = await app.inject({
+        method: 'PUT',
+        url: `/api/entity/${id}`,
+        headers: { authorization: `Bearer ${token}` },
+        body: { description: 'Descripción actualizada' }
+      })
+      expect(res.statusCode).toBe(200)
+      expect(res.json()).toMatchObject({ message: 'Entity updated successfully' })
     })
 
-    expect(response.statusCode).toBe(200)
-    const body = response.json()
-    expect(body).toMatchObject({ message: 'Entity deleted successfully' })
+    it('el cambio persiste al hacer un GET posterior', async () => {
+      const { id, token } = await createEntityWithToken(app)
+      await app.inject({
+        method: 'PUT',
+        url: `/api/entity/${id}`,
+        headers: { authorization: `Bearer ${token}` },
+        body: { description: 'Nueva descripción' }
+      })
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/entity/${id}`,
+        headers: { authorization: `Bearer ${token}` }
+      })
+      expect(res.json().data.description).toBe('Nueva descripción')
+    })
+
+    it('devuelve 404 al actualizar un id inexistente', async () => {
+      const { token } = await createEntityWithToken(app)
+      const res = await app.inject({
+        method: 'PUT',
+        url: '/api/entity/00000000-0000-0000-0000-000000000000',
+        headers: { authorization: `Bearer ${token}` },
+        body: { description: 'x' }
+      })
+      expect(res.statusCode).toBe(404)
+    })
+
+    it('devuelve 401 sin token', async () => {
+      const entity = await createEntity(app)
+      const res = await app.inject({
+        method: 'PUT',
+        url: `/api/entity/${entity.id}`,
+        body: { description: 'x' }
+      })
+      expect(res.statusCode).toBe(401)
+    })
+  })
+
+  describe('DELETE /api/entity/:id', () => {
+    it('elimina una entidad existente', async () => {
+      const { id, token } = await createEntityWithToken(app)
+      const res = await app.inject({
+        method: 'DELETE',
+        url: `/api/entity/${id}`,
+        headers: { authorization: `Bearer ${token}` }
+      })
+      expect(res.statusCode).toBe(200)
+      expect(res.json()).toMatchObject({ message: 'Entity deleted successfully' })
+    })
+
+    it('el GET devuelve 404 luego del DELETE', async () => {
+      const { id, token } = await createEntityWithToken(app)
+      await app.inject({
+        method: 'DELETE',
+        url: `/api/entity/${id}`,
+        headers: { authorization: `Bearer ${token}` }
+      })
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/entity/${id}`,
+        headers: { authorization: `Bearer ${token}` }
+      })
+      expect(res.statusCode).toBe(404)
+    })
+
+    it('devuelve 404 al eliminar un id inexistente', async () => {
+      const { token } = await createEntityWithToken(app)
+      const res = await app.inject({
+        method: 'DELETE',
+        url: '/api/entity/00000000-0000-0000-0000-000000000000',
+        headers: { authorization: `Bearer ${token}` }
+      })
+      expect(res.statusCode).toBe(404)
+    })
+
+    it('devuelve 401 sin token', async () => {
+      const entity = await createEntity(app)
+      const res = await app.inject({ method: 'DELETE', url: `/api/entity/${entity.id}` })
+      expect(res.statusCode).toBe(401)
+    })
+  })
+
+  describe('POST /api/entity/auth/login', () => {
+    it('hace login con credenciales válidas y devuelve tokens', async () => {
+      await createEntity(app)
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/entity/auth/login',
+        body: { email: ENTITY_FIXTURE.email, password: ENTITY_FIXTURE.password }
+      })
+      expect(res.statusCode).toBe(201)
+      expect(res.json().data).toHaveProperty('accessToken')
+      expect(res.json().data).toHaveProperty('refreshToken')
+    })
+
+    it('devuelve 401 con password incorrecta', async () => {
+      await createEntity(app)
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/entity/auth/login',
+        body: { email: ENTITY_FIXTURE.email, password: 'WrongPass123@' }
+      })
+      expect(res.statusCode).toBe(401)
+    })
+
+    it('devuelve 401 con email inexistente', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/entity/auth/login',
+        body: { email: 'noexiste@test.com', password: 'Test123@#.' }
+      })
+      expect(res.statusCode).toBe(401)
+    })
   })
 })

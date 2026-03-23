@@ -28,7 +28,7 @@ class GreenPointMikroORMRepository implements GreenPointRepository {
   async update(id: string, payload: GreenPointUpdatePayload): Promise<Nullable<GreenPointEntity>> {
     const em = this.getEntityManager()
 
-    const greenPoint = em.getReference(GreenPointEntity, id)
+    const greenPoint = await em.findOne(GreenPointEntity, { id })
     if (greenPoint == null) return null
 
     greenPoint.update(payload)
@@ -40,7 +40,7 @@ class GreenPointMikroORMRepository implements GreenPointRepository {
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 
-    const greenPoint = em.getReference(GreenPointEntity, id)
+    const greenPoint = await em.findOne(GreenPointEntity, { id })
     if (greenPoint == null) {
       throw new ErrorGreenPointNotFound(id, undefined)
     }
