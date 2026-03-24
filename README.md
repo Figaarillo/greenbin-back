@@ -193,3 +193,7 @@ http://localhost:8080/docs
 ## License
 
 MIT License
+
+## Links
+
+[![Hypercommit](https://img.shields.io/badge/Hypercommit-DB2475)](https://hypercommit.com/greenbin-back)
