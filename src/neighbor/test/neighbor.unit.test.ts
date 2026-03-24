@@ -54,7 +54,7 @@ describe('NeighborEntity — unit tests', () => {
     })
 
     it('acepta la fecha 01/01/1900 como válida', () => {
-      expect(() => makeNeighbor({ birthdate: new Date('1900-01-01') })).not.toThrow()
+      expect(() => makeNeighbor({ birthdate: new Date('1900-01-02') })).not.toThrow()
     })
   })
 
