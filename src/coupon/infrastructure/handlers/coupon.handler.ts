@@ -72,7 +72,7 @@ class CouponHandler {
     const registerCoupon = new RegisterCouponUseCase(this.couponRepository, findRewardPartner)
     const coupon = await registerCoupon.exec(req.body)
 
-    HandleHTTPResponse.Created(rep, 'Coupon registered successfully', { id: coupon.id })
+    HandleHTTPResponse.Created(rep, 'Coupon registered successfully', coupon)
   }
 
   async update(

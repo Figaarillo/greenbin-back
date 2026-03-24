@@ -2,6 +2,7 @@ import { RequestContext } from '@mikro-orm/core'
 import ErrorEntityManagerNotFound from '../../../../shared/domain/errors/entity-manager-not-found.error'
 import type Nullable from '../../../../shared/domain/types/nullable.type'
 import WasteCategoryEntity from '../../../domain/entities/waste-category.entity'
+import ErrorCategoryNotFound from '../../../domain/errors/category-not-found.error'
 import type WasteCategoryPayload from '../../../domain/payloads/waste-category.payload'
 import type WasteCategoryRepository from '../../../domain/repositories/waste-category.repository'
 
@@ -42,7 +43,7 @@ class CategoryMikroORMRepository implements WasteCategoryRepository {
 
     const category = await em.findOne(WasteCategoryEntity, { id })
     if (category == null) {
-      throw new Error('Error when try to delete waste category. Waste category not found')
+      throw new ErrorCategoryNotFound(id)
     }
 
     category.softDelete()

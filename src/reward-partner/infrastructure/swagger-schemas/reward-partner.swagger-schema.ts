@@ -73,8 +73,7 @@ export const updateSwaggerSchema = {
       address: rewardPartnerProperties.address,
       email: rewardPartnerProperties.email,
       phoneNumber: rewardPartnerProperties.phoneNumber
-    },
-    required: ['name', 'address', 'email']
+    }
   },
   response: {
     200: {

@@ -39,7 +39,7 @@ class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
   async update(id: string, transaction: WasteTransactionEntity): Promise<Nullable<WasteTransactionEntity>> {
     const em = this.getEntityManager()
 
-    const entity = em.getReference(WasteTransactionEntity, id)
+    const entity = await em.findOne(WasteTransactionEntity, { id })
     if (entity == null) return null
 
     await em.persist(transaction).flush()

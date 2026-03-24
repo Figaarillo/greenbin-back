@@ -73,7 +73,7 @@ class EntityEntity extends BaseEntity {
   }
 
   update(description: string): void {
-    if (description !== '' || description != null) this.description = description
+    if (description != null && description !== '') this.description = description
   }
 
   @BeforeCreate()

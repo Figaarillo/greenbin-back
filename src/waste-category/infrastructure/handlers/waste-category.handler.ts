@@ -33,8 +33,6 @@ class WasteCategoryHandler {
       updatedAt: c.updatedAt
     }))
 
-    console.log('mapped:', JSON.stringify(mapped))
-
     HandleHTTPResponse.OK(rep, 'Waste Categories retrieved successfully', mapped)
   }
 
@@ -46,6 +44,12 @@ class WasteCategoryHandler {
 
     const findCategory = new FindWasteCategoryByIDUseCase(this.repository)
     const category = await findCategory.exec(id)
+
+    if (!category.isActive) {
+      const error = new Error('Category not found')
+      ;(error as any).code = 404
+      throw error
+    }
 
     HandleHTTPResponse.OK(rep, 'Waste Category retrieved successfully', category)
   }
