@@ -18,6 +18,17 @@ class WasteCategoryEntity extends BaseEntity {
   @Property({ type: t.float })
   co2: number
 
+  @Property({ default: true })
+  isActive: boolean = true
+
+  softDelete(): void {
+    this.isActive = false
+  }
+
+  enable(): void {
+    this.isActive = true
+  }
+
   @OneToMany(() => WasteEntity, waste => waste.category)
   wastes = new Collection<WasteEntity>(this)
 

@@ -7,7 +7,8 @@ const wasteCategorySchema = {
     name: { type: 'string', description: 'Name of the waste category.' },
     pointsPerWeight: { type: 'number', description: 'Points per weight of the waste category.' },
     description: { type: 'string', description: 'Description of the waste category.' },
-    co2: { type: 'number', description: 'CO2 emission of the waste category.' }
+    co2: { type: 'number', description: 'CO2 emission of the waste category.' },
+    isActive: { type: 'boolean', description: 'Whether the waste category is active.' }
   },
   required: ['id', 'createdAt', 'updatedAt', 'name', 'description']
 }

@@ -15,10 +15,10 @@ import CouponSchemaValidator from '../../../coupon/infrastructure/middlewares/zo
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import { getURLParams } from '../../../shared/utils/http.request.util'
 import FindCouponTransactionByIDUseCase from '../../application/usecases/find-by-id.usecase'
-import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
 import UseCouponUseCase from '../../application/usecases/use-coupon.usecase'
 import type UseCouponPayload from '../../domain/payloads/use-coupon.payload'
 import UseCouponDTO from '../dtos/use-coupon.dto'
+import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
 
 class CouponTransactionHandler {
   constructor(

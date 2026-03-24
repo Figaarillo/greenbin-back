@@ -46,7 +46,8 @@ class CategoryMikroORMRepository implements WasteCategoryRepository {
       throw new ErrorCategoryNotFound(id)
     }
 
-    await em.remove(category).flush()
+    category.softDelete()
+    await em.flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
