@@ -30,9 +30,9 @@ class WasteCategoryEntity extends BaseEntity {
   }
 
   update(payload: WasteCategoryPayload): void {
-    if (payload.name !== '' || payload.name != null) this.name = payload.name
+    if (payload.name != null && payload.name !== '') this.name = payload.name
     if (payload.pointsPerWeight != null) this.pointsPerWeight = payload.pointsPerWeight
-    if (payload.description !== '' || payload.description != null) this.description = payload.description
+    if (payload.description != null && payload.description !== '') this.description = payload.description
   }
 }
 
