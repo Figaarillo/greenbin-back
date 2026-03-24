@@ -38,7 +38,7 @@ make dev.setup
 make run
 ```
 
-The API will be available at `http://localhost:3000` and Swagger docs at `http://localhost:3000/docs`.
+The API will be available at `http://localhost:8080` and Swagger docs at `http://localhost:8080/docs`.
 
 ---
 
@@ -53,6 +53,7 @@ All commands are run with `make <command>`:
 | `make run`       | Start the server with database in Docker        |
 | `make run.dev`   | Start the server in watch mode (auto-reload)    |
 | `make dev.setup` | Full setup: clean DB, run migrations, seed data |
+| `make reset`     | Reset database (deletes all and recreates)      |
 
 ### Docker Management
 
@@ -167,15 +168,15 @@ module/
 
 Copy `.env.example` to `.env` and configure:
 
-| Variable            | Description        | Default     |
-| ------------------- | ------------------ | ----------- |
-| `PORT`              | Server port        | `3000`      |
-| `DATABASE_HOST`     | Database host      | `localhost` |
-| `DATABASE_PORT`     | Database port      | `5432`      |
-| `DATABASE_NAME`     | Database name      | `greenbin`  |
-| `DATABASE_USER`     | Database user      | `postgres`  |
-| `DATABASE_PASSWORD` | Database password  | `postgres`  |
-| `JWT_SECRET`        | JWT signing secret | -           |
+| Variable            | Description        | Default       |
+| ------------------- | ------------------ | ------------- |
+| `SERVER_PORT`       | Server port        | `8080`        |
+| `DATABASE_HOST`     | Database host      | `localhost`   |
+| `DATABASE_PORT`     | Database port      | `5432`        |
+| `DATABASE_NAME`     | Database name      | `greenbin_db` |
+| `DATABASE_USER`     | Database user      | `postgres`    |
+| `DATABASE_PASSWORD` | Database password  | `postgres`    |
+| `JWT_SECRET`        | JWT signing secret | -             |
 
 ---
 
@@ -184,7 +185,7 @@ Copy `.env.example` to `.env` and configure:
 When the server is running, access Swagger UI at:
 
 ```
-http://localhost:3000/docs
+http://localhost:8080/docs
 ```
 
 ---

@@ -38,7 +38,7 @@ make dev.setup
 make run
 ```
 
-La API estará disponible en `http://localhost:3000` y la documentación Swagger en `http://localhost:3000/docs`.
+La API estará disponible en `http://localhost:8080` y la documentación Swagger en `http://localhost:8080/docs`.
 
 ---
 
@@ -53,6 +53,7 @@ Todos los comandos se ejecutan con `make <comando>`:
 | `make run`       | Iniciar el servidor con la base de datos en Docker             |
 | `make run.dev`   | Iniciar el servidor en modo watch (auto-recarga)               |
 | `make dev.setup` | Configuración completa: limpiar DB, ejecutar migraciones, seed |
+| `make reset`     | Reiniciar la base de datos (borra todo y recrea desde cero)    |
 
 ### Gestión de Docker
 
@@ -167,15 +168,15 @@ modulo/
 
 Copiar `.env.example` a `.env` y configurar:
 
-| Variable            | Descripción                    | Por defecto |
-| ------------------- | ------------------------------ | ----------- |
-| `PORT`              | Puerto del servidor            | `3000`      |
-| `DATABASE_HOST`     | Host de la base de datos       | `localhost` |
-| `DATABASE_PORT`     | Puerto de la base de datos     | `5432`      |
-| `DATABASE_NAME`     | Nombre de la base de datos     | `greenbin`  |
-| `DATABASE_USER`     | Usuario de la base de datos    | `postgres`  |
-| `DATABASE_PASSWORD` | Contraseña de la base de datos | `postgres`  |
-| `JWT_SECRET`        | Secreto para firmar JWT        | -           |
+| Variable            | Descripción                    | Por defecto   |
+| ------------------- | ------------------------------ | ------------- |
+| `SERVER_PORT`       | Puerto del servidor            | `8080`        |
+| `DATABASE_HOST`     | Host de la base de datos       | `localhost`   |
+| `DATABASE_PORT`     | Puerto de la base de datos     | `5432`        |
+| `DATABASE_NAME`     | Nombre de la base de datos     | `greenbin_db` |
+| `DATABASE_USER`     | Usuario de la base de datos    | `postgres`    |
+| `DATABASE_PASSWORD` | Contraseña de la base de datos | `postgres`    |
+| `JWT_SECRET`        | Secreto para firmar JWT        | -             |
 
 ---
 
@@ -184,7 +185,7 @@ Copiar `.env.example` a `.env` y configurar:
 Cuando el servidor está corriendo, acceder a Swagger UI en:
 
 ```
-http://localhost:3000/docs
+http://localhost:8080/docs
 ```
 
 ---

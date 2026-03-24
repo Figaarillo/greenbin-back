@@ -1,4 +1,4 @@
-.PHONY: docker.run docker.run.db docker.run.test docker.build docker.stop docker.clean docker.restart.server run run.dev test test.unit test.e2e test.e2e.entity test.e2e.waste-category test.e2e.neighbor test.e2e.responsible test.e2e.reward-partner test.e2e.green-point test.e2e.coupon test.e2e.waste-transaction test.e2e.coupon-transaction migrations migrations.up migrations.create migrations.delete migrations.initial seed dev.setup pgadmin pgadmin.stop
+.PHONY: docker.run docker.run.db docker.run.test docker.build docker.stop docker.clean docker.restart.server run run.dev test test.unit test.e2e test.e2e.entity test.e2e.waste-category test.e2e.neighbor test.e2e.responsible test.e2e.reward-partner test.e2e.green-point test.e2e.coupon test.e2e.waste-transaction test.e2e.coupon-transaction migrations migrations.up migrations.create migrations.delete migrations.initial seed dev.setup pgadmin pgadmin.stop reset
 
 # ############ VARIABLES ############ #
 DB_HOST=localhost
@@ -7,11 +7,35 @@ DB_HOST=localhost
 
 run: docker.run.db
 	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │       WAITING FOR DATABASE...          │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	@sleep 3
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │           RUNNING MIGRATIONS           │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:up
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │         SEEDING DATABASE               │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm run seed
+	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │             RUNNING SERVER             │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=$(DB_HOST) pnpm start
 
 run.dev: docker.run.db
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │       WAITING FOR DATABASE...          │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	@sleep 3
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │           RUNNING MIGRATIONS           │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:up
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │         SEEDING DATABASE               │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm run seed
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │      RUNNING SERVER IN WATCH MODE      │ "
 	@echo " ╰────────────────────────────────────────╯ "
@@ -52,7 +76,9 @@ docker.clean:
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │       CLEANING DOCKER CONTAINERS       │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	docker compose down --volumes
+	docker compose down --volumes --remove-orphans
+	@docker volume rm greenbin-back_pgdata 2>/dev/null || true
+	@docker volume rm greenbin-back_pgdata-test 2>/dev/null || true
 
 docker.restart.server:
 	@echo " ╭────────────────────────────────────────╮ "
@@ -185,6 +211,27 @@ pgadmin: docker.run.db
 
 pgadmin.stop:
 	@echo " ╭────────────────────────────────────────╮ "
-	@echo " │            STOPPING PGADMIN            │ "
+	@echo " │            STOPPING PGADMIN             │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	docker compose stop pgadmin
+
+reset: docker.clean
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │      RESETING DATABASE (CLEAN)        │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	docker compose up -d database
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │       WAITING FOR DATABASE...          │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	sleep 3
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │           RUNNING MIGRATIONS           │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm run migration:up
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │         SEEDING DATABASE               │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm run seed
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │        DATABASE RESET COMPLETE         │ "
+	@echo " ╰────────────────────────────────────────╯ "
