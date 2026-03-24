@@ -1,6 +1,7 @@
 import type CouponTransactionRepository from '../../domain/repositories/coupon-transaction.repository'
 import type UseCouponPayload from '../../domain/payloads/use-coupon.payload'
 import type CouponTransactionEntity from '../../domain/entities/coupon-transaction.entity'
+import ErrorCouponCodeNotFound from '../../domain/errors/coupon-code-not-found.error'
 
 class UseCouponUseCase {
   constructor(private readonly repository: CouponTransactionRepository) {}
@@ -9,7 +10,7 @@ class UseCouponUseCase {
     const transaction = await this.repository.findByCode(payload.code)
 
     if (transaction == null) {
-      throw new Error('Código de cupón no encontrado.')
+      throw new ErrorCouponCodeNotFound(payload.code)
     }
 
     if (transaction.rewardPartner.id !== payload.rewardPartnerId) {

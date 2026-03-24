@@ -79,16 +79,16 @@ class RewardPartnerEntity extends BaseEntity {
   }
 
   update(payload: RewardPartnerUpdatePayload): void {
-    if (payload.name != null || payload.name !== '') {
+    if (payload.name != null && payload.name !== '') {
       this.name = payload.name
     }
-    if (payload.address != null || payload.address !== '') {
+    if (payload.address != null && payload.address !== '') {
       this.address = payload.address
     }
-    if (payload.email != null || payload.email !== '') {
+    if (payload.email != null && payload.email !== '') {
       this.email = payload.email
     }
-    if (payload.phoneNumber != null || payload.phoneNumber !== '') {
+    if (payload.phoneNumber != null && payload.phoneNumber !== '') {
       this.phoneNumber = payload.phoneNumber
     }
   }

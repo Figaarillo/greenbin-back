@@ -139,8 +139,7 @@ export const updateSwaggerSchema = {
     properties: {
       username: { type: 'string', description: 'Username of the responsible.' },
       phoneNumber: { type: 'string', description: 'Phone number of the responsible.' }
-    },
-    required: ['username', 'phoneNumber']
+    }
   },
   response: {
     200: {

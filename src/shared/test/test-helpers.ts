@@ -149,6 +149,9 @@ export async function createResponsible(
     url: '/api/responsible',
     body: { ...RESPONSIBLE_FIXTURE, entityId, ...overrides }
   })
+  if (res.statusCode >= 400) {
+    throw new Error(`Failed to create responsible: ${res.statusCode} - ${res.body}`)
+  }
   return res.json().data
 }
 
@@ -162,7 +165,30 @@ export async function createRewardPartner(
     url: '/api/reward-partner',
     body: { ...REWARD_PARTNER_FIXTURE, entityId, ...overrides }
   })
+  if (res.statusCode >= 400) {
+    throw new Error(`Failed to create reward partner: ${res.statusCode} - ${res.body}`)
+  }
   return res.json().data
+}
+
+export async function createRewardPartnerWithToken(
+  app: FastifyInstance,
+  entityId: string,
+  overrides = {}
+): Promise<{ id: string; token: string }> {
+  const fixture = { ...REWARD_PARTNER_FIXTURE, ...overrides }
+  const created = await createRewardPartner(app, entityId, overrides)
+  const token = await loginRewardPartner(app, fixture.email, fixture.password)
+  return { id: created.id, token }
+}
+
+export async function loginRewardPartner(app: FastifyInstance, email: string, password: string): Promise<string> {
+  const res = await app.inject({
+    method: 'POST',
+    url: '/api/reward-partner/auth/login',
+    body: { email, password }
+  })
+  return res.json().data?.accessToken ?? ''
 }
 
 export async function createGreenPoint(
@@ -207,4 +233,24 @@ export async function loginNeighbor(app: FastifyInstance, email: string, passwor
     body: { email, password }
   })
   return res.json().data?.accessToken ?? ''
+}
+
+export async function loginResponsible(app: FastifyInstance, email: string, password: string): Promise<string> {
+  const res = await app.inject({
+    method: 'POST',
+    url: '/api/responsible/auth/login',
+    body: { email, password }
+  })
+  return res.json().data?.accessToken ?? ''
+}
+
+export async function createResponsibleWithToken(
+  app: FastifyInstance,
+  entityId: string,
+  overrides = {}
+): Promise<{ id: string; token: string }> {
+  const fixture = { ...RESPONSIBLE_FIXTURE, ...overrides }
+  const created = await createResponsible(app, entityId, overrides)
+  const token = await loginResponsible(app, fixture.email, fixture.password)
+  return { id: created.id, token }
 }

@@ -78,7 +78,7 @@ test.e2e: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │         RUNNING ALL E2E TESTS          │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run --config src/vitest.config.ts
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run --config src/vitest.config.ts 2>/dev/null
 
 test.e2e.entity: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
