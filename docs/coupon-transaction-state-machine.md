@@ -44,57 +44,32 @@ Este documento describe la máquina de estados implementada para el ciclo de vid
 
 - Ninguna (estado terminal)
 
-## Diagrama de Estados (PlantUML)
+## Diagrama de Estados
 
-```plantuml
-@startuml
-skinparam backgroundColor #FEFEFE
-skinparam state {
-  BackgroundColor #E8F5E9
-  BorderColor #2E7D32
-  FontColor #1B5E20
-  SecondaryBackgroundColor #C8E6C9
-  SecondaryBorderColor #4CAF50
-}
-skinparam arrow {
-  Color #388E3C
-  Thickness 2
-}
+```mermaid
+stateDiagram-v2
+    [*] --> ADQUIRIDO : Canjear cupón
 
-state "ADQUIRIDO" as ADQUIRIDO {
-  state "¿Válido?" as check_valid
-  state "Sí" as valid
-  state "No" as invalid
+    ADQUIRIDO --> USADO : useCoupon()
+    ADQUIRIDO --> EXPIRADO : Expirar
 
-  check_valid --> valid : expirationDate > now
-  check_valid --> invalid : expirationDate <= now
-}
+    USADO --> [*]
+    EXPIRADO --> [*]
 
-[*] --> ADQUIRIDO : Canjear cupón\n(subtractPoints, generateCode)
+    note right of ADQUIRIDO
+        El vecino tiene el cupón
+        esperando ser utilizado
+    end note
 
-ADQUIRIDO --> USADO : Usar cupón\n(useCoupon)
-ADQUIRIDO --> EXPIRADO : Expirar\n(auto/manual)
+    note right of USADO
+        Estado terminal
+        El cupón fue utilizado
+    end note
 
-USADO --> [*]
-EXPIRADO --> [*]
-
-note right of ADQUIRIDO
-  El vecino tiene el cupón
-  esperando ser utilizado
-end note
-
-note right of USADO
-  Estado terminal
-  El cupón fue utilizado
-  por el comercio
-end note
-
-note right of EXPIRADO
-  Estado terminal
-  El cupón venció
-  sin ser utilizado
-end note
-@enduml
+    note right of EXPIRADO
+        Estado terminal
+        El cupón venció sin ser utilizado
+    end note
 ```
 
 ## Diagrama de Transiciones
