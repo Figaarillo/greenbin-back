@@ -20,6 +20,7 @@ import type WasteTransactionPayload from '../../domain/payloads/waste-transactio
 import type WasteTransactionRepository from '../../domain/repositories/waste-transaction.repository'
 import RegisterWasteTransactionDTO from '../dtos/register-waste-transaction.dto'
 import WasteTransactionSchemaValidator from '../middlewares/zod-schema-validator.middleware'
+import ListWasteTransactionsByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
 
 class WasteTransactionHandler {
   constructor(
@@ -40,6 +41,15 @@ class WasteTransactionHandler {
     const wasteTransaction = await findWasteTransaction.exec(id)
 
     HandleHTTPResponse.OK(rep, 'Waste transaction retrieved successfully', wasteTransaction)
+  }
+
+  async listByNeighbor(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    const neighborId = getURLParams(req, 'neighborId')
+
+    const listByNeighbor = new ListWasteTransactionsByNeighborUseCase(this.transactionRepository)
+    const transactions = await listByNeighbor.exec(neighborId)
+
+    HandleHTTPResponse.OK(rep, 'Waste transactions retrieved successfully', transactions)
   }
 
   async register(req: FastifyRequest<{ Body: WasteTransactionPayload }>, rep: FastifyReply): Promise<void> {
