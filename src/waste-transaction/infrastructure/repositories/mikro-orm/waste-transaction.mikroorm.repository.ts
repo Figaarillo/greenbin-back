@@ -46,6 +46,24 @@ class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
     return transaction
   }
 
+  async findByNeighbor(neighborId: string): Promise<WasteTransactionEntity[]> {
+    const em = this.getEntityManager()
+    return await em.find(
+      WasteTransactionEntity,
+      { neighbor: neighborId },
+      { populate: ['transactionDetails', 'greenPoint', 'responsible'], orderBy: { date: 'DESC' } }
+    )
+  }
+
+  async findByResponsible(responsibleId: string): Promise<WasteTransactionEntity[]> {
+    const em = this.getEntityManager()
+    return await em.find(
+      WasteTransactionEntity,
+      { responsible: responsibleId },
+      { populate: ['transactionDetails', 'greenPoint', 'neighbor'], orderBy: { date: 'DESC' } }
+    )
+  }
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   private getEntityManager() {
     const em = RequestContext.getEntityManager()
