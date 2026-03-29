@@ -19,6 +19,7 @@ import UseCouponUseCase from '../../application/usecases/use-coupon.usecase'
 import type UseCouponPayload from '../../domain/payloads/use-coupon.payload'
 import UseCouponDTO from '../dtos/use-coupon.dto'
 import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
+import ListByRewardPartnerUseCase from '../../application/usecases/list-by-reward-partner.usecase'
 
 class CouponTransactionHandler {
   constructor(
@@ -75,6 +76,20 @@ class CouponTransactionHandler {
 
       const listByNeighborUseCase = new ListByNeighborUseCase(this.couponTransactionRepository)
       const transactions = await listByNeighborUseCase.exec(neighborId)
+
+      HandleHTTPResponse.OK(rep, 'Coupon transactions retrieved successfully', transactions)
+    } catch (error: any) {
+      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
+      rep.status(statusCode).send({ message: error.message })
+    }
+  }
+
+  async listByRewardPartner(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    try {
+      const rewardPartnerId = getURLParams(req, 'rewardPartnerId')
+
+      const listByRewardPartnerUseCase = new ListByRewardPartnerUseCase(this.couponTransactionRepository)
+      const transactions = await listByRewardPartnerUseCase.exec(rewardPartnerId)
 
       HandleHTTPResponse.OK(rep, 'Coupon transactions retrieved successfully', transactions)
     } catch (error: any) {

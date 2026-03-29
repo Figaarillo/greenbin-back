@@ -6,6 +6,7 @@ interface CouponTransactionRepository {
   find: (property: Record<string, string>) => Promise<Nullable<CouponTransactionEntity>>
   findById: (id: string) => Promise<Nullable<CouponTransactionEntity>>
   findByNeighbor: (neighborId: string) => Promise<CouponTransactionEntity[]>
+  findByRewardPartner: (rewardPartnerId: string) => Promise<CouponTransactionEntity[]>
   findByCode: (code: string) => Promise<Nullable<CouponTransactionEntity>>
   save: (transaction: CouponTransactionEntity) => Promise<Nullable<CouponTransactionEntity>>
   update: (id: string, transaction: CouponTransactionEntity) => Promise<Nullable<CouponTransactionEntity>>
