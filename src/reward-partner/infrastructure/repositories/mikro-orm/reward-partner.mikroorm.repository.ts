@@ -7,11 +7,13 @@ import type RewardPartnerRepository from '../../../domain/repositories/reward-pa
 import ErrorEntityManagerNotFound from '../../../../shared/domain/errors/entity-manager-not-found.error'
 
 class RewardPartnerMikroORMRepository implements RewardPartnerRepository {
-  async list(offset?: number, limit?: number): Promise<Nullable<RewardPartnerEntity[]>> {
+  async list(offset?: number, limit?: number, entityId?: string): Promise<Nullable<RewardPartnerEntity[]>> {
     const em = this.getEntityManager()
-    if (limit == null) return await em.find(RewardPartnerEntity, {})
-    if (offset == null) return await em.find(RewardPartnerEntity, {}, { limit })
-    return await em.find(RewardPartnerEntity, {}, { limit, offset })
+    const where: Record<string, any> = {}
+    if (entityId != null) where.entity = { id: entityId }
+    if (limit == null) return await em.find(RewardPartnerEntity, where)
+    if (offset == null) return await em.find(RewardPartnerEntity, where, { limit })
+    return await em.find(RewardPartnerEntity, where, { limit, offset })
   }
 
   async find(property: Record<string, string>): Promise<Nullable<RewardPartnerEntity>> {

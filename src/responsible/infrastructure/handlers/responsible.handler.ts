@@ -30,8 +30,9 @@ class ResponsibleHandler {
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     const { offset, limit } = getPaginationParams(req)
 
+    const entityId = req.query.entityId
     const listResponsibles = new ListResponsiblesUseCase(this.responsibleRepository)
-    const responsibles = await listResponsibles.exec(offset, limit)
+    const responsibles = await listResponsibles.exec(offset, limit, entityId)
 
     HandleHTTPResponse.OK(rep, 'Responsibles retrieved successfully', responsibles)
   }

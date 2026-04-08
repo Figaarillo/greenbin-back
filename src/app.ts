@@ -4,9 +4,7 @@ import FastifyCors from '@fastify/cors'
 import Swagger from '@fastify/swagger'
 import SwaggerUI from '@fastify/swagger-ui'
 import { RequestContext, type Options } from '@mikro-orm/postgresql'
-import env from 'env-var'
 import { type FastifyInstance } from 'fastify'
-import jwt from 'jsonwebtoken'
 import bootstrapAuth from './auth/auth.bootstrap'
 import bootstrapCouponTransaction from './coupon-transaction/coupon-transaction.bootstrap'
 import bootstrapCoupon from './coupon/coupon.bootstrap'
@@ -24,6 +22,7 @@ import bootstrapWasteCategory from './waste-category/waste-category.bootstrap'
 import bootstrapWasteTransactionDetail from './waste-transaction-detail/waste-transaction-detail.bootstrap'
 import bootstrapWasteTransaction from './waste-transaction/waste-transaction.bootstrap'
 import bootstrapWaste from './waste/waste.bootstrap'
+import bootstrapStatistics from './statistics/statistics.bootstrap'
 import errorMiddleware from './shared/infrastructure/middlewares/error.middleware'
 import runSeeders from './shared/database/seeders/database.seeder'
 
@@ -59,40 +58,6 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
     return 'Hello, World!'
   })
 
-  app.get('/metabase', async (request, reply) => {
-    const { id } = request.query as { id?: string }
-    if (id === undefined || id === null || id === '') {
-      return await reply.status(400).send({ error: 'ID is required' })
-    }
-    const payload = {
-      resource: { dashboard: 2 },
-      params: { id: [id] },
-      exp: Math.round(Date.now() / 1000) + 10 * 60 // 10 minutos de expiración
-    }
-    const token = jwt.sign(payload, env.get('METABASE_SECRET_KEY').required().asString())
-    const iframeUrl = `${env
-      .get('METABASE_SITE_URL')
-      .required()
-      .asString()}/embed/dashboard/${token}#bordered=true&titled=true`
-
-    return { iframeUrl }
-  })
-
-  app.get('/metabase/neighbor', async (_request, _reply) => {
-    const payload = {
-      resource: { dashboard: 3 },
-      params: {},
-      exp: Math.round(Date.now() / 1000) + 10 * 60 // 10 minute expiration
-    }
-    const token = jwt.sign(payload, env.get('METABASE_SECRET_KEY').required().asString())
-    const iframeUrl = `${env
-      .get('METABASE_SITE_URL')
-      .required()
-      .asString()}/embed/dashboard/${token}#bordered=true&titled=true`
-
-    return { iframeUrl }
-  })
-
   /* Register the entities */
   bootstrapAuth(app)
   bootstrapEntity(app)
@@ -106,6 +71,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapWasteTransactionDetail(app)
   bootstrapCoupon(app)
   bootstrapCouponTransaction(app)
+  bootstrapStatistics(app)
 
   app.setErrorHandler(errorMiddleware)
 

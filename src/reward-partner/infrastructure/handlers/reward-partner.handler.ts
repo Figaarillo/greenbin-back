@@ -156,8 +156,9 @@ class RewardPartnerHandler {
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     const { offset, limit } = getPaginationParams(req)
 
+    const entityId = req.query.entityId
     const listRewardPartners = new ListRewardPartnersUseCase(this.rewardPartnerRepository)
-    const rewardPartners = await listRewardPartners.exec(offset, limit)
+    const rewardPartners = await listRewardPartners.exec(offset, limit, entityId)
 
     HandleHTTPResponse.OK(rep, 'Reward partners retrieved successfully', rewardPartners)
   }

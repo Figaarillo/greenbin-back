@@ -34,8 +34,9 @@ class NeighborHandler {
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     const { offset, limit } = getPaginationParams(req)
 
+    const entityId = req.query.entityId
     const listNeighbor = new ListNeighborsUseCase(this.neighborRepository)
-    const neighbors = await listNeighbor.exec(offset, limit)
+    const neighbors = await listNeighbor.exec(offset, limit, entityId)
 
     HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
   }

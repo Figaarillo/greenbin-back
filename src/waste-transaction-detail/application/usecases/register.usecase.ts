@@ -17,6 +17,9 @@ class RegisterWasteTransactionDetailUseCase {
     const waste = await this.findWasteById.exec(paylaod.wasteId)
 
     const newTransactionDetail = new WasteTransactionDetailEntity(waste, transaction)
+    if (paylaod.weight != null) newTransactionDetail.weight = paylaod.weight
+    if (paylaod.points != null) newTransactionDetail.points = paylaod.points
+    if (paylaod.pointsPerWeight != null) newTransactionDetail.pointsPerWeight = paylaod.pointsPerWeight
 
     const transactionDetail = await this.repository.save(newTransactionDetail)
     if (transactionDetail == null) {

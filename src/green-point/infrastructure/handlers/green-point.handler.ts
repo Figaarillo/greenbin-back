@@ -24,8 +24,9 @@ class GreenPointHandler {
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     const { offset, limit } = getPaginationParams(req)
 
+    const entityId = req.query.entityId
     const listGreenPoints = new ListGreenPointsUseCase(this.greenPointRepository)
-    const greenPoints = await listGreenPoints.exec(offset, limit)
+    const greenPoints = await listGreenPoints.exec(offset, limit, entityId)
 
     HandleHTTPResponse.OK(rep, 'Green points retrieved successfully', greenPoints)
   }

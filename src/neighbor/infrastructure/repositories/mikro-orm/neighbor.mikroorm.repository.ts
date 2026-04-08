@@ -42,9 +42,11 @@ class NeighborMikroORMRepository implements NeighborRepository {
     return neighbor
   }
 
-  async list(offset: number, limit: number): Promise<Nullable<NeighborEntity[]>> {
+  async list(offset: number, limit: number, entityId?: string): Promise<Nullable<NeighborEntity[]>> {
     const em = this.getEntityManager()
-    return await em.find(NeighborEntity, {}, { limit, offset, orderBy: { createdAt: 'ASC' } })
+    const where: Record<string, any> = {}
+    if (entityId != null) where.entity = { id: entityId }
+    return await em.find(NeighborEntity, where, { limit, offset, orderBy: { createdAt: 'ASC' } })
   }
 
   async delete(id: string): Promise<void> {

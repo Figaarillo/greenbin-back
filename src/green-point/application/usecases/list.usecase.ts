@@ -5,8 +5,8 @@ import type GreenPointRepository from '../../domain/repositories/green-point.rep
 class ListGreenPointsUseCase {
   constructor(private readonly repository: GreenPointRepository) {}
 
-  async exec(offset: number, limit: number): Promise<GreenPointEntity[]> {
-    const greenPoints = await this.repository.list(offset, limit)
+  async exec(offset: number, limit: number, entityId?: string): Promise<GreenPointEntity[]> {
+    const greenPoints = await this.repository.list(offset, limit, entityId)
     if (greenPoints == null) {
       throw new ErrorGreenPointNotFound()
     }
