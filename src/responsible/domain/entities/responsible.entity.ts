@@ -64,7 +64,7 @@ class ResponsibleEntity extends BaseEntity {
   }
 
   update(payload: ResponsibleUpdatePayload): void {
-    if (payload.username != null || payload.username !== '') {
+    if (payload.username != null && payload.username !== '') {
       this.username = payload.username
     }
     if (payload.phoneNumber != null) {

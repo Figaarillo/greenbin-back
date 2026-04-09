@@ -22,7 +22,18 @@ class WasteCategoryHandler {
     const listCategories = new ListCategoriesUseCase(this.repository)
     const entities = await listCategories.exec(offset, limit)
 
-    HandleHTTPResponse.OK(rep, 'Waste Categories retrieved successfully', entities)
+    const mapped = entities?.map(c => ({
+      id: c.id,
+      name: c.name,
+      description: c.description,
+      pointsPerWeight: c.pointsPerWeight,
+      co2: c.co2,
+      isActive: c.isActive,
+      createdAt: c.createdAt,
+      updatedAt: c.updatedAt
+    }))
+
+    HandleHTTPResponse.OK(rep, 'Waste Categories retrieved successfully', mapped)
   }
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
@@ -33,6 +44,12 @@ class WasteCategoryHandler {
 
     const findCategory = new FindWasteCategoryByIDUseCase(this.repository)
     const category = await findCategory.exec(id)
+
+    if (!category.isActive) {
+      const error = new Error('Category not found')
+      ;(error as any).code = 404
+      throw error
+    }
 
     HandleHTTPResponse.OK(rep, 'Waste Category retrieved successfully', category)
   }

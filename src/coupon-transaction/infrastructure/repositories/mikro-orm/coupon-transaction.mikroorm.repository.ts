@@ -17,6 +17,11 @@ class CouponTransactionMikroORMRepository implements CouponTransactionRepository
     return await em.find(CouponTransactionEntity, { neighbor: neighborId }, { populate: ['coupon', 'rewardPartner'] })
   }
 
+  async findById(id: string): Promise<Nullable<CouponTransactionEntity>> {
+    const em = this.getEntityManager()
+    return await em.findOne(CouponTransactionEntity, { id }, { populate: ['coupon', 'rewardPartner', 'neighbor'] })
+  }
+
   async findByCode(code: string): Promise<Nullable<CouponTransactionEntity>> {
     const em = this.getEntityManager()
     return await em.findOne(CouponTransactionEntity, { code }, { populate: ['coupon', 'rewardPartner', 'neighbor'] })

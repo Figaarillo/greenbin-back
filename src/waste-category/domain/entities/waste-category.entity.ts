@@ -18,6 +18,17 @@ class WasteCategoryEntity extends BaseEntity {
   @Property({ type: t.float })
   co2: number
 
+  @Property({ default: true })
+  isActive: boolean = true
+
+  softDelete(): void {
+    this.isActive = false
+  }
+
+  enable(): void {
+    this.isActive = true
+  }
+
   @OneToMany(() => WasteEntity, waste => waste.category)
   wastes = new Collection<WasteEntity>(this)
 
@@ -30,9 +41,9 @@ class WasteCategoryEntity extends BaseEntity {
   }
 
   update(payload: WasteCategoryPayload): void {
-    if (payload.name !== '' || payload.name != null) this.name = payload.name
+    if (payload.name != null && payload.name !== '') this.name = payload.name
     if (payload.pointsPerWeight != null) this.pointsPerWeight = payload.pointsPerWeight
-    if (payload.description !== '' || payload.description != null) this.description = payload.description
+    if (payload.description != null && payload.description !== '') this.description = payload.description
   }
 }
 

@@ -15,10 +15,10 @@ import CouponSchemaValidator from '../../../coupon/infrastructure/middlewares/zo
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import { getURLParams } from '../../../shared/utils/http.request.util'
 import FindCouponTransactionByIDUseCase from '../../application/usecases/find-by-id.usecase'
-import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
 import UseCouponUseCase from '../../application/usecases/use-coupon.usecase'
 import type UseCouponPayload from '../../domain/payloads/use-coupon.payload'
 import UseCouponDTO from '../dtos/use-coupon.dto'
+import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
 
 class CouponTransactionHandler {
   constructor(
@@ -45,10 +45,10 @@ class CouponTransactionHandler {
       )
       const redeemedCoupon = await redeemCouponUseCase.exec(req.body)
 
-      // HandleHTTPResponse.OK(rep, 'Coupon redeemed successfully', { id: redeemedCoupon.id })
-      HandleHTTPResponse.OK(rep, 'Coupon redeemed successfully', redeemedCoupon)
+      HandleHTTPResponse.Created(rep, 'Coupon redeemed successfully', redeemedCoupon)
     } catch (error: any) {
-      rep.status(500).send({ message: error.message })
+      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
+      rep.status(statusCode).send({ message: error.message })
     }
   }
 
@@ -63,8 +63,9 @@ class CouponTransactionHandler {
       const transaction = await findTransaction.exec(id)
 
       HandleHTTPResponse.OK(rep, 'Coupon transaction retrieved successfully', transaction)
-    } catch (error) {
-      rep.status(500).send(error)
+    } catch (error: any) {
+      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
+      rep.status(statusCode).send({ message: error.message })
     }
   }
 
@@ -76,8 +77,9 @@ class CouponTransactionHandler {
       const transactions = await listByNeighborUseCase.exec(neighborId)
 
       HandleHTTPResponse.OK(rep, 'Coupon transactions retrieved successfully', transactions)
-    } catch (error) {
-      rep.status(500).send(error)
+    } catch (error: any) {
+      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
+      rep.status(statusCode).send({ message: error.message })
     }
   }
 
@@ -95,10 +97,12 @@ class CouponTransactionHandler {
         transactionId: result.transaction.id,
         couponTitle: result.transaction.coupon.title,
         discount: result.transaction.coupon.discount,
-        finalAmount: result.finalAmount
+        finalAmount: result.finalAmount,
+        status: result.transaction.status
       })
     } catch (error: any) {
-      rep.status(500).send({ message: error.message })
+      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
+      rep.status(statusCode).send({ message: error.message })
     }
   }
 }

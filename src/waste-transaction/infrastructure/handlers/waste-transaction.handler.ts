@@ -18,6 +18,7 @@ import UpdateWasteTransactionUseCase from '../../application/usecases/update.use
 import type WasteDeliveryPayload from '../../domain/payloads/waste-delivery.payload'
 import type WasteTransactionPayload from '../../domain/payloads/waste-transaction.payload'
 import type WasteTransactionRepository from '../../domain/repositories/waste-transaction.repository'
+import RegisterWasteDeliveryDTO from '../dtos/register-waste-delivery.dto'
 import RegisterWasteTransactionDTO from '../dtos/register-waste-transaction.dto'
 import WasteTransactionSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 import ListWasteTransactionsByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
@@ -73,6 +74,9 @@ class WasteTransactionHandler {
   }
 
   async registerWasteDelivery(req: FastifyRequest<{ Body: WasteDeliveryPayload }>, rep: FastifyReply): Promise<void> {
+    const validateRegisterSchema = new WasteTransactionSchemaValidator(RegisterWasteDeliveryDTO, req.body)
+    validateRegisterSchema.exec()
+
     const registerWasteDelivery = new RegisterWasteDeliveryUseCase(
       new RegisterWasteTransactionUseCase(this.transactionRepository),
       new UpdateWasteTransactionUseCase(this.transactionRepository),
@@ -87,7 +91,7 @@ class WasteTransactionHandler {
 
     const wasteDelivery = await registerWasteDelivery.exec(req.body)
 
-    HandleHTTPResponse.Created(rep, 'Waste delivery registered successfully', { id: wasteDelivery.id })
+    HandleHTTPResponse.Created(rep, 'Waste delivery registered successfully', wasteDelivery)
   }
 }
 

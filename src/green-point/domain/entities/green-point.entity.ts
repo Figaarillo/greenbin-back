@@ -43,10 +43,10 @@ class GreenPointEntity extends BaseGreenPoint {
   }
 
   update(payload: GreenPointUpdatePayload): void {
-    if (payload.name !== '' || payload.name != null) this.name = payload.name
-    if (payload.email !== '' || payload.email != null) this.email = payload.email
-    if (payload.phoneNumber !== '' || payload.phoneNumber != null) this.phoneNumber = payload.phoneNumber
-    if (payload.description !== '' || payload.description != null) this.description = payload.description
+    if (payload.name != null && payload.name !== '') this.name = payload.name
+    if (payload.email != null && payload.email !== '') this.email = payload.email
+    if (payload.phoneNumber != null && payload.phoneNumber !== '') this.phoneNumber = payload.phoneNumber
+    if (payload.description != null && payload.description !== '') this.description = payload.description
   }
 }
 

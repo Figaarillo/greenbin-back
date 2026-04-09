@@ -30,7 +30,7 @@ class ResponsibleMikroORMRepository implements ResponsibleRepository {
   async update(id: string, payload: ResponsibleUpdatePayload): Promise<Nullable<ResponsibleEntity>> {
     const em = this.getEntityManager()
 
-    const responsible = em.getReference(ResponsibleEntity, id)
+    const responsible = await em.findOne(ResponsibleEntity, { id })
     if (responsible == null) return null
 
     responsible.update(payload)
@@ -42,7 +42,7 @@ class ResponsibleMikroORMRepository implements ResponsibleRepository {
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 
-    const responsible = em.getReference(ResponsibleEntity, id)
+    const responsible = await em.findOne(ResponsibleEntity, { id })
     if (responsible == null) {
       throw new ErrorResponsibleNotFound(id, undefined, undefined)
     }

@@ -20,6 +20,7 @@
     "@typescript-eslint/space-before-function-paren": "off",
     "@typescript-eslint/no-floating-promises": "off",
     "object-curly-spacing": ["error", "always"],
-    "max-len": "off"
+    "max-len": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off"
   }
 }
