@@ -5,8 +5,8 @@ import type ResponsibleRepository from '../../domain/repositories/responsible.re
 class ListResponsiblesUseCase {
   constructor(private readonly repository: ResponsibleRepository) {}
 
-  async exec(offset: number, limit: number): Promise<ResponsibleEntity[]> {
-    const responsiblesFounded = await this.repository.list(offset, limit)
+  async exec(offset: number, limit: number, entityId?: string): Promise<ResponsibleEntity[]> {
+    const responsiblesFounded = await this.repository.list(offset, limit, entityId)
     if (responsiblesFounded == null) {
       throw new ErrorResponsibleNotFound()
     }

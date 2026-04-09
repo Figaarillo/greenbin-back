@@ -7,9 +7,11 @@ import type GreenPointUpdatePayload from '../../../domain/payloads/green-point.u
 import type GreenPointRepository from '../../../domain/repositories/green-point.repository'
 
 class GreenPointMikroORMRepository implements GreenPointRepository {
-  async list(offset: number, limit: number): Promise<Nullable<GreenPointEntity[]>> {
+  async list(offset: number, limit: number, entityId?: string): Promise<Nullable<GreenPointEntity[]>> {
     const em = this.getEntityManager()
-    return await em.find(GreenPointEntity, {}, { limit, offset })
+    const where: Record<string, any> = {}
+    if (entityId != null) where.entity = { id: entityId }
+    return await em.find(GreenPointEntity, where, { limit, offset })
   }
 
   async find(property: Record<string, string>): Promise<Nullable<GreenPointEntity>> {

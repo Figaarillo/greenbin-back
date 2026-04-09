@@ -24,15 +24,15 @@ class RegisterWasteDeliveryUseCase {
     for (const waste of wastes) {
       const newWaste = await this.registerWaste.exec(waste)
 
+      const points = newWaste.calculatePoints()
+
       const transactionDetail = await this.registerTransactionDetail.exec({
         wasteId: newWaste.id,
-        transactionId: transaction.id
+        transactionId: transaction.id,
+        weight: newWaste.weight,
+        points,
+        pointsPerWeight: newWaste.pointsPerWeight
       })
-
-      const points = newWaste.calculatePoints()
-      transactionDetail.points = points
-      transactionDetail.pointsPerWeight = newWaste.pointsPerWeight
-      transactionDetail.weight = newWaste.weight
 
       neighbor.addPoints(points)
       neighbor.registerWaste(newWaste)

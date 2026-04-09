@@ -135,6 +135,7 @@ async function seedWasteTransactions(
       em.persist(waste)
 
       const transactionDetail = new WasteTransactionDetailEntity(waste, transaction)
+      transactionDetail.weight = waste.weight
       transactionDetail.setPointsPerWeight()
       transactionDetail.setPoints()
       em.persist(transactionDetail)

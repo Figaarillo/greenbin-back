@@ -8,9 +8,11 @@ import ErrorEntityManagerNotFound from '../../../../shared/domain/errors/entity-
 import type ResponsibleRelationships from '../../../domain/enums/responsible-relationships.enum'
 
 class ResponsibleMikroORMRepository implements ResponsibleRepository {
-  async list(offset: number, limit: number): Promise<Nullable<ResponsibleEntity[]>> {
+  async list(offset: number, limit: number, entityId?: string): Promise<Nullable<ResponsibleEntity[]>> {
     const em = this.getEntityManager()
-    return await em.find(ResponsibleEntity, {}, { limit, offset })
+    const where: Record<string, any> = {}
+    if (entityId != null) where.entity = { id: entityId }
+    return await em.find(ResponsibleEntity, where, { limit, offset })
   }
 
   async find(

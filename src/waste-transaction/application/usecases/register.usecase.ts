@@ -3,6 +3,7 @@ import ErrorNeighborNotFound from '../../../neighbor/domain/errors/neighbor-not-
 import ErrorResponsibleNotFound from '../../../responsible/domain/errors/responsible-not-found.error'
 import WasteTransactionEntity from '../../domain/entities/waste-transaction.entity'
 import ErrorCannotSaveWasteTransaction from '../../domain/errors/cannot-save-waste-transaction.error'
+import ErrorNeighborEntityMismatch from '../../domain/errors/neighbor-entity-mismatch.error'
 import type WasteTransactionPayload from '../../domain/payloads/waste-transaction.payload'
 import type WasteTransactionRepository from '../../domain/repositories/waste-transaction.repository'
 
@@ -18,6 +19,8 @@ class RegisterWasteTransactionUseCase {
 
     const greenPoint = await this.repository.fidnGreenPoint({ id: payload.greenPointId })
     if (greenPoint == null) throw new ErrorGreenPointNotFound(payload.greenPointId)
+
+    if (neighbor.entity.id !== greenPoint.entity.id) throw new ErrorNeighborEntityMismatch()
 
     const transaction = new WasteTransactionEntity(responsible, neighbor, greenPoint)
     const savedTransaction = await this.repository.save(transaction)
