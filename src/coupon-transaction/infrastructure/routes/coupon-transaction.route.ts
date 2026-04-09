@@ -24,6 +24,12 @@ class CouponTransactionRoute {
       }
     )
     this.server.get(
+      '/api/coupon-transaction/reward-partner/:rewardPartnerId',
+      async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+        await this.handler.listByRewardPartner(req, rep)
+      }
+    )
+    this.server.get(
       '/api/coupon-transaction/:id',
       async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
         await this.handler.findByID(req, rep)
