@@ -19,6 +19,12 @@ class WasteTransactionRoute {
         await this.handler.listByNeighbor(req, rep)
       }
     )
+    this.server.get(
+      '/api/waste/transaction/responsible/:responsibleId',
+      async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+        await this.handler.listByResponsible(req, rep)
+      }
+    )
     this.server.post('/api/waste/transaction', async (req: FastifyRequest<{ Body: WasteTransactionPayload }>, rep) => {
       await this.handler.register(req, rep)
     })

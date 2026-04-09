@@ -55,6 +55,15 @@ class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
     )
   }
 
+  async findByResponsible(responsibleId: string): Promise<WasteTransactionEntity[]> {
+    const em = this.getEntityManager()
+    return await em.find(
+      WasteTransactionEntity,
+      { responsible: responsibleId },
+      { populate: ['transactionDetails', 'greenPoint', 'neighbor'], orderBy: { date: 'DESC' } }
+    )
+  }
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   private getEntityManager() {
     const em = RequestContext.getEntityManager()

@@ -9,7 +9,7 @@ run: docker.run.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │       WAITING FOR DATABASE...          │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	@sleep 3
+	@sleep 3  
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │           RUNNING MIGRATIONS           │ "
 	@echo " ╰────────────────────────────────────────╯ "
@@ -52,7 +52,7 @@ docker.run.db:
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │       RUNNING DATABASE CONTAINER       │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	docker compose up -d database
+	docker compose up -d --wait database
 
 docker.run.test:
 	@echo " ╭────────────────────────────────────────╮ "
@@ -64,7 +64,7 @@ docker.build:
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │          BUILDING DOCKER IMAGE         │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	docker compose build
+	docker compose up -d --wait database-test
 
 docker.stop:
 	@echo " ╭────────────────────────────────────────╮ "
@@ -164,6 +164,7 @@ migrations: docker.clean
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │    CREATING AND RUNNING MIGRATIONS     │ "
 	@echo " ╰────────────────────────────────────────╯ "
+	$(MAKE) migrations.up
 	$(MAKE) migrations.create
 	$(MAKE) migrations.up
 
@@ -189,7 +190,6 @@ migrations.initial: migrations.delete docker.clean docker.run.db
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │       INITIALIZING MIGRATIONS          │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	sleep 1
 	DATABASE_HOST=$(DB_HOST) pnpm run migration:initial
 
 seed: docker.run.db migrations.up

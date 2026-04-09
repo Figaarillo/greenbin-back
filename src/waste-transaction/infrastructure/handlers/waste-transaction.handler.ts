@@ -22,6 +22,7 @@ import RegisterWasteDeliveryDTO from '../dtos/register-waste-delivery.dto'
 import RegisterWasteTransactionDTO from '../dtos/register-waste-transaction.dto'
 import WasteTransactionSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 import ListWasteTransactionsByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
+import ListWasteTransactionsByResponsibleUseCase from '../../application/usecases/list-by-responsible.usecase'
 
 class WasteTransactionHandler {
   constructor(
@@ -49,6 +50,15 @@ class WasteTransactionHandler {
 
     const listByNeighbor = new ListWasteTransactionsByNeighborUseCase(this.transactionRepository)
     const transactions = await listByNeighbor.exec(neighborId)
+
+    HandleHTTPResponse.OK(rep, 'Waste transactions retrieved successfully', transactions)
+  }
+
+  async listByResponsible(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+    const responsibleId = getURLParams(req, 'responsibleId')
+
+    const listByResponsible = new ListWasteTransactionsByResponsibleUseCase(this.transactionRepository)
+    const transactions = await listByResponsible.exec(responsibleId)
 
     HandleHTTPResponse.OK(rep, 'Waste transactions retrieved successfully', transactions)
   }

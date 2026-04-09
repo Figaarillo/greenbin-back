@@ -11,6 +11,7 @@ interface WasteTransactionRepository {
   findNeighbor: (property: Record<string, string>) => Promise<Nullable<NeighborEntity>>
   fidnGreenPoint: (property: Record<string, string>) => Promise<Nullable<GreenPointEntity>>
   findByNeighbor: (neighborId: string) => Promise<WasteTransactionEntity[]>
+  findByResponsible: (responsibleId: string) => Promise<WasteTransactionEntity[]>
   save: (transaction: WasteTransactionEntity) => Promise<Nullable<WasteTransactionEntity>>
   update: (id: string, transaction: WasteTransactionEntity) => Promise<Nullable<WasteTransactionEntity>>
 }
