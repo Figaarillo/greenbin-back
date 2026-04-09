@@ -1,5 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/application/service/auth.service'
+import RecaptchaService from '../../../auth/application/service/recaptcha.service'
 import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
@@ -96,9 +97,18 @@ class EntityHandler {
     HandleHTTPResponse.OK(rep, 'Entity deleted successfully', { id })
   }
 
-  async login(req: FastifyRequest<{ Body: EntityLoginPayload }>, rep: FastifyReply): Promise<void> {
+  async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
+    const { recaptchaToken, ...loginPayload } = req.body as EntityLoginPayload & { recaptchaToken: string }
+
+    const recaptchaService = new RecaptchaService()
+    const isHuman = await recaptchaService.verify(recaptchaToken)
+    if (!isHuman) {
+      HandleHTTPResponse.BadRequest(rep, 'reCAPTCHA verification failed')
+      return
+    }
+
     const login = new LoginEntityUseCase(this.repository)
-    const entity = await login.exec(req.body)
+    const entity = await login.exec(loginPayload)
 
     const authService = new AuthService(this.jwtStrategy)
     const accessToken = await authService.generateAccessToken(entity.id, {

@@ -1,5 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/application/service/auth.service'
+import RecaptchaService from '../../../auth/application/service/recaptcha.service'
 import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
@@ -84,7 +85,14 @@ class RewardPartnerHandler {
   }
 
   async login(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const payload = req.body as RewardPartnerLoginPayload
+    const { recaptchaToken, ...payload } = req.body as RewardPartnerLoginPayload & { recaptchaToken: string }
+
+    const recaptchaService = new RecaptchaService()
+    const isHuman = await recaptchaService.verify(recaptchaToken)
+    if (!isHuman) {
+      HandleHTTPResponse.BadRequest(rep, 'reCAPTCHA verification failed')
+      return
+    }
 
     const schemaValidator = new RewardPartnerSchemaValidator(LoginRewardPartnerDTO, payload)
     schemaValidator.exec()
