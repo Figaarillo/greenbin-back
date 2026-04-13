@@ -53,6 +53,9 @@ importers:
       jsonwebtoken:
         specifier: 9.0.2
         version: 9.0.2
+      nodemailer:
+        specifier: ^8.0.5
+        version: 8.0.5
       reflect-metadata:
         specifier: 0.2.2
         version: 0.2.2
@@ -87,6 +90,9 @@ importers:
       '@types/node':
         specifier: 20.10.5
         version: 20.10.5
+      '@types/nodemailer':
+        specifier: ^8.0.0
+        version: 8.0.0
       '@types/uuid':
         specifier: 9.0.7
         version: 9.0.7
@@ -726,6 +732,9 @@ packages:
 
   '@types/node@20.10.5':
     resolution: {integrity: sha512-nNPsNE65wjMxEKI93yOP+NPGGBJz/PoN3kZsVLee0XMiJolxSekEVD8wRwBUBqkwc7UWop0edW50yrCQW4CyRw==}
+
+  '@types/nodemailer@8.0.0':
+    resolution: {integrity: sha512-fyf8jWULsCo0d0BuoQ75i6IeoHs47qcqxWc7yUdUcV0pOZGjUTTOvwdG1PRXUDqN/8A64yQdQdnA2pZgcdi+cA==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -2387,6 +2396,10 @@ packages:
     resolution: {integrity: sha512-OSs33Z9yWr148JZcbZd5WiAXhh/n9z8TxQcdMhIOlpN9AhWpLfvVFO73+m77bBABQMaY9XSvIa+qk0jlI7Gcaw==}
     hasBin: true
 
+  nodemailer@8.0.5:
+    resolution: {integrity: sha512-0PF8Yb1yZuQfQbq+5/pZJrtF6WQcjTd5/S4JOHs9PGFxuTqoB/icwuB44pOdURHJbRKX1PPoJZtY7R4VUoCC8w==}
+    engines: {node: '>=6.0.0'}
+
   nodemon@3.1.4:
     resolution: {integrity: sha512-wjPBbFhtpJwmIeY2yP7QF+UKzPfltVGtfce1g/bB15/8vCGZj8uxD62b/b9M9/WVgme0NZudpownKN+c0plXlQ==}
     engines: {node: '>=10'}
@@ -3980,6 +3993,10 @@ snapshots:
   '@types/node@20.10.5':
     dependencies:
       undici-types: 5.26.5
+
+  '@types/nodemailer@8.0.0':
+    dependencies:
+      '@types/node': 20.10.5
 
   '@types/normalize-package-data@2.4.4': {}
 
@@ -5762,6 +5779,8 @@ snapshots:
       whatwg-url: 5.0.0
 
   node-gyp-build@4.8.1: {}
+
+  nodemailer@8.0.5: {}
 
   nodemon@3.1.4:
     dependencies:

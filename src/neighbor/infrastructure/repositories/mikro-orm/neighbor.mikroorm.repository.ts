@@ -49,6 +49,15 @@ class NeighborMikroORMRepository implements NeighborRepository {
     return await em.find(NeighborEntity, where, { limit, offset, orderBy: { createdAt: 'ASC' } })
   }
 
+  async changePassword(email: string, newPassword: string): Promise<boolean> {
+    const em = this.getEntityManager()
+    const neighbor = await em.findOne(NeighborEntity, { email })
+    if (neighbor == null) return false
+    neighbor.password = newPassword
+    await em.flush()
+    return true
+  }
+
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 

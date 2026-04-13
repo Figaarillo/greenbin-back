@@ -8,6 +8,7 @@ interface RewardPartnerRepository {
   findWithPassword: (property: Record<string, string>) => Promise<Nullable<RewardPartnerEntity>>
   save: (rewardPartner: RewardPartnerEntity) => Promise<Nullable<RewardPartnerEntity>>
   update: (id: string, payload: RewardPartnerUpdatePayload) => Promise<Nullable<RewardPartnerEntity>>
+  changePassword: (email: string, newPassword: string) => Promise<boolean>
   delete: (id: string) => Promise<void>
 }
 
