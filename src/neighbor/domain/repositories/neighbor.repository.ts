@@ -9,6 +9,7 @@ interface NeighborRepository {
   findWithPassword: (property: Record<string, string>) => Promise<Nullable<NeighborEntity>>
   save: (neighbor: NeighborEntity) => Promise<Nullable<NeighborEntity>>
   update: (id: string, payload: NeighborUpdatePayload) => Promise<Nullable<NeighborEntity>>
+  changePassword: (email: string, newPassword: string) => Promise<boolean>
   delete: (id: string) => Promise<void>
 }
 

@@ -39,6 +39,15 @@ class EntityMikroORMRepository implements EntityRepository {
     return entity
   }
 
+  async changePassword(email: string, newPassword: string): Promise<boolean> {
+    const em = this.getEntityManager()
+    const entity = await em.findOne(EntityEntity, { email })
+    if (entity == null) return false
+    entity.password = newPassword
+    await em.flush()
+    return true
+  }
+
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 

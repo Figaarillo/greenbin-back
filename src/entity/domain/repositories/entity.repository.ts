@@ -7,6 +7,7 @@ interface EntityRepository {
   find: (where: Record<string, any>, populate?: EntityRelationships[]) => Promise<Nullable<EntityEntity>>
   save: (entity: EntityEntity) => Promise<Nullable<EntityEntity>>
   update: (id: string, description: string) => Promise<Nullable<EntityEntity>>
+  changePassword: (email: string, newPassword: string) => Promise<boolean>
   delete: (id: string) => Promise<void>
 }
 

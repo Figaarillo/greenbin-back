@@ -8,6 +8,7 @@ interface ResponsibleRepository {
   find: (where: Record<string, string>, populate?: ResponsibleRelationships[]) => Promise<Nullable<ResponsibleEntity>>
   save: (responsible: ResponsibleEntity) => Promise<Nullable<ResponsibleEntity>>
   update: (id: string, payload: ResponsibleUpdatePayload) => Promise<Nullable<ResponsibleEntity>>
+  changePassword: (email: string, newPassword: string) => Promise<boolean>
   delete: (id: string) => Promise<void>
 }
 

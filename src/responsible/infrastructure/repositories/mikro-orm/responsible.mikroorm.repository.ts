@@ -41,6 +41,15 @@ class ResponsibleMikroORMRepository implements ResponsibleRepository {
     return responsible
   }
 
+  async changePassword(email: string, newPassword: string): Promise<boolean> {
+    const em = this.getEntityManager()
+    const responsible = await em.findOne(ResponsibleEntity, { email })
+    if (responsible == null) return false
+    responsible.password = newPassword
+    await em.flush()
+    return true
+  }
+
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 

@@ -24,11 +24,22 @@ interface Auth {
   refreshTokenExpiresIn: string
 }
 
+interface Recaptcha {
+  secretKey: string
+}
+
+interface EmailConfig {
+  user: string
+  appPassword: string
+}
+
 interface Config {
   auth: Auth
   server: ServerConfig
   database: DatabaseConfig
   testDatabase: DatabaseConfig
+  recaptcha: Recaptcha
+  email: EmailConfig
 }
 
 const serverConfig: ServerConfig = {
@@ -60,11 +71,22 @@ const authConfig: Auth = {
   refreshTokenExpiresIn: env.get('REFRESH_TOKEN_EXPIRES_IN').required().asString()
 }
 
+const recaptchaConfig: Recaptcha = {
+  secretKey: env.get('RECAPTCHA_SECRET_KEY').required().asString()
+}
+
+const emailConfig: EmailConfig = {
+  user: env.get('EMAIL_USER').required().asString(),
+  appPassword: env.get('EMAIL_APP_PASSWORD').required().asString()
+}
+
 const EnvVar: Config = {
   auth: authConfig,
   server: serverConfig,
   database: databaseConfig,
-  testDatabase: testDatabaseConfig
+  testDatabase: testDatabaseConfig,
+  recaptcha: recaptchaConfig,
+  email: emailConfig
 }
 
 export default EnvVar

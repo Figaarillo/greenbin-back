@@ -44,6 +44,15 @@ class RewardPartnerMikroORMRepository implements RewardPartnerRepository {
     return rewardPartner
   }
 
+  async changePassword(email: string, newPassword: string): Promise<boolean> {
+    const em = this.getEntityManager()
+    const rewardPartner = await em.findOne(RewardPartnerEntity, { email })
+    if (rewardPartner == null) return false
+    rewardPartner.password = newPassword
+    await em.flush()
+    return true
+  }
+
   async delete(id: string): Promise<void> {
     const em = this.getEntityManager()
 
