@@ -83,9 +83,9 @@ jobs:
       - name: Run tests
         env:
           NODE_ENV: test
-          DATABASE_HOST: localhost
-          DATABASE_PORT: 5432
-          DATABASE_USER: test
-          DATABASE_PASS: test
-          DATABASE_NAME: greenbin_test
+          TEST_DATABASE_HOST: localhost
+          TEST_DATABASE_PORT: 5432
+          TEST_DATABASE_USER: test
+          TEST_DATABASE_PASS: test
+          TEST_DATABASE_NAME: greenbin_test
         run: pnpm run test
