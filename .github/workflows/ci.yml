@@ -22,10 +22,10 @@ jobs:
           node-version: "22"
 
       - name: Install pnpm
-        run: corepack enable && corepack prepare pnpm@8 --activate
+        run: corepack enable && corepack prepare pnpm@9 --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Lint
         run: pnpm run lint
@@ -45,10 +45,10 @@ jobs:
           node-version: "22"
 
       - name: Install pnpm
-        run: corepack enable && corepack prepare pnpm@8 --activate
+        run: corepack enable && corepack prepare pnpm@9 --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Type check
         run: pnpm run ts-check
@@ -83,10 +83,10 @@ jobs:
           node-version: "22"
 
       - name: Install pnpm
-        run: corepack enable && corepack prepare pnpm@8 --activate
+        run: corepack enable && corepack prepare pnpm@9 --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Run tests
         env:
