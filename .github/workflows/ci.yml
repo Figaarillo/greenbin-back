@@ -20,10 +20,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: pnpm
 
       - name: Install pnpm
-        run: npm install -g pnpm@8
+        run: corepack enable && corepack prepare pnpm@8 --activate
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -35,6 +34,7 @@ jobs:
     name: Type Check
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    needs: lint
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,10 +43,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: pnpm
 
       - name: Install pnpm
-        run: npm install -g pnpm@8
+        run: corepack enable && corepack prepare pnpm@8 --activate
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -58,6 +57,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    needs: typecheck
     services:
       postgres:
         image: postgres:16
@@ -81,10 +81,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: pnpm
 
       - name: Install pnpm
-        run: npm install -g pnpm@8
+        run: corepack enable && corepack prepare pnpm@8 --activate
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
