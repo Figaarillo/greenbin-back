@@ -91,9 +91,18 @@ jobs:
       - name: Run tests
         env:
           NODE_ENV: test
+          SERVER_HOST: localhost
+          SERVER_PORT: 8080
           TEST_DATABASE_HOST: localhost
           TEST_DATABASE_PORT: 5432
           TEST_DATABASE_USER: test
           TEST_DATABASE_PASS: test
           TEST_DATABASE_NAME: greenbin_test
+          ACCESS_TOKEN: test_secret
+          REFRESH_TOKEN: test_secret
+          ACCESS_TOKEN_EXPIRES_IN: 10m
+          REFRESH_TOKEN_EXPIRES_IN: 7d
+          RECAPTCHA_SECRET_KEY: test_key
+          EMAIL_USER: test@example.com
+          EMAIL_APP_PASSWORD: test_password
         run: pnpm run test
