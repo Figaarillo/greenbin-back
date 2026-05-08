@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop]
+    types: [opened, synchronize]
+  push:
+    branches: [develop]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@9 --activate
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm run lint
+
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@9 --activate
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Type check
+        run: pnpm run ts-check
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: typecheck
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: greenbin_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@9 --activate
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests
+        env:
+          NODE_ENV: test
+          TEST_DATABASE_HOST: localhost
+          TEST_DATABASE_PORT: 5432
+          TEST_DATABASE_USER: test
+          TEST_DATABASE_PASS: test
+          TEST_DATABASE_NAME: greenbin_test
+        run: pnpm run test

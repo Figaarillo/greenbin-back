@@ -2,6 +2,10 @@
 
 # GreenBin Backend
 
+[![CI](https://img.shields.io/github/actions/workflow/status/Figaarillo/greenbin-back/ci.yml?branch=develop&label=CI)](https://github.com/Figaarillo/greenbin-back/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/actions/workflow/status/Figaarillo/greenbin-back/release.yml?branch=master&label=Release)](https://github.com/Figaarillo/greenbin-back/actions/workflows/release.yml)
+[![Docker Image](https://img.shields.io/docker/image-size/figaarillo/greenbin-back/latest?label=Docker%20Image)](https://github.com/Figaarillo/greenbin-back/pkgs/container/greenbin-back)
+
 Final Project for the completion of the Systems Engineering degree at UTN FRVM.
 
 A backend API for a waste recycling reward system where neighbors earn points by delivering recyclables and can redeem them for coupons at partner businesses.
@@ -187,6 +191,20 @@ When the server is running, access Swagger UI at:
 ```
 http://localhost:8080/docs
 ```
+
+---
+
+## Release Process
+
+Releases follow the [branching process](./docs/process/branching.md):
+
+1. Create a release branch from `develop`: `git checkout -b release/v{x.y}`
+2. Polish and test on the release branch (no new features)
+3. Open PR targeting `master` — CI + Release pipeline must pass
+4. Merge to `master` → Docker image automatically pushed to GHCR
+5. Sync `develop` back: `git checkout develop && git merge master`
+
+For more details, see [docs/process/branching.md](./docs/process/branching.md).
 
 ---
 
