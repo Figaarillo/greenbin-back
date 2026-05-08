@@ -36,7 +36,7 @@ class FastifyConifg {
   async start(port: number): Promise<string> {
     try {
       return await this.server.listen({
-        host: '127.0.0.1',
+        host: '0.0.0.0',
         port
       })
     } catch (err) {
