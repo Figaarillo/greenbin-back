@@ -1,116 +1,213 @@
-# Noderplate
+[English](./README.md) | [Spanish](./README.es.md)
 
-Noderplate is a boilerplate for Node.js projects, providing a well-structured foundation for building scalable and maintainable applications. It includes a setup with TypeORM, Fastify, and other essential tools for development.
+# GreenBin Backend
 
-## Features
+[![CI](https://img.shields.io/github/actions/workflow/status/Figaarillo/greenbin-back/ci.yml?branch=develop&label=CI)](https://github.com/Figaarillo/greenbin-back/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/actions/workflow/status/Figaarillo/greenbin-back/release.yml?branch=master&label=Release)](https://github.com/Figaarillo/greenbin-back/actions/workflows/release.yml)
+[![Docker Image](https://img.shields.io/docker/image-size/figaarillo/greenbin-back/latest?label=Docker%20Image)](https://github.com/Figaarillo/greenbin-back/pkgs/container/greenbin-back)
 
-- **[TypeORM Integration](https://typeorm.io/)**: Simplifies database interactions with a TypeScript ORM.
-- **[Fastify](https://fastify.dev/)**: A high-performance framework for Node.js.
-- **Modular Architecture**: Clean separation of concerns with a well-defined structure.
-- **Environment Configuration**: Managed via dotenv.
-- **TypeScript**: Strongly typed development environment.
-- **Pre-configured Tooling**: Includes ESLint, Prettier, Husky, and more for code quality and consistency.
+Final Project for the completion of the Systems Engineering degree at UTN FRVM.
 
-## Getting Started
+A backend API for a waste recycling reward system where neighbors earn points by delivering recyclables and can redeem them for coupons at partner businesses.
 
-### Prerequisites
+## Technologies
 
-- Node.js (>= 14.x)
-- pnpm (>= 6.x)
-- Docker (for database setup)
+- **[Fastify](https://fastify.dev/)**: High-performance web framework
+- **[MikroORM](https://mikro-orm.io/)**: ORM for database interactions
+- **[PostgreSQL](https://www.postgresql.org/)**: Relational database
+- **[TypeScript](https://www.typescriptlang.org/)**: Type-safe development
+- **[Vitest](https://vitest.dev/)**: Testing framework
+- **[Docker](https://www.docker.com/)**: Containerization
+- **[SwaggerUI](https://swagger.io/)**: API documentation
+- **[Husky](https://github.com/typicode/husky)**: Git hooks
+- **[ESLint](https://eslint.org/) & [Prettier](https://prettier.io/)**: Code quality
 
-### Installation
+---
 
-1. Clone the repository:
-    ```sh
-    git clone https://github.com/Figaarillo/noderplate.git
-    cd noderplate
-    ```
+## Quick Start
 
-2. Install dependencies:
-    ```sh
-    pnpm install
-    ```
+```sh
+# 1. Clone and install dependencies
+git clone https://github.com/Figaarillo/greenbin-back.git
+cd greenbin-back
+pnpm install
 
-3. Set up environment variables:
-    ```sh
-    cp .env.dev .env
-    # Update .env with your configuration
-    ```
+# 2. Set up environment variables
+cp .env.example .env
 
-4. Run the database using Docker:
-    ```sh
-    docker-compose up -d
-    ```
+# 3. Set up development environment (creates DB, runs migrations, seeds data)
+make dev.setup
+
+# 4. Run the server
+make run
+```
+
+The API will be available at `http://localhost:8080` and Swagger docs at `http://localhost:8080/docs`.
+
+---
+
+## Available Commands
+
+All commands are run with `make <command>`:
 
 ### Development
 
-To start the development server:
-```sh
-pnpm run dev
-```
+| Command          | Description                                     |
+| ---------------- | ----------------------------------------------- |
+| `make run`       | Start the server with database in Docker        |
+| `make run.dev`   | Start the server in watch mode (auto-reload)    |
+| `make dev.setup` | Full setup: clean DB, run migrations, seed data |
+| `make reset`     | Reset database (deletes all and recreates)      |
 
-### Building
+### Docker Management
 
-To build the project:
-```sh
-pnpm run build
-```
+| Command                      | Description                                     |
+| ---------------------------- | ----------------------------------------------- |
+| `make docker`                | Start full stack (backend + database) in Docker |
+| `make docker.run.db`         | Start only the database container               |
+| `make docker.restart.server` | Restart the API server container                |
+| `make docker.stop`           | Stop all containers                             |
+| `make docker.clean`          | Stop and remove all containers and volumes      |
 
-### Running Migrations
+### Database Migrations
 
-To generate new migrations:
-```sh
-pnpm run migration:generate
-```
+| Command                   | Description                                |
+| ------------------------- | ------------------------------------------ |
+| `make migrations`         | Clean DB, create and run migrations        |
+| `make migrations.create`  | Create a new migration from schema changes |
+| `make migrations.up`      | Run pending migrations                     |
+| `make migrations.delete`  | Delete all migrations                      |
+| `make migrations.initial` | Reset DB and run initial migration         |
 
-To run migrations:
-```sh
-pnpm run migration:run
-```
+### Database Utilities
 
-### Linting and Formatting
-
-To lint the code:
-```sh
-pnpm run lint
-```
-
-To format the code:
-```sh
-pnpm run prettier
-```
+| Command             | Description                           |
+| ------------------- | ------------------------------------- |
+| `make seed`         | Seed the database with sample data    |
+| `make pgadmin`      | Start pgAdmin for database management |
+| `make pgadmin.stop` | Stop pgAdmin                          |
 
 ### Testing
 
-To run tests:
-```sh
-pnpm run test
-```
+| Command                            | Description                         |
+| ---------------------------------- | ----------------------------------- |
+| `make test`                        | Run all tests (unit + e2e)          |
+| `make test.unit`                   | Run only unit tests                 |
+| `make test.e2e`                    | Run all e2e integration tests       |
+| `make test.e2e.entity`             | Run entity module tests             |
+| `make test.e2e.neighbor`           | Run neighbor module tests           |
+| `make test.e2e.responsible`        | Run responsible module tests        |
+| `make test.e2e.reward-partner`     | Run reward-partner module tests     |
+| `make test.e2e.green-point`        | Run green-point module tests        |
+| `make test.e2e.waste-category`     | Run waste-category module tests     |
+| `make test.e2e.waste-transaction`  | Run waste-transaction module tests  |
+| `make test.e2e.coupon`             | Run coupon module tests             |
+| `make test.e2e.coupon-transaction` | Run coupon-transaction module tests |
+
+### Code Quality
+
+| Command               | Description                                      |
+| --------------------- | ------------------------------------------------ |
+| `pnpm run lint`       | Lint all files                                   |
+| `pnpm run prettier`   | Format all files                                 |
+| `pnpm run ts-check`   | TypeScript type checking                         |
+| `pnpm run pre-commit` | Run pre-commit hooks (lint + format + typecheck) |
+
+---
 
 ## Project Structure
 
 ```
-.
-├── src
-│   ├── main.ts                 # Application entry point
-│   ├── shared                  # Shared modules and utilities
-│   │   ├── config
-│   │   ├── domain
-│   │   └── utils
-│   └── user                    # User domain-related modules
-│       ├── aplication
-│       ├── domain
-│       └── infrastructure
-├── docker-compose.yml          # Docker configuration
-├── package.json                # Project configuration and scripts
-└── tsconfig.json               # TypeScript configuration
+src/
+├── entity/                      # Entity (company/organization) module
+│   ├── application/usecases/    # Business logic
+│   ├── domain/                  # Domain definitions (entities, errors, payloads)
+│   ├── infrastructure/          # HTTP layer (handlers, routes, DTOs, repositories)
+│   └── test/                    # Integration tests
+├── neighbor/                    # Neighbor (user) module
+├── responsible/                 # Responsible (employee) module
+├── reward-partner/              # Reward partner (business) module
+├── green-point/                 # Green point (drop-off location) module
+├── waste-category/              # Waste category module
+├── waste-transaction/           # Waste transaction module
+├── waste-transaction-detail/    # Waste transaction detail module
+├── waste/                      # Waste item module
+├── coupon/                      # Coupon module
+├── coupon-transaction/          # Coupon transaction (redemption) module
+├── auth/                        # Authentication module
+├── migrations/                  # Database migrations
+└── shared/                      # Shared utilities and configs
+    ├── config/
+    ├── domain/
+    ├── test/
+    └── utils/
 ```
 
-## Contributing
+### Module Structure
 
-Contributions are welcome! Please follow the [code of conduct](CODE_OF_CONDUCT.md) and submit pull requests for any enhancements or bug fixes.
+Each module follows clean architecture:
+
+```
+module/
+├── application/
+│   └── usecases/              # Business logic
+├── domain/
+│   ├── entities/              # Domain models
+│   ├── errors/                # Custom errors
+│   ├── payloads/              # Data structures
+│   └── repositories/          # Repository interfaces
+├── infrastructure/
+│   ├── dtos/                  # Request/Response DTOs
+│   ├── handlers/              # HTTP controllers
+│   ├── middlewares/           # Express middlewares
+│   ├── repositories/           # Repository implementations
+│   ├── routes/                # Route definitions
+│   └── swagger-schemas/       # OpenAPI schemas
+└── test/                      # Integration tests
+```
+
+---
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+| Variable            | Description        | Default       |
+| ------------------- | ------------------ | ------------- |
+| `SERVER_PORT`       | Server port        | `8080`        |
+| `DATABASE_HOST`     | Database host      | `localhost`   |
+| `DATABASE_PORT`     | Database port      | `5432`        |
+| `DATABASE_NAME`     | Database name      | `greenbin_db` |
+| `DATABASE_USER`     | Database user      | `postgres`    |
+| `DATABASE_PASSWORD` | Database password  | `postgres`    |
+| `JWT_SECRET`        | JWT signing secret | -             |
+
+---
+
+## API Documentation
+
+When the server is running, access Swagger UI at:
+
+```
+http://localhost:8080/docs
+```
+
+---
+
+## Release Process
+
+Releases follow the [branching process](./docs/process/branching.md):
+
+1. Create a release branch from `develop`: `git checkout -b release/v{x.y}`
+2. Polish and test on the release branch (no new features)
+3. Open PR targeting `master` — CI + Release pipeline must pass
+4. Merge to `master` → Docker image automatically pushed to GHCR
+5. Sync `develop` back: `git checkout develop && git merge master`
+
+For more details, see [docs/process/branching.md](./docs/process/branching.md).
+
+---
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License

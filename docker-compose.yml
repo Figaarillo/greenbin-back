@@ -1,5 +1,20 @@
 services:
-  ### DATABASE ###
+  # ############ API SERVER ############ #
+  apiserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - '8080:8080'
+    environment:
+      DATABASE_HOST: database
+    networks:
+      - dev-network
+
+  # ############# DATABASE ############# #
   database:
     image: postgres:16.2-alpine3.19
     restart: always
@@ -11,7 +26,54 @@ services:
       - '${DATABASE_PORT}:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - dev-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ########### TEST DATABASE ########## #
+  database-test:
+    image: postgres:16.2-alpine3.19
+    restart: always
+    environment:
+      POSTGRES_USER: ${TEST_DATABASE_USER}
+      POSTGRES_PASSWORD: ${TEST_DATABASE_PASS}
+      POSTGRES_DB: ${TEST_DATABASE_NAME}
+    ports:
+      - '${TEST_DATABASE_PORT}:5432'
+    volumes:
+      - pgdata-test:/var/lib/postgresql/data
+    networks:
+      - dev-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${TEST_DATABASE_USER} -d ${TEST_DATABASE_NAME}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ############# PGADMIN ############## #
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - '${PGADMIN_PORT}:80'
+    depends_on:
+      - database
+    networks:
+      - dev-network
 
 volumes:
   pgdata:
     driver: local
+  pgdata-test:
+    driver: local
+
+networks:
+  dev-network:
+    driver: bridge

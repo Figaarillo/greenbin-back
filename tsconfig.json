@@ -1,8 +1,6 @@
 {
-  "include": ["src/**/*.ts"],
-  "exclude": [],
-
   "compilerOptions": {
+    "typeRoots": ["node_modules/@types", "types"],
     /* Projects */
     "incremental": true,
     "tsBuildInfoFile": "./.tsbuildinfo",
@@ -14,16 +12,12 @@
 
     /* Modules */
     "module": "commonjs",
-    "rootDir": "src/",
     "moduleResolution": "node",
-    "baseUrl": "./",
-    "paths": {
-      "@shared/*": ["src/shared/*"],
-      "@user/*": ["src/user/*"]
-    },
+    "rootDir": "src/",
     "resolveJsonModule": true,
 
     /* JavaScript Support */
+    "declaration": true,
     "sourceMap": true,
     "outDir": "dist/",
     "removeComments": true,
@@ -39,11 +33,16 @@
     "strictPropertyInitialization": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "allowUnusedLabels": true,
-    "allowUnreachableCode": true,
+    "noImplicitReturns": false,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
 
     /* Completeness */
     "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts", "types"],
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "files": true
   }
 }
