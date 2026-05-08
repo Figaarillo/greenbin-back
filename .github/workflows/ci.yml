@@ -83,5 +83,9 @@ jobs:
       - name: Run tests
         env:
           NODE_ENV: test
-          DATABASE_URL: postgres://test:test@localhost:5432/greenbin_test
+          DATABASE_HOST: localhost
+          DATABASE_PORT: 5432
+          DATABASE_USER: test
+          DATABASE_PASS: test
+          DATABASE_NAME: greenbin_test
         run: pnpm run test
