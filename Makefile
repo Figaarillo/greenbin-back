@@ -125,8 +125,8 @@ test.e2e.neighbor: docker.run.test
 	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/neighbor/test/neighbor.test.ts --config src/vitest.config.ts 2>/dev/null
 
 test.e2e.responsible: docker.run.test
-	@echo " │   RUNNING E2E TESTS FOR RESPONSIBLE    │ "
 	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │   RUNNING E2E TESTS FOR RESPONSIBLE    │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/responsible/test/responsible.test.ts --config src/vitest.config.ts 2>/dev/null
 

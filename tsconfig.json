@@ -41,5 +41,8 @@
     "skipLibCheck": true
   },
   "include": ["src/**/*.ts", "types"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "files": true
+  }
 }
