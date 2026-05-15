@@ -1,6 +1,5 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import FindCouponByIDUseCase from '../../../coupon/application/usecases/find-by-id.usecase'
-import UpdateCouponStateUseCase from '../../../coupon/application/usecases/update-state.usecase'
 import type CouponRepository from '../../../coupon/domain/repositories/coupon.repository'
 import FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find-by-id.usecase'
 import SubtractNeighborPointsUseCase from '../../../neighbor/application/usecases/substrac-points.usecase'
@@ -35,14 +34,12 @@ class CouponTransactionHandler {
       const findNeighborById = new FindNeighborByIDUseCase(this.neighborRepository)
       const findRewardPartnerById = new FindRewardPartnerByIdUseCase(this.rewardPartnerRepository)
       const subtractPoints = new SubtractNeighborPointsUseCase(this.neighborRepository)
-      const updateState = new UpdateCouponStateUseCase(this.couponRepository)
       const redeemCouponUseCase = new RedeemCouponUseCase(
         this.couponTransactionRepository,
         findCouponById,
         findNeighborById,
         findRewardPartnerById,
-        subtractPoints,
-        updateState
+        subtractPoints
       )
       const redeemedCoupon = await redeemCouponUseCase.exec(req.body)
 
