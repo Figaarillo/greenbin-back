@@ -10,82 +10,130 @@ import type WasteCategoryEntity from '../../../waste-category/domain/entities/wa
 
 interface TransactionSeed {
   responsibleUsername: string
-  neighborUsername: string
+  neighborUsername?: string
+  neighborEmail?: string
   greenPointName: string
   daysAgo: number
   details: Array<{ categoryName: string; weight: number }>
 }
 
 const TRANSACTION_SEEDS: TransactionSeed[] = [
+  // Transacciones de Enzo Mattalia (Etruria) — últimos 4 meses
   {
-    responsibleUsername: 'lfernandez',
-    neighborUsername: 'cgomez',
-    greenPointName: 'Punto Verde Plaza Central',
-    daysAgo: 1,
-    details: [
-      { categoryName: 'Plástico', weight: 2.5 },
-      { categoryName: 'Papel y Cartón', weight: 1.8 }
-    ]
-  },
-  {
-    responsibleUsername: 'lfernandez',
-    neighborUsername: 'amartinez',
-    greenPointName: 'Punto Verde Plaza Central',
-    daysAgo: 2,
-    details: [
-      { categoryName: 'Vidrio', weight: 3.0 },
-      { categoryName: 'Metal', weight: 0.5 }
-    ]
-  },
-  {
-    responsibleUsername: 'mrodriguez',
-    neighborUsername: 'dsanchez',
-    greenPointName: 'Punto Verde Barrio San Martín',
-    daysAgo: 3,
-    details: [
-      { categoryName: 'Electrónico', weight: 1.2 },
-      { categoryName: 'Plástico', weight: 1.0 }
-    ]
-  },
-  {
-    responsibleUsername: 'mrodriguez',
-    neighborUsername: 'vtorres',
-    greenPointName: 'Punto Verde Barrio San Martín',
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
     daysAgo: 5,
     details: [
-      { categoryName: 'Papel y Cartón', weight: 4.0 },
-      { categoryName: 'Orgánico', weight: 2.0 }
+      { categoryName: 'Plástico', weight: 2.0 },
+      { categoryName: 'Papel y Cartón', weight: 1.5 }
     ]
   },
   {
-    responsibleUsername: 'lfernandez',
-    neighborUsername: 'cgomez',
-    greenPointName: 'Punto Verde Universidad Nacional',
-    daysAgo: 7,
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 13,
     details: [
-      { categoryName: 'Plástico', weight: 1.5 },
-      { categoryName: 'Metal', weight: 1.0 },
+      { categoryName: 'Vidrio', weight: 3.2 },
+      { categoryName: 'Metal', weight: 0.8 }
+    ]
+  },
+  {
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 22,
+    details: [
+      { categoryName: 'Orgánico', weight: 2.5 },
+      { categoryName: 'Plástico', weight: 1.2 }
+    ]
+  },
+  {
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 35,
+    details: [
+      { categoryName: 'Papel y Cartón', weight: 4.0 },
       { categoryName: 'Vidrio', weight: 2.0 }
     ]
   },
   {
-    responsibleUsername: 'slopez',
-    neighborUsername: 'pherrera',
-    greenPointName: 'Punto Verde Barrio Nueva Córdoba',
-    daysAgo: 2,
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 47,
     details: [
-      { categoryName: 'Papel y Cartón', weight: 3.5 },
-      { categoryName: 'Plástico', weight: 2.0 }
+      { categoryName: 'Metal', weight: 1.5 },
+      { categoryName: 'Plástico', weight: 2.8 }
     ]
   },
   {
-    responsibleUsername: 'slopez',
-    neighborUsername: 'lflores',
-    greenPointName: 'Punto Verde Barrio Nueva Córdoba',
-    daysAgo: 4,
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 58,
+    details: [{ categoryName: 'Orgánico', weight: 3.0 }]
+  },
+  {
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 70,
     details: [
-      { categoryName: 'Electrónico', weight: 0.8 },
-      { categoryName: 'Metal', weight: 1.5 }
+      { categoryName: 'Plástico', weight: 1.8 },
+      { categoryName: 'Vidrio', weight: 2.5 }
+    ]
+  },
+  {
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 82,
+    details: [
+      { categoryName: 'Papel y Cartón', weight: 3.0 },
+      { categoryName: 'Metal', weight: 1.2 }
+    ]
+  },
+  {
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 91,
+    details: [
+      { categoryName: 'Plástico', weight: 2.2 },
+      { categoryName: 'Orgánico', weight: 1.8 }
+    ]
+  },
+  {
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 100,
+    details: [
+      { categoryName: 'Vidrio', weight: 1.5 },
+      { categoryName: 'Papel y Cartón', weight: 2.0 }
+    ]
+  },
+  {
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 110,
+    details: [
+      { categoryName: 'Metal', weight: 2.0 },
+      { categoryName: 'Plástico', weight: 1.0 }
+    ]
+  },
+  {
+    responsibleUsername: 'jgonzalez',
+    neighborEmail: 'enzomattalia@hotmail.com',
+    greenPointName: 'Punto Verde Etruria Centro',
+    daysAgo: 118,
+    details: [
+      { categoryName: 'Orgánico', weight: 2.8 },
+      { categoryName: 'Vidrio', weight: 1.0 }
     ]
   }
 ]
@@ -103,25 +151,36 @@ async function seedWasteTransactions(
   greenPoints: GreenPointEntity[],
   categories: WasteCategoryEntity[]
 ): Promise<void> {
-  const existing = await em.count(WasteTransactionEntity)
-  if (existing > 0) {
-    console.log(`[Seeder] WasteTransaction: ya existen ${existing} registros, se omite.`)
-    return
-  }
-
   const responsibleMap = new Map(responsibles.map(r => [r.username, r]))
-  const neighborMap = new Map(neighbors.map(n => [n.username, n]))
+  const neighborByUsernameMap = new Map(neighbors.map(n => [n.username, n]))
+  const neighborByEmailMap = new Map(neighbors.map(n => [n.email, n]))
   const greenPointMap = new Map(greenPoints.map(g => [g.name, g]))
   const categoryMap = new Map(categories.map(c => [c.name, c]))
 
+  // Obtener IDs de vecinos que ya tienen transacciones para no duplicar
+  const existingTransactions = await em.find(WasteTransactionEntity, {}, { fields: ['neighbor'] })
+  const neighborsWithTransactions = new Set(existingTransactions.map(t => t.neighbor.id))
+
+  let created = 0
+  let skipped = 0
+
   for (const seed of TRANSACTION_SEEDS) {
     const responsible = responsibleMap.get(seed.responsibleUsername)
-    const neighbor = neighborMap.get(seed.neighborUsername)
+    const neighbor =
+      seed.neighborUsername != null
+        ? neighborByUsernameMap.get(seed.neighborUsername)
+        : neighborByEmailMap.get(seed.neighborEmail ?? '')
     const greenPoint = greenPointMap.get(seed.greenPointName)
 
     if (responsible == null) throw new Error(`[Seeder] Responsible no encontrado: ${seed.responsibleUsername}`)
-    if (neighbor == null) throw new Error(`[Seeder] Neighbor no encontrado: ${seed.neighborUsername}`)
+    if (neighbor == null)
+      throw new Error(`[Seeder] Neighbor no encontrado: ${seed.neighborUsername ?? seed.neighborEmail}`)
     if (greenPoint == null) throw new Error(`[Seeder] GreenPoint no encontrado: ${seed.greenPointName}`)
+
+    if (neighborsWithTransactions.has(neighbor.id)) {
+      skipped++
+      continue
+    }
 
     const transaction = new WasteTransactionEntity(responsible, neighbor, greenPoint)
     transaction.date = daysAgoDate(seed.daysAgo)
@@ -146,10 +205,13 @@ async function seedWasteTransactions(
     }
 
     em.persist(transaction)
+    created++
   }
 
   await em.flush()
-  console.log(`[Seeder] WasteTransaction: ${TRANSACTION_SEEDS.length} transacciones creadas con sus detalles.`)
+  console.log(
+    `[Seeder] WasteTransaction: ${created} transacciones creadas, ${skipped} omitidas (vecino ya tenía datos).`
+  )
 }
 
 export default seedWasteTransactions

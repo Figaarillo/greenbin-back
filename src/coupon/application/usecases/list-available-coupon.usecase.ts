@@ -5,8 +5,13 @@ import type CouponRepository from '../../domain/repositories/coupon.repository'
 class ListAvailableCouponUseCase {
   constructor(private readonly couponRepository: CouponRepository) {}
 
-  async exec(offset: number, limit: number): Promise<CouponEntity[]> {
-    const coupons = await this.couponRepository.list({ isAvailable: true }, offset, limit)
+  async exec(offset: number, limit: number, entityId?: string): Promise<CouponEntity[]> {
+    const where: Record<string, any> = { isAvailable: true }
+    if (entityId != null && entityId !== '') {
+      where.rewardPartner = { entity: entityId }
+    }
+
+    const coupons = await this.couponRepository.list(where, offset, limit)
     if (coupons == null) {
       throw new ErrorNoCouponsAvailable()
     }

@@ -5,58 +5,41 @@ import type EntityEntity from '../../../entity/domain/entities/entity.entity'
 
 const RESPONSIBLE_SEEDS = [
   {
-    firstname: 'Laura',
-    lastname: 'Fernández',
-    username: 'lfernandez',
+    firstname: 'Juliana',
+    lastname: 'González',
+    username: 'jgonzalez',
     entityId: '',
-    email: 'lfernandez@villamaria.gob.ar',
+    email: 'jgonzalez@etruria.gob.ar',
     password: 'Resp2024!',
-    dni: 28456789,
-    phoneNumber: '353-4100001',
-    entityEmail: 'reciclado@villamaria.gob.ar'
-  },
-  {
-    firstname: 'Martín',
-    lastname: 'Rodríguez',
-    username: 'mrodriguez',
-    entityId: '',
-    email: 'mrodriguez@villamaria.gob.ar',
-    password: 'Resp2024!',
-    dni: 31234567,
-    phoneNumber: '353-4100002',
-    entityEmail: 'reciclado@villamaria.gob.ar'
-  },
-  {
-    firstname: 'Sofía',
-    lastname: 'López',
-    username: 'slopez',
-    entityId: '',
-    email: 'slopez@ecoverde.org.ar',
-    password: 'Resp2024!',
-    dni: 35678901,
-    phoneNumber: '351-4200001',
-    entityEmail: 'contacto@ecoverde.org.ar'
+    dni: 33456789,
+    phoneNumber: '3533-400001',
+    entityEmail: 'muniEtruria@gmail.com'
   }
 ]
 
 async function seedResponsibles(em: EntityManager, entities: EntityEntity[]): Promise<ResponsibleEntity[]> {
-  const existing = await em.count(ResponsibleEntity)
-  if (existing > 0) {
-    console.log(`[Seeder] Responsible: ya existen ${existing} registros, se omite.`)
-    return await em.find(ResponsibleEntity, {})
-  }
-
+  const existingResponsibles = await em.find(ResponsibleEntity, {})
+  const existingEmails = new Set(existingResponsibles.map(r => r.email))
   const entityMap = new Map(entities.map(e => [e.email, e]))
 
-  const responsibles = RESPONSIBLE_SEEDS.map(({ entityEmail, ...data }) => {
+  const toCreate = RESPONSIBLE_SEEDS.filter(s => !existingEmails.has(s.email))
+
+  if (toCreate.length === 0) {
+    console.log('[Seeder] Responsible: todos los registros ya existen, se omite.')
+    return existingResponsibles
+  }
+
+  const responsibles = toCreate.map(({ entityEmail, ...data }) => {
     const entity = entityMap.get(entityEmail)
     if (entity == null) throw new Error(`[Seeder] Entity no encontrada: ${entityEmail}`)
     return new ResponsibleEntity(data, entity)
   })
 
   await em.persistAndFlush(responsibles)
-  console.log(`[Seeder] Responsible: ${responsibles.length} responsables creados.`)
-  return responsibles
+  console.log(
+    `[Seeder] Responsible: ${responsibles.length} responsables creados, ${existingResponsibles.length} ya existían.`
+  )
+  return [...existingResponsibles, ...responsibles]
 }
 
 export default seedResponsibles

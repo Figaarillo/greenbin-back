@@ -51,7 +51,16 @@ class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
     return await em.find(
       WasteTransactionEntity,
       { neighbor: neighborId },
-      { populate: ['transactionDetails', 'greenPoint', 'responsible'], orderBy: { date: 'DESC' } }
+      {
+        populate: [
+          'transactionDetails',
+          'transactionDetails.waste',
+          'transactionDetails.waste.category',
+          'greenPoint',
+          'responsible'
+        ],
+        orderBy: { date: 'DESC' }
+      }
     )
   }
 
@@ -60,7 +69,16 @@ class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
     return await em.find(
       WasteTransactionEntity,
       { responsible: responsibleId },
-      { populate: ['transactionDetails', 'greenPoint', 'neighbor'], orderBy: { date: 'DESC' } }
+      {
+        populate: [
+          'transactionDetails',
+          'transactionDetails.waste',
+          'transactionDetails.waste.category',
+          'greenPoint',
+          'neighbor'
+        ],
+        orderBy: { date: 'DESC' }
+      }
     )
   }
 
