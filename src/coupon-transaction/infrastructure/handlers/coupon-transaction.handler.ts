@@ -109,11 +109,10 @@ class CouponTransactionHandler {
       const result = await useCoupon.exec(payload)
 
       HandleHTTPResponse.OK(rep, 'Coupon used successfully', {
-        transactionId: result.transaction.id,
-        couponTitle: result.transaction.coupon.title,
-        discount: result.transaction.coupon.discount,
-        finalAmount: result.finalAmount,
-        status: result.transaction.status
+        transactionId: result.id,
+        couponTitle: result.coupon.title,
+        discount: result.coupon.discount,
+        status: result.status
       })
     } catch (error: any) {
       const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
