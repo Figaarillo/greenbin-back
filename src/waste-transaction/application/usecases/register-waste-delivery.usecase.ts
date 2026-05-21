@@ -1,3 +1,4 @@
+import type EmailService from '../../../auth/application/service/email.service'
 import type FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find-by-id.usecase'
 import type RegisterWasteTransactionDetailUseCase from '../../../waste-transaction-detail/application/usecases/register.usecase'
 import type RegisterWasteUseCase from '../../../waste/application/usecases/register.usecase'
@@ -12,7 +13,8 @@ class RegisterWasteDeliveryUseCase {
     private readonly updateTransaction: UpdateWasteTransactionUseCase,
     private readonly registerTransactionDetail: RegisterWasteTransactionDetailUseCase,
     private readonly registerWaste: RegisterWasteUseCase,
-    private readonly findNeighborByID: FindNeighborByIDUseCase
+    private readonly findNeighborByID: FindNeighborByIDUseCase,
+    private readonly emailService: EmailService
   ) {}
 
   async exec(payload: WasteDeliveryPayload): Promise<WasteTransactionEntity> {
@@ -20,6 +22,7 @@ class RegisterWasteDeliveryUseCase {
     const { wastes, neighborId } = payload
 
     const neighbor = await this.findNeighborByID.exec(neighborId)
+    const wasteDetails: Array<{ categoryName: string; weight: number }> = []
 
     for (const waste of wastes) {
       const newWaste = await this.registerWaste.exec(waste)
@@ -38,10 +41,19 @@ class RegisterWasteDeliveryUseCase {
       neighbor.registerWaste(newWaste)
 
       transaction.addTransactionDetail(transactionDetail)
+      wasteDetails.push({ categoryName: newWaste.category.name, weight: newWaste.weight })
     }
 
     transaction.calculateTotalPoints()
-    return await this.updateTransaction.exec(transaction.id, transaction)
+    const updatedTransaction = await this.updateTransaction.exec(transaction.id, transaction)
+
+    await this.emailService.sendWasteDeliveryConfirmation(
+      neighbor.email,
+      `${neighbor.firstname} ${neighbor.lastname}`,
+      wasteDetails
+    )
+
+    return updatedTransaction
   }
 }
 
