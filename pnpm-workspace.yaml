@@ -1,5 +1,9 @@
 packages:
   - '.'
+allowBuilds:
+  argon2: true
+  bcrypt: true
+  esbuild: true
 onlyBuiltDependencies:
   - argon2
   - bcrypt

@@ -77,8 +77,8 @@ docker.clean:
 	@echo " │       CLEANING DOCKER CONTAINERS       │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	docker compose down --volumes --remove-orphans
-	@docker volume rm greenbin-back_pgdata 2>/dev/null || true
-	@docker volume rm greenbin-back_pgdata-test 2>/dev/null || true
+	@docker volume rm greenbin-back_pgdata || true
+	@docker volume rm greenbin-back_pgdata-test || true
 
 docker.restart.server:
 	@echo " ╭────────────────────────────────────────╮ "
@@ -91,7 +91,7 @@ test: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │           RUNNING ALL TESTS            │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run --config src/vitest.config.ts
 	DATABASE_HOST=$(DB_HOST) pnpm vitest run --config src/vitest.unit.config.ts
 
 test.unit:
@@ -104,61 +104,61 @@ test.e2e: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │         RUNNING ALL E2E TESTS          │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run --config src/vitest.config.ts
 
 test.e2e.entity: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │      RUNNING E2E TESTS FOR ENTITY      │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/entity/test/entity.test.ts --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/entity/test/entity.test.ts --config src/vitest.config.ts
 
 test.e2e.waste-category: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │  RUNNING E2E TESTS FOR WASTE-CATEGORY  │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/waste-category/test/waste-category.test.ts --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/waste-category/test/waste-category.test.ts --config src/vitest.config.ts
 
 test.e2e.neighbor: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │     RUNNING E2E TESTS FOR NEIGHBOR     │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/neighbor/test/neighbor.test.ts --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/neighbor/test/neighbor.test.ts --config src/vitest.config.ts
 
 test.e2e.responsible: docker.run.test
-	@echo " │   RUNNING E2E TESTS FOR RESPONSIBLE    │ "
 	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │   RUNNING E2E TESTS FOR RESPONSIBLE    │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/responsible/test/responsible.test.ts --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/responsible/test/responsible.test.ts --config src/vitest.config.ts
 
 test.e2e.reward-partner: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │  RUNNING E2E TESTS FOR REWARD-PARTNER  │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/reward-partner/test/reward-partner.test.ts --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/reward-partner/test/reward-partner.test.ts --config src/vitest.config.ts
 
 test.e2e.green-point: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │   RUNNING E2E TESTS FOR GREEN-POINT    │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/green-point/test/green-point.test.ts --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/green-point/test/green-point.test.ts --config src/vitest.config.ts
 
 test.e2e.coupon: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │      RUNNING E2E TESTS FOR COUPON      │ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/coupon/test/coupon.test.ts --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/coupon/test/coupon.test.ts --config src/vitest.config.ts
 
 test.e2e.waste-transaction: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │ RUNNING E2E TESTS FOR WASTE-TRANSACTION│ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/waste-transaction/test/waste-transaction.test.ts --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/waste-transaction/test/waste-transaction.test.ts --config src/vitest.config.ts
 
 test.e2e.coupon-transaction: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "
 	@echo " │RUNNING E2E TESTS FOR COUPON-TRANSACTION│ "
 	@echo " ╰────────────────────────────────────────╯ "
-	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/coupon-transaction/test/coupon-transaction.test.ts --config src/vitest.config.ts 2>/dev/null
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/coupon-transaction/test/coupon-transaction.test.ts --config src/vitest.config.ts
 
 migrations: docker.clean
 	@echo " ╭────────────────────────────────────────╮ "

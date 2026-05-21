@@ -9,49 +9,14 @@ import type RewardPartnerEntity from '../../../reward-partner/domain/entities/re
 
 interface CouponTransactionSeed {
   couponTitle: string
-  neighborUsername: string
+  neighborUsername?: string
+  neighborEmail?: string
   partnerUsername: string
   status: 'ADQUIRIDO' | 'UTILIZADO' | 'VENCIDO'
   daysAgo: number
 }
 
-const COUPON_TRANSACTION_SEEDS: CouponTransactionSeed[] = [
-  {
-    couponTitle: '10% de descuento en almacén',
-    neighborUsername: 'cgomez',
-    partnerUsername: 'carrefour_vm',
-    status: 'UTILIZADO',
-    daysAgo: 5
-  },
-  {
-    couponTitle: '15% descuento en medicamentos',
-    neighborUsername: 'amartinez',
-    partnerUsername: 'farmacia_delpueblo',
-    status: 'ADQUIRIDO',
-    daysAgo: 1
-  },
-  {
-    couponTitle: '25% en artículos de librería',
-    neighborUsername: 'dsanchez',
-    partnerUsername: 'libreria_estudiante',
-    status: 'ADQUIRIDO',
-    daysAgo: 2
-  },
-  {
-    couponTitle: '20% de descuento en frescos',
-    neighborUsername: 'vtorres',
-    partnerUsername: 'carrefour_vm',
-    status: 'VENCIDO',
-    daysAgo: 20
-  },
-  {
-    couponTitle: 'Kit escolar gratis',
-    neighborUsername: 'pherrera',
-    partnerUsername: 'libreria_estudiante',
-    status: 'ADQUIRIDO',
-    daysAgo: 1
-  }
-]
+const COUPON_TRANSACTION_SEEDS: CouponTransactionSeed[] = []
 
 function generateCode(): string {
   return uuidv4().replace(/-/g, '').substring(0, 6).toUpperCase()
@@ -63,26 +28,35 @@ async function seedCouponTransactions(
   neighbors: NeighborEntity[],
   rewardPartners: RewardPartnerEntity[]
 ): Promise<void> {
-  const existing = await em.count(CouponTransactionEntity)
-  if (existing > 0) {
-    console.log(`[Seeder] CouponTransaction: ya existen ${existing} registros, se omite.`)
-    return
-  }
-
   const couponMap = new Map(coupons.map(c => [c.title, c]))
-  const neighborMap = new Map(neighbors.map(n => [n.username, n]))
+  const neighborByUsernameMap = new Map(neighbors.map(n => [n.username, n]))
+  const neighborByEmailMap = new Map(neighbors.map(n => [n.email, n]))
   const partnerMap = new Map(rewardPartners.map(p => [p.username, p]))
 
+  // Obtener IDs de vecinos que ya tienen transacciones de cupones para no duplicar
+  const existingTransactions = await em.find(CouponTransactionEntity, {}, { fields: ['neighbor'] })
+  const neighborsWithCouponTransactions = new Set(existingTransactions.map(t => t.neighbor.id))
+
   const transactions: CouponTransactionEntity[] = []
+  let skipped = 0
 
   for (const seed of COUPON_TRANSACTION_SEEDS) {
     const coupon = couponMap.get(seed.couponTitle)
-    const neighbor = neighborMap.get(seed.neighborUsername)
+    const neighbor =
+      seed.neighborUsername != null
+        ? neighborByUsernameMap.get(seed.neighborUsername)
+        : neighborByEmailMap.get(seed.neighborEmail ?? '')
     const partner = partnerMap.get(seed.partnerUsername)
 
     if (coupon == null) throw new Error(`[Seeder] Coupon no encontrado: ${seed.couponTitle}`)
-    if (neighbor == null) throw new Error(`[Seeder] Neighbor no encontrado: ${seed.neighborUsername}`)
+    if (neighbor == null)
+      throw new Error(`[Seeder] Neighbor no encontrado: ${seed.neighborUsername ?? seed.neighborEmail}`)
     if (partner == null) throw new Error(`[Seeder] RewardPartner no encontrado: ${seed.partnerUsername}`)
+
+    if (neighborsWithCouponTransactions.has(neighbor.id)) {
+      skipped++
+      continue
+    }
 
     const adquisitionDate = subDays(new Date(), seed.daysAgo)
     const expirationDate = addDays(adquisitionDate, coupon.validDays)
@@ -110,7 +84,9 @@ async function seedCouponTransactions(
   }
 
   await em.persistAndFlush(transactions)
-  console.log(`[Seeder] CouponTransaction: ${transactions.length} transacciones de cupones creadas.`)
+  console.log(
+    `[Seeder] CouponTransaction: ${transactions.length} transacciones creadas, ${skipped} omitidas (vecino ya tenía datos).`
+  )
 }
 
 export default seedCouponTransactions
