@@ -4,10 +4,6 @@ import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 
-const SUPERADMIN_ID = '00000000-0000-0000-0000-000000000001'
-const SUPERADMIN_USERNAME = 'Admin'
-const SUPERADMIN_PASSWORD = 'admin123'
-
 class SuperadminHandler {
   constructor(private readonly jwtStrategy: IJWTStrategy) {}
 
