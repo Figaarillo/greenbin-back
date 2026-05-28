@@ -4,14 +4,13 @@ import EntityEntity from '../../../entity/domain/entities/entity.entity'
 
 export const ENTITY_SEEDS = [
   {
-    name: 'Municipalidad de Etruria',
+    name: 'Municipalidad Etruria',
     email: 'muniEtruria@gmail.com',
-    description:
-      'Dirección de Medio Ambiente de la Municipalidad de Etruria. Programa municipal de reciclaje y separación en origen.',
+    description: 'Descripcion',
     password: 'Etruria2024!',
     city: 'Etruria',
-    province: 'Córdoba',
-    coordinates: { latitude: -32.9469, longitude: -63.2536 }
+    province: 'Cordoba',
+    coordinates: { latitude: -32.9380556, longitude: -63.2416667 }
   }
 ]
 
