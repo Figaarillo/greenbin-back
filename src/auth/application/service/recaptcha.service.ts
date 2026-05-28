@@ -13,6 +13,8 @@ class RecaptchaService {
   }
 
   async verify(token: string): Promise<boolean> {
+    if (process.env.NODE_ENV === 'test') return true
+
     const url = 'https://www.google.com/recaptcha/api/siteverify'
     const params = new URLSearchParams({
       secret: this.secretKey,

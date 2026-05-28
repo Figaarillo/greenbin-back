@@ -163,13 +163,11 @@ class NeighborHandler {
   }
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
-
     const findByEmail = new FindByEmailUseCase(this.neighborRepository)
-    const neighbor = await findByEmail.exec(tokenNeighbor.email)
+    const neighbor = await findByEmail.exec(req.user.email)
 
     const authService = new AuthService(this.jwtStrategy)
-    const accessToken = await authService.generateAccessToken(req.neighbor.id, {
+    const accessToken = await authService.generateAccessToken(req.user.sub, {
       username: neighbor.username,
       email: neighbor.email,
       role: neighbor.role
@@ -181,8 +179,7 @@ class NeighborHandler {
   }
 
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenEntity = req.tokenRole
-    if (tokenEntity !== Roles.NEIGHBOR) {
+    if (req.user.role !== Roles.NEIGHBOR) {
       throw new Error('Invalid role')
     }
     HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })

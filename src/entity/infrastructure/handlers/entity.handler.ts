@@ -130,13 +130,11 @@ class EntityHandler {
   }
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenEntity = req.entity as { name: string; email: string; role: string }
-
     const findByEmail = new FindByEmailUseCase(this.repository)
-    const entity = await findByEmail.exec(tokenEntity.email)
+    const entity = await findByEmail.exec(req.user.email)
 
     const authService = new AuthService(this.jwtStrategy)
-    const accessToken = await authService.generateAccessToken(req.entity.id, {
+    const accessToken = await authService.generateAccessToken(req.user.sub, {
       name: entity.name,
       email: entity.email,
       role: entity.role
@@ -146,8 +144,7 @@ class EntityHandler {
   }
 
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenEntity = req.tokenRole
-    if (tokenEntity !== Roles.ENTITY) {
+    if (req.user.role !== Roles.ENTITY) {
       throw new Error('Invalid role')
     }
     HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })

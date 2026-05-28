@@ -2,6 +2,7 @@ import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fa
 import type NeighborPayload from '../../domain/payloads/neighbor.payload'
 import type NeighborHandler from '../handlers/neighbor.handler'
 import { updateSwaggerSchema } from '../swagger-schemas/neighbor.swagger-schema'
+import { Roles } from '../../../auth/domain/entities/role'
 
 class NeighborRoute {
   constructor(
@@ -10,9 +11,8 @@ class NeighborRoute {
   ) {}
 
   setupRoutes(): void {
-    // Rutas estáticas primero
     this.server.get('/api/neighbor', {
-      preHandler: this.server.auth([this.server.validateAccessToken]),
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.NEIGHBOR),
       handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
         await this.handler.list(req, rep)
       }
@@ -30,40 +30,39 @@ class NeighborRoute {
       }
     })
     this.server.get('/api/neighbor/auth/validate-role', {
-      preHandler: this.server.auth([this.server.getTokenRole]),
+      preHandler: this.server.auth([this.server.validateAccessToken]),
       handler: async (req, rep) => {
         await this.handler.validateRole(req, rep)
       }
     })
 
-    // Rutas con parámetros dinámicos después
     this.server.get('/api/neighbor/dni/:dni', {
-      preHandler: this.server.auth([this.server.validateAccessToken]),
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.NEIGHBOR),
       handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply) => {
         await this.handler.findByDni(req, rep)
       }
     })
     this.server.get('/api/neighbor/get-waste/:id', {
-      preHandler: this.server.auth([this.server.validateAccessToken]),
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.NEIGHBOR),
       handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply) => {
         await this.handler.getWastes(req, rep)
       }
     })
     this.server.get('/api/neighbor/:id', {
-      preHandler: this.server.auth([this.server.validateAccessToken]),
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.NEIGHBOR),
       handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply) => {
         await this.handler.findById(req, rep)
       }
     })
     this.server.put('/api/neighbor/:id', {
       schema: updateSwaggerSchema,
-      preHandler: this.server.auth([this.server.validateAccessToken]),
+      preHandler: this.server.protectOwner('id', Roles.NEIGHBOR),
       handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply) => {
         await this.handler.update(req, rep)
       }
     })
     this.server.delete('/api/neighbor/:id', {
-      preHandler: this.server.auth([this.server.validateAccessToken]),
+      preHandler: this.server.protectOwner('id', Roles.NEIGHBOR),
       handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep: FastifyReply) => {
         await this.handler.delete(req, rep)
       }

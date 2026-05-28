@@ -126,13 +126,11 @@ class ResponsibleHandler {
   }
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenResponsible = req.responsible as { username: string; email: string; role: string }
-
     const findByEmail = new FindByEmailUseCase(this.responsibleRepository)
-    const responsible = await findByEmail.exec(tokenResponsible.email)
+    const responsible = await findByEmail.exec(req.user.email)
 
     const authService = new AuthService(this.jwtStrategy)
-    const accessToken = await authService.generateAccessToken(req.responsible.id, {
+    const accessToken = await authService.generateAccessToken(req.user.sub, {
       username: responsible.username,
       email: responsible.email,
       role: responsible.role
@@ -144,8 +142,7 @@ class ResponsibleHandler {
   }
 
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenEntity = req.tokenRole
-    if (tokenEntity !== Roles.RESPONSIBLE) {
+    if (req.user.role !== Roles.RESPONSIBLE) {
       throw new Error('Invalid role')
     }
     HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
