@@ -5,18 +5,6 @@ import type EntityEntity from '../../../entity/domain/entities/entity.entity'
 
 const REWARD_PARTNER_SEEDS = [
   {
-    name: 'Almacén El Progreso',
-    username: 'almacen_elprogreso',
-    address: 'Calle Belgrano 345, Etruria',
-    cuit: '20-25678901-3',
-    email: 'canje@almacenelprogreso.com.ar',
-    password: 'Partner2024!',
-    phoneNumber: '3533-400010',
-    coordinates: { latitude: -32.948, longitude: -63.254 },
-    entityId: '',
-    entityEmail: 'muniEtruria@gmail.com'
-  },
-  {
     name: 'Almacén Don Juan',
     username: 'alm_donjuan',
     address: 'Av. San Martín 150, Etruria',
@@ -24,7 +12,7 @@ const REWARD_PARTNER_SEEDS = [
     email: 'canje@almacendonjuan.com.ar',
     password: 'Partner2024!',
     phoneNumber: '3465-420001',
-    coordinates: { latitude: -32.947, longitude: -63.252 },
+    coordinates: { latitude: -32.9332, longitude: -62.5847 },
     entityId: '',
     entityEmail: 'muniEtruria@gmail.com'
   },
@@ -36,7 +24,7 @@ const REWARD_PARTNER_SEEDS = [
     email: 'canje@ferreteriaelprogreso.com.ar',
     password: 'Partner2024!',
     phoneNumber: '3465-420002',
-    coordinates: { latitude: -32.949, longitude: -63.255 },
+    coordinates: { latitude: -32.934, longitude: -62.5835 },
     entityId: '',
     entityEmail: 'muniEtruria@gmail.com'
   },
@@ -48,7 +36,7 @@ const REWARD_PARTNER_SEEDS = [
     email: 'canje@farmaciasanroque.com.ar',
     password: 'Partner2024!',
     phoneNumber: '3465-420003',
-    coordinates: { latitude: -32.946, longitude: -63.253 },
+    coordinates: { latitude: -32.9325, longitude: -62.5852 },
     entityId: '',
     entityEmail: 'muniEtruria@gmail.com'
   },
@@ -60,35 +48,42 @@ const REWARD_PARTNER_SEEDS = [
     email: 'canje@panaderiallaespiga.com.ar',
     password: 'Partner2024!',
     phoneNumber: '3465-420004',
-    coordinates: { latitude: -32.95, longitude: -63.251 },
+    coordinates: { latitude: -32.9318, longitude: -62.5838 },
+    entityId: '',
+    entityEmail: 'muniEtruria@gmail.com'
+  },
+  {
+    name: 'Almacén El Progreso',
+    username: 'almacen_elprogreso',
+    address: 'Calle Belgrano 345, Etruria',
+    cuit: '20-25678901-3',
+    email: 'canje@almacenelprogreso.com.ar',
+    password: 'Partner2024!',
+    phoneNumber: '3533-400010',
+    coordinates: { latitude: -32.948, longitude: -63.254 },
     entityId: '',
     entityEmail: 'muniEtruria@gmail.com'
   }
 ]
 
 async function seedRewardPartners(em: EntityManager, entities: EntityEntity[]): Promise<RewardPartnerEntity[]> {
-  const existingPartners = await em.find(RewardPartnerEntity, {})
-  const existingUsernames = new Set(existingPartners.map(p => p.username))
-  const entityMap = new Map(entities.map(e => [e.email, e]))
-
-  const toCreate = REWARD_PARTNER_SEEDS.filter(s => !existingUsernames.has(s.username))
-
-  if (toCreate.length === 0) {
-    console.log('[Seeder] RewardPartner: todos los registros ya existen, se omite.')
-    return existingPartners
+  const existing = await em.count(RewardPartnerEntity)
+  if (existing > 0) {
+    console.log(`[Seeder] RewardPartner: ya existen ${existing} registros, se omite.`)
+    return await em.find(RewardPartnerEntity, {})
   }
 
-  const partners = toCreate.map(({ entityEmail, ...data }) => {
+  const entityMap = new Map(entities.map(e => [e.email, e]))
+
+  const partners = REWARD_PARTNER_SEEDS.map(({ entityEmail, ...data }) => {
     const entity = entityMap.get(entityEmail)
     if (entity == null) throw new Error(`[Seeder] Entity no encontrada: ${entityEmail}`)
     return new RewardPartnerEntity(data, entity)
   })
 
   await em.persistAndFlush(partners)
-  console.log(
-    `[Seeder] RewardPartner: ${partners.length} reward partners creados, ${existingPartners.length} ya existían.`
-  )
-  return [...existingPartners, ...partners]
+  console.log(`[Seeder] RewardPartner: ${partners.length} reward partners creados.`)
+  return partners
 }
 
 export default seedRewardPartners
