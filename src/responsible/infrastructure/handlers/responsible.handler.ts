@@ -145,7 +145,7 @@ class ResponsibleHandler {
 
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
     const tokenEntity = req.tokenRole
-    if (tokenEntity !== Roles.RESPONSIBLE) {
+    if (tokenEntity !== Roles.RESPONSIBLE && tokenEntity !== Roles.ADMIN) {
       throw new Error('Invalid role')
     }
     HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })

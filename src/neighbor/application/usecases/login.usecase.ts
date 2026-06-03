@@ -18,6 +18,12 @@ class LoginNeighborUseCase {
       throw new ErrorInvalidCredentialsProvided()
     }
 
+    if (!neighbor.isActive) {
+      throw new ErrorInvalidCredentialsProvided(
+        'Tu cuenta fue deshabilitada. Contactá a la entidad para más información.'
+      )
+    }
+
     return neighbor
   }
 

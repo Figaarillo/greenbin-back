@@ -16,6 +16,12 @@ class LoginRewardPartnerUseCase {
       throw new ErrorInvalidCredentialsProvided()
     }
 
+    if (!rewardPartner.isActive) {
+      throw new ErrorInvalidCredentialsProvided(
+        'Tu cuenta fue deshabilitada. Contactá a la entidad para más información.'
+      )
+    }
+
     return rewardPartner
   }
 

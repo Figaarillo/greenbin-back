@@ -69,7 +69,10 @@ class EntityHandler {
   }
 
   async update(
-    req: FastifyRequest<{ Body: { description: string }; Params: Record<string, string> }>,
+    req: FastifyRequest<{
+      Body: { name?: string; description?: string; password?: string }
+      Params: Record<string, string>
+    }>,
     rep: FastifyReply
   ): Promise<void> {
     const id = getURLParams(req, 'id')

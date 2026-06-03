@@ -29,7 +29,8 @@ export const listSwaggerSchema = {
               username: { type: 'string', description: 'Username of the responsible.' },
               email: { type: 'string', description: 'Email of the responsible.' },
               dni: { type: 'number', description: 'DNI of the responsible.' },
-              phoneNumber: { type: 'string', description: 'Phone number of the responsible.' }
+              phoneNumber: { type: 'string', description: 'Phone number of the responsible.' },
+              isActive: { type: 'boolean', description: 'Whether the responsible is active.' }
             },
             required: [
               'id',
@@ -78,7 +79,8 @@ export const findByIdSwaggerSchema = {
             username: { type: 'string', description: 'Username of the responsible.' },
             email: { type: 'string', description: 'Email of the responsible.' },
             dni: { type: 'number', description: 'DNI of the responsible.' },
-            phoneNumber: { type: 'string', description: 'Phone number of the responsible.' }
+            phoneNumber: { type: 'string', description: 'Phone number of the responsible.' },
+            isActive: { type: 'boolean', description: 'Whether the responsible is active.' }
           },
           required: ['id', 'createdAt', 'updatedAt', 'firstname', 'lastname', 'username', 'email', 'dni', 'phoneNumber']
         }
