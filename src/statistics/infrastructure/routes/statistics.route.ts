@@ -17,7 +17,7 @@ class StatisticsRoute {
 
     this.server.get(
       '/api/statistics/entity/:entityId/green-points-ranking',
-      async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+      async (req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>, rep) => {
         await this.handler.getGreenPointsRanking(req, rep)
       }
     )
@@ -38,7 +38,7 @@ class StatisticsRoute {
 
     this.server.get(
       '/api/statistics/neighbor/:neighborId/deliveries',
-      async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+      async (req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>, rep) => {
         await this.handler.getNeighborDeliveries(req, rep)
       }
     )

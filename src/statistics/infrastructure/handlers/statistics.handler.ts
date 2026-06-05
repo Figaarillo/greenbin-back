@@ -27,12 +27,17 @@ class StatisticsHandler {
   }
 
   async getGreenPointsRanking(
-    req: FastifyRequest<{ Params: Record<string, string> }>,
+    req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
     rep: FastifyReply
   ): Promise<void> {
     const entityId = getURLParams(req, 'entityId')
+    const { from, to } = req.query
     const useCase = new GetGreenPointsRankingUseCase(this.repository)
-    const result = await useCase.exec(entityId)
+    const result = await useCase.exec(
+      entityId,
+      from != null ? new Date(from) : undefined,
+      to != null ? new Date(to) : undefined
+    )
     HandleHTTPResponse.OK(rep, 'Green points ranking retrieved successfully', result)
   }
 
@@ -68,12 +73,17 @@ class StatisticsHandler {
   }
 
   async getNeighborDeliveries(
-    req: FastifyRequest<{ Params: Record<string, string> }>,
+    req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
     rep: FastifyReply
   ): Promise<void> {
     const neighborId = getURLParams(req, 'neighborId')
+    const { from, to } = req.query
     const useCase = new GetNeighborDeliveriesUseCase(this.repository)
-    const result = await useCase.exec(neighborId)
+    const result = await useCase.exec(
+      neighborId,
+      from != null ? new Date(from) : undefined,
+      to != null ? new Date(to) : undefined
+    )
     HandleHTTPResponse.OK(rep, 'Neighbor deliveries retrieved successfully', result)
   }
 }
