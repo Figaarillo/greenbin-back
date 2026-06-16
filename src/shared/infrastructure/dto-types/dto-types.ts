@@ -123,7 +123,7 @@ export const usernameDTO = z
   .string()
   .min(4, { message: 'Username must be at least 4 characters long' })
   .max(100, { message: 'Username must be less than 100 characters' })
-  .regex(/^[a-zA-Z0-9]+$/, { message: 'Username must only contain letters and numbers' })
+  .regex(/^[a-zA-Z0-9_]+$/, { message: 'Username must only contain letters, numbers, and underscores' })
   .refine((username: string) => username.trim().length > 0, { message: 'Username cannot be empty' })
 
 export const validDaysDTO = z

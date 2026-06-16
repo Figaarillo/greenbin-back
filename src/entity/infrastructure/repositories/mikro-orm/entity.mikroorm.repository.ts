@@ -4,6 +4,7 @@ import type Nullable from '../../../../shared/domain/types/nullable.type'
 import EntityEntity from '../../../domain/entities/entity.entity'
 import ErrorEntityNotFound from '../../../domain/errors/entity-not-found.error'
 import type EntityRepository from '../../../domain/repositories/entity.repository'
+import { type EntityUpdatePayload } from '../../../domain/repositories/entity.repository'
 import { type EntityRelationships } from '../../../domain/enums/entity.enum'
 
 class EntityMikroORMRepository implements EntityRepository {
@@ -27,13 +28,13 @@ class EntityMikroORMRepository implements EntityRepository {
     return entity
   }
 
-  async update(id: string, description: string): Promise<Nullable<EntityEntity>> {
+  async update(id: string, payload: EntityUpdatePayload): Promise<Nullable<EntityEntity>> {
     const em = this.getEntityManager()
 
     const entity = await em.findOne(EntityEntity, { id })
     if (entity == null) return null
 
-    entity.update(description)
+    entity.update(payload)
     await em.flush()
 
     return entity
@@ -56,7 +57,8 @@ class EntityMikroORMRepository implements EntityRepository {
       throw new ErrorEntityNotFound(id, undefined, undefined)
     }
 
-    await em.remove(entity).flush()
+    entity.softDelete()
+    await em.flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

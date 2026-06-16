@@ -12,9 +12,11 @@ export default defineConfig({
   entities: ['./dist/**/*.entity.js'],
   entitiesTs: ['./src/**/*.entity.ts'],
   metadataProvider: TsMorphMetadataProvider,
-  debug: true,
+  debug: EnvVar.server.nodeEnv === 'development',
   extensions: [Migrator],
   migrations: {
+    path: './dist/migrations',
+    pathTs: './src/migrations',
     safe: true
   }
 })

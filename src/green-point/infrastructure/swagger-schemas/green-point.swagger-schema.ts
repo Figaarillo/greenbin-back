@@ -5,7 +5,12 @@ export const listSwaggerSchema = {
     type: 'object',
     properties: {
       offset: { type: 'integer', description: 'Offset for pagination' },
-      limit: { type: 'integer', description: 'Limit for pagination' }
+      limit: { type: 'integer', description: 'Limit for pagination' },
+      entityId: { type: 'string', description: 'Filter by entity id' },
+      includeInactive: {
+        type: 'string',
+        description: 'If "true", inactive (soft-deleted) green points are returned alongside active ones'
+      }
     },
     required: ['offset', 'limit']
   },
@@ -36,7 +41,8 @@ export const listSwaggerSchema = {
                   longitude: { type: 'number', description: 'Longitude of the Green point.' }
                 },
                 required: ['latitude', 'longitude']
-              }
+              },
+              isActive: { type: 'boolean', description: 'Whether the green point is active.' }
             },
             required: ['id', 'createdAt', 'updatedAt', 'name', 'description', 'address', 'coordinates']
           }
@@ -82,7 +88,8 @@ export const findByIdSwaggerSchema = {
                 longitude: { type: 'number', description: 'Longitude of the Green point.' }
               },
               required: ['latitude', 'longitude']
-            }
+            },
+            isActive: { type: 'boolean', description: 'Whether the green point is active.' }
           },
           required: ['id', 'createdAt', 'updatedAt', 'name', 'description', 'address', 'coordinates']
         }

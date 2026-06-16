@@ -27,7 +27,10 @@ class CouponMikroORMRepository implements CouponRepository {
     populate: CouponRelationship[]
   ): Promise<Nullable<CouponEntity>> {
     const em = this.getEntityManager()
-    return await em.findOne(CouponEntity, property, { populate })
+    // Lectura de detalle: desactivamos el filtro 'active' para que el maestro
+    // referenciado (rewardPartner) se popule aunque esté dado de baja, en lugar
+    // de venir null y romper la vista del cupón.
+    return await em.findOne(CouponEntity, property, { populate, filters: { active: false } })
   }
 
   async save(newCoupon: CouponEntity): Promise<Nullable<CouponEntity>> {
@@ -56,7 +59,8 @@ class CouponMikroORMRepository implements CouponRepository {
       throw new ErrorCouponNotFound(id)
     }
 
-    await em.remove(coupon).flush()
+    coupon.softDelete()
+    await em.flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

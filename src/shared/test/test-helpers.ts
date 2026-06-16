@@ -89,6 +89,10 @@ export const COUPON_FIXTURE = {
 
 // ─── Factory functions ────────────────────────────────────────────────────────
 
+function authHeaders(token?: string): Record<string, string> {
+  return token != null && token.length > 0 ? { authorization: `Bearer ${token}` } : {}
+}
+
 export async function createEntity(app: FastifyInstance, overrides = {}): Promise<Record<string, string>> {
   const res = await app.inject({
     method: 'POST',
@@ -108,10 +112,15 @@ export async function createEntityWithToken(
   return { id: created.id, token }
 }
 
-export async function createWasteCategory(app: FastifyInstance, overrides = {}): Promise<Record<string, string>> {
+export async function createWasteCategory(
+  app: FastifyInstance,
+  overrides = {},
+  token?: string
+): Promise<Record<string, string>> {
   const res = await app.inject({
     method: 'POST',
     url: '/api/waste-category',
+    headers: authHeaders(token),
     body: { ...WASTE_CATEGORY_FIXTURE, ...overrides }
   })
   return res.json().data
@@ -142,11 +151,13 @@ export async function createNeighborWithToken(
 export async function createResponsible(
   app: FastifyInstance,
   entityId: string,
-  overrides = {}
+  overrides = {},
+  token?: string
 ): Promise<Record<string, string>> {
   const res = await app.inject({
     method: 'POST',
     url: '/api/responsible',
+    headers: authHeaders(token),
     body: { ...RESPONSIBLE_FIXTURE, entityId, ...overrides }
   })
   if (res.statusCode >= 400) {
@@ -158,11 +169,13 @@ export async function createResponsible(
 export async function createRewardPartner(
   app: FastifyInstance,
   entityId: string,
-  overrides = {}
+  overrides = {},
+  token?: string
 ): Promise<Record<string, string>> {
   const res = await app.inject({
     method: 'POST',
     url: '/api/reward-partner',
+    headers: authHeaders(token),
     body: { ...REWARD_PARTNER_FIXTURE, entityId, ...overrides }
   })
   if (res.statusCode >= 400) {
@@ -174,10 +187,11 @@ export async function createRewardPartner(
 export async function createRewardPartnerWithToken(
   app: FastifyInstance,
   entityId: string,
+  creatorToken: string,
   overrides = {}
 ): Promise<{ id: string; token: string }> {
   const fixture = { ...REWARD_PARTNER_FIXTURE, ...overrides }
-  const created = await createRewardPartner(app, entityId, overrides)
+  const created = await createRewardPartner(app, entityId, overrides, creatorToken)
   const token = await loginRewardPartner(app, fixture.email, fixture.password)
   return { id: created.id, token }
 }
@@ -194,11 +208,13 @@ export async function loginRewardPartner(app: FastifyInstance, email: string, pa
 export async function createGreenPoint(
   app: FastifyInstance,
   entityId: string,
-  overrides = {}
+  overrides = {},
+  token?: string
 ): Promise<Record<string, string>> {
   const res = await app.inject({
     method: 'POST',
     url: '/api/green-point',
+    headers: authHeaders(token),
     body: { ...GREEN_POINT_FIXTURE, entityId, ...overrides }
   })
   return res.json().data
@@ -207,11 +223,13 @@ export async function createGreenPoint(
 export async function createCoupon(
   app: FastifyInstance,
   rewardPartnerId: string,
-  overrides = {}
+  overrides = {},
+  token?: string
 ): Promise<Record<string, string>> {
   const res = await app.inject({
     method: 'POST',
     url: '/api/coupon',
+    headers: authHeaders(token),
     body: { ...COUPON_FIXTURE, rewardPartnerId, ...overrides }
   })
   return res.json().data
@@ -247,10 +265,11 @@ export async function loginResponsible(app: FastifyInstance, email: string, pass
 export async function createResponsibleWithToken(
   app: FastifyInstance,
   entityId: string,
+  creatorToken: string,
   overrides = {}
 ): Promise<{ id: string; token: string }> {
   const fixture = { ...RESPONSIBLE_FIXTURE, ...overrides }
-  const created = await createResponsible(app, entityId, overrides)
+  const created = await createResponsible(app, entityId, overrides, creatorToken)
   const token = await loginResponsible(app, fixture.email, fixture.password)
   return { id: created.id, token }
 }

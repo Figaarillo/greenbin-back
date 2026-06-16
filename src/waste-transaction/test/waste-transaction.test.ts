@@ -2,7 +2,7 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { app } from '../../shared/test/test.setup'
 import {
-  createEntity,
+  createEntityWithToken,
   createNeighborWithToken,
   createResponsible,
   createGreenPoint,
@@ -15,13 +15,15 @@ describe('WasteTransaction — integration tests', () => {
   let greenPointId: string
   let categoryId: string
   let token: string
+  let entityToken: string
 
   beforeEach(async () => {
-    const entity = await createEntity(app)
+    const entity = await createEntityWithToken(app)
+    entityToken = entity.token
     const neighbor = await createNeighborWithToken(app, entity.id)
-    const responsible = await createResponsible(app, entity.id)
-    const greenPoint = await createGreenPoint(app, entity.id)
-    const category = await createWasteCategory(app)
+    const responsible = await createResponsible(app, entity.id, {}, entityToken)
+    const greenPoint = await createGreenPoint(app, entity.id, {}, entityToken)
+    const category = await createWasteCategory(app, {}, entityToken)
 
     neighborId = neighbor.id
     responsibleId = responsible.id
@@ -35,6 +37,7 @@ describe('WasteTransaction — integration tests', () => {
       const res = await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId,
           neighborId,
@@ -48,17 +51,36 @@ describe('WasteTransaction — integration tests', () => {
       expect(body).toHaveProperty('id')
     })
 
-    it('registra una entrega con múltiples residuos', async () => {
-      const category2 = await createWasteCategory(app, {
-        name: 'Vidrio',
-        pointsPerWeight: 6,
-        description: 'Vidrio',
-        co2: 1.2
+    it('devuelve 401 sin token', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/waste/transaction/delivery',
+        body: {
+          responsibleId,
+          neighborId,
+          greenPointId,
+          wastes: [{ categoryId, weight: 2.0 }]
+        }
       })
+      expect(res.statusCode).toBe(401)
+    })
+
+    it('registra una entrega con múltiples residuos', async () => {
+      const category2 = await createWasteCategory(
+        app,
+        {
+          name: 'Vidrio',
+          pointsPerWeight: 6,
+          description: 'Vidrio',
+          co2: 1.2
+        },
+        entityToken
+      )
 
       const res = await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId,
           neighborId,
@@ -77,6 +99,7 @@ describe('WasteTransaction — integration tests', () => {
       const res = await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId,
           neighborId,
@@ -93,6 +116,7 @@ describe('WasteTransaction — integration tests', () => {
       await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId,
           neighborId,
@@ -112,6 +136,7 @@ describe('WasteTransaction — integration tests', () => {
       await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId,
           neighborId,
@@ -131,6 +156,7 @@ describe('WasteTransaction — integration tests', () => {
       const res = await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId: '00000000-0000-0000-0000-000000000000',
           neighborId,
@@ -145,6 +171,7 @@ describe('WasteTransaction — integration tests', () => {
       const res = await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId,
           neighborId: '00000000-0000-0000-0000-000000000000',
@@ -159,6 +186,7 @@ describe('WasteTransaction — integration tests', () => {
       const res = await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId,
           neighborId,
@@ -173,6 +201,7 @@ describe('WasteTransaction — integration tests', () => {
       const res = await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId,
           neighborId,
@@ -189,6 +218,7 @@ describe('WasteTransaction — integration tests', () => {
       const delivery = await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId,
           neighborId,
@@ -198,7 +228,11 @@ describe('WasteTransaction — integration tests', () => {
       })
       const transactionId = delivery.json().data.id
 
-      const res = await app.inject({ method: 'GET', url: `/api/waste/transaction/${transactionId}` })
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/waste/transaction/${transactionId}`,
+        headers: { authorization: `Bearer ${entityToken}` }
+      })
       expect(res.statusCode).toBe(200)
       expect(res.json().data.id).toBe(transactionId)
     })
@@ -206,7 +240,8 @@ describe('WasteTransaction — integration tests', () => {
     it('devuelve 404 con id inexistente', async () => {
       const res = await app.inject({
         method: 'GET',
-        url: '/api/waste/transaction/00000000-0000-0000-0000-000000000000'
+        url: '/api/waste/transaction/00000000-0000-0000-0000-000000000000',
+        headers: { authorization: `Bearer ${entityToken}` }
       })
       expect(res.statusCode).toBe(404)
     })

@@ -3,7 +3,12 @@ import type NeighborEntity from '../entities/neighbor.entity'
 import type NeighborUpdatePayload from '../payloads/neighbor.update.payload'
 
 interface NeighborRepository {
-  list: (offset: number, limit: number, entityId?: string) => Promise<Nullable<NeighborEntity[]>>
+  list: (
+    offset: number,
+    limit: number,
+    entityId?: string,
+    includeInactive?: boolean
+  ) => Promise<Nullable<NeighborEntity[]>>
   find: (property: Record<string, string>) => Promise<Nullable<NeighborEntity>>
   findWithWaste: (property: Record<string, string>) => Promise<Nullable<NeighborEntity>>
   findWithPassword: (property: Record<string, string>) => Promise<Nullable<NeighborEntity>>

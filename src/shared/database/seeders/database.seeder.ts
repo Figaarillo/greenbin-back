@@ -9,6 +9,7 @@ import seedGreenPoints from './green-point.seeder'
 import seedCoupons from './coupon.seeder'
 import seedWasteTransactions from './waste-transaction.seeder'
 import seedCouponTransactions from './coupon-transaction.seeder'
+import seedAdmins from './admin.seeder'
 
 /**
  * Orquestador principal del seeder.
@@ -25,6 +26,7 @@ async function runSeeders(em: EntityManager): Promise<void> {
     const entities = await seedEntities(em.fork())
 
     // 2. Dependen de Entity
+    await seedAdmins(em.fork(), entities)
     const responsibles = await seedResponsibles(em.fork(), entities)
     const rewardPartners = await seedRewardPartners(em.fork(), entities)
     const neighbors = await seedNeighbors(em.fork(), entities)

@@ -12,9 +12,16 @@ class CouponTransactionMikroORMRepository implements CouponTransactionRepository
     return await em.findOne(CouponTransactionEntity, property)
   }
 
+  // Lecturas de historial: desactivamos el filtro 'active' para que los maestros
+  // referenciados (coupon, rewardPartner, neighbor) se populen aunque estén dados
+  // de baja. Si no, el populate los traería null y rompería el render del histórico.
   async findByNeighbor(neighborId: string): Promise<CouponTransactionEntity[]> {
     const em = this.getEntityManager()
-    return await em.find(CouponTransactionEntity, { neighbor: neighborId }, { populate: ['coupon', 'rewardPartner'] })
+    return await em.find(
+      CouponTransactionEntity,
+      { neighbor: neighborId },
+      { populate: ['coupon', 'rewardPartner'], filters: { active: false } }
+    )
   }
 
   async findByRewardPartner(rewardPartnerId: string): Promise<CouponTransactionEntity[]> {
@@ -22,18 +29,26 @@ class CouponTransactionMikroORMRepository implements CouponTransactionRepository
     return await em.find(
       CouponTransactionEntity,
       { rewardPartner: rewardPartnerId },
-      { populate: ['coupon', 'neighbor'] }
+      { populate: ['coupon', 'neighbor'], filters: { active: false } }
     )
   }
 
   async findById(id: string): Promise<Nullable<CouponTransactionEntity>> {
     const em = this.getEntityManager()
-    return await em.findOne(CouponTransactionEntity, { id }, { populate: ['coupon', 'rewardPartner', 'neighbor'] })
+    return await em.findOne(
+      CouponTransactionEntity,
+      { id },
+      { populate: ['coupon', 'rewardPartner', 'neighbor'], filters: { active: false } }
+    )
   }
 
   async findByCode(code: string): Promise<Nullable<CouponTransactionEntity>> {
     const em = this.getEntityManager()
-    return await em.findOne(CouponTransactionEntity, { code }, { populate: ['coupon', 'rewardPartner', 'neighbor'] })
+    return await em.findOne(
+      CouponTransactionEntity,
+      { code },
+      { populate: ['coupon', 'rewardPartner', 'neighbor'], filters: { active: false } }
+    )
   }
 
   async save(transaction: CouponTransactionEntity): Promise<Nullable<CouponTransactionEntity>> {

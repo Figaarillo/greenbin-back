@@ -1,8 +1,10 @@
 import { z } from 'zod'
-import { descriptionDTO } from '../../../shared/infrastructure/dto-types/dto-types'
+import { descriptionDTO, nameDTO, passwordDTO } from '../../../shared/infrastructure/dto-types/dto-types'
 
 const UpdateEntityDTO = z.object({
-  description: descriptionDTO
+  name: nameDTO.optional(),
+  description: descriptionDTO.optional(),
+  password: passwordDTO.optional()
 })
 
 export default UpdateEntityDTO
