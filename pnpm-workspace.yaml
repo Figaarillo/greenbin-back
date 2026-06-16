@@ -1,7 +1,7 @@
-onlyBuiltDependencies:
-  - argon2
-  - bcrypt
-  - esbuild
+allowBuilds:
+  argon2: true
+  bcrypt: true
+  esbuild: true
 
 overrides:
   jws: '>=3.2.3'
