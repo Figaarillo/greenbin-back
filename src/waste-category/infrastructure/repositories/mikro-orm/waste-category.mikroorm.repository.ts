@@ -7,12 +7,17 @@ import type WasteCategoryPayload from '../../../domain/payloads/waste-category.p
 import type WasteCategoryRepository from '../../../domain/repositories/waste-category.repository'
 
 class CategoryMikroORMRepository implements WasteCategoryRepository {
-  async list(offset?: number, limit?: number): Promise<Nullable<WasteCategoryEntity[]>> {
+  async list(offset?: number, limit?: number, includeInactive?: boolean): Promise<Nullable<WasteCategoryEntity[]>> {
     const em = this.getEntityManager()
 
-    if (limit == null) return await em.find(WasteCategoryEntity, {})
-    if (offset == null) return await em.find(WasteCategoryEntity, {}, { limit })
-    return await em.find(WasteCategoryEntity, {}, { limit, offset })
+    const options: Record<string, any> = {}
+    if (limit != null) options.limit = limit
+    if (offset != null) options.offset = offset
+    // El filtro global 'active' oculta inactivos por defecto. Solo cuando se piden
+    // explícitamente (vista de admin) lo desactivamos para traerlos junto a los activos.
+    if (includeInactive === true) options.filters = { active: false }
+
+    return await em.find(WasteCategoryEntity, {}, options)
   }
 
   async find(property: Record<string, string>): Promise<Nullable<WasteCategoryEntity>> {

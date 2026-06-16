@@ -31,9 +31,6 @@ class GreenPointEntity extends BaseGreenPoint {
   @ManyToOne(() => EntityEntity)
   entity: EntityEntity
 
-  @Property({ default: true })
-  isActive: boolean = true
-
   constructor(payload: GreenPointPayload, entity: EntityEntity) {
     super()
     this.name = payload.name
@@ -50,10 +47,6 @@ class GreenPointEntity extends BaseGreenPoint {
     if (payload.email != null && payload.email !== '') this.email = payload.email
     if (payload.phoneNumber != null && payload.phoneNumber !== '') this.phoneNumber = payload.phoneNumber
     if (payload.description != null && payload.description !== '') this.description = payload.description
-  }
-
-  softDelete(): void {
-    this.isActive = false
   }
 }
 

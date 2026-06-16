@@ -46,12 +46,19 @@ class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
     return transaction
   }
 
+  // Lecturas de historial: desactivamos el filtro 'active' para que los maestros
+  // referenciados (greenPoint, responsible, neighbor) se populen aunque estén dados
+  // de baja. Si no, el populate los traería null y rompería el render del histórico.
   async findByNeighbor(neighborId: string): Promise<WasteTransactionEntity[]> {
     const em = this.getEntityManager()
     return await em.find(
       WasteTransactionEntity,
       { neighbor: neighborId },
-      { populate: ['transactionDetails', 'greenPoint', 'responsible'], orderBy: { date: 'DESC' } }
+      {
+        populate: ['transactionDetails', 'greenPoint', 'responsible'],
+        orderBy: { date: 'DESC' },
+        filters: { active: false }
+      }
     )
   }
 
@@ -60,7 +67,11 @@ class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
     return await em.find(
       WasteTransactionEntity,
       { responsible: responsibleId },
-      { populate: ['transactionDetails', 'greenPoint', 'neighbor'], orderBy: { date: 'DESC' } }
+      {
+        populate: ['transactionDetails', 'greenPoint', 'neighbor'],
+        orderBy: { date: 'DESC' },
+        filters: { active: false }
+      }
     )
   }
 

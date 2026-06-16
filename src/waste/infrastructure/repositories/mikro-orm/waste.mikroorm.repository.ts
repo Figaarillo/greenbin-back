@@ -10,7 +10,9 @@ class WasteMikroORMRepository implements WasteRepository {
 
   async find(property: Record<string, string>): Promise<Nullable<WasteEntity>> {
     const em = this.getEntityManager()
-    return await em.findOne(WasteEntity, property, { populate: ['category'] })
+    // Desactivamos el filtro 'active' para que la categoría se popule aunque esté
+    // dada de baja (un waste registrado bajo una categoría luego desactivada).
+    return await em.findOne(WasteEntity, property, { populate: ['category'], filters: { active: false } })
   }
 
   async findCategory(property: Record<string, string>): Promise<Nullable<WasteCategoryEntity>> {

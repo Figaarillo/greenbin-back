@@ -100,10 +100,6 @@ class RewardPartnerHandler {
     const login = new LoginRewardPartnerUseCase(this.rewardPartnerRepository)
     const rewardPartner = await login.exec(payload)
 
-    if (!rewardPartner.isActive) {
-      throw new Error('La cuenta está deshabilitada.')
-    }
-
     const authService = new AuthService(this.jwtStrategy)
     const accessToken = await authService.generateAccessToken(rewardPartner.id, {
       username: rewardPartner.username,

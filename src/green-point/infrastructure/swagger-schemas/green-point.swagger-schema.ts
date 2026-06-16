@@ -7,7 +7,10 @@ export const listSwaggerSchema = {
       offset: { type: 'integer', description: 'Offset for pagination' },
       limit: { type: 'integer', description: 'Limit for pagination' },
       entityId: { type: 'string', description: 'Filter by entity id' },
-      onlyActive: { type: 'string', description: 'If "true", only active green points are returned' }
+      includeInactive: {
+        type: 'string',
+        description: 'If "true", inactive (soft-deleted) green points are returned alongside active ones'
+      }
     },
     required: ['offset', 'limit']
   },

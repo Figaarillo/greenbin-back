@@ -7,7 +7,7 @@ interface GreenPointRepository {
     offset: number,
     limit: number,
     entityId?: string,
-    onlyActive?: boolean
+    includeInactive?: boolean
   ) => Promise<Nullable<GreenPointEntity[]>>
   find: (property: Record<string, string>) => Promise<Nullable<GreenPointEntity>>
   save: (greenPoint: GreenPointEntity) => Promise<Nullable<GreenPointEntity>>

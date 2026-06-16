@@ -36,8 +36,9 @@ class NeighborHandler {
     const { offset, limit } = getPaginationParams(req)
 
     const entityId = req.query.entityId
+    const includeInactive = req.query.includeInactive === 'true'
     const listNeighbor = new ListNeighborsUseCase(this.neighborRepository)
-    const neighbors = await listNeighbor.exec(offset, limit, entityId)
+    const neighbors = await listNeighbor.exec(offset, limit, entityId, includeInactive)
 
     HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
   }
@@ -135,13 +136,6 @@ class NeighborHandler {
 
     const login = new LoginNeighborUseCase(this.neighborRepository)
     const neighbor = await login.exec(paylaod)
-    if (!neighbor.isActive) {
-      throw new Error('La cuenta está deshabilitada.')
-    }
-
-    if (!neighbor.isActive) {
-      throw new Error('La cuenta está deshabilitada.')
-    }
 
     const authService = new AuthService(this.jwtStrategy)
     const accessToken = await authService.generateAccessToken(neighbor.id, {

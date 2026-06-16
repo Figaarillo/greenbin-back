@@ -11,13 +11,18 @@ class GreenPointMikroORMRepository implements GreenPointRepository {
     offset: number,
     limit: number,
     entityId?: string,
-    onlyActive?: boolean
+    includeInactive?: boolean
   ): Promise<Nullable<GreenPointEntity[]>> {
     const em = this.getEntityManager()
     const where: Record<string, any> = {}
     if (entityId != null) where.entity = { id: entityId }
-    if (onlyActive === true) where.isActive = true
-    return await em.find(GreenPointEntity, where, { limit, offset })
+    // El filtro global 'active' oculta inactivos por defecto. Solo cuando se piden
+    // explícitamente (vista de admin) lo desactivamos para traerlos junto a los activos.
+    return await em.find(GreenPointEntity, where, {
+      limit,
+      offset,
+      ...(includeInactive === true ? { filters: { active: false } } : {})
+    })
   }
 
   async find(property: Record<string, string>): Promise<Nullable<GreenPointEntity>> {

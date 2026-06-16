@@ -57,7 +57,8 @@ class EntityMikroORMRepository implements EntityRepository {
       throw new ErrorEntityNotFound(id, undefined, undefined)
     }
 
-    await em.remove(entity).flush()
+    entity.softDelete()
+    await em.flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

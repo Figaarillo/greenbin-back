@@ -5,8 +5,8 @@ import type WasteCategoryRepository from '../../domain/repositories/waste-catego
 class ListCategoriesUseCase {
   constructor(private readonly repository: WasteCategoryRepository) {}
 
-  async exec(offset: number, limit: number): Promise<WasteCategoryEntity[]> {
-    const entitiesFounded = await this.repository.list(offset, limit)
+  async exec(offset: number, limit: number, includeInactive?: boolean): Promise<WasteCategoryEntity[]> {
+    const entitiesFounded = await this.repository.list(offset, limit, includeInactive)
     if (entitiesFounded == null) {
       throw new ErrorCategoryNotFound()
     }
