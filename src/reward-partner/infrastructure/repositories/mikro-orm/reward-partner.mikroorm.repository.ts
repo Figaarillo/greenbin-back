@@ -7,13 +7,24 @@ import type RewardPartnerRepository from '../../../domain/repositories/reward-pa
 import ErrorEntityManagerNotFound from '../../../../shared/domain/errors/entity-manager-not-found.error'
 
 class RewardPartnerMikroORMRepository implements RewardPartnerRepository {
-  async list(offset?: number, limit?: number, entityId?: string): Promise<Nullable<RewardPartnerEntity[]>> {
+  async list(
+    offset?: number,
+    limit?: number,
+    entityId?: string,
+    includeInactive?: boolean
+  ): Promise<Nullable<RewardPartnerEntity[]>> {
     const em = this.getEntityManager()
     const where: Record<string, any> = {}
     if (entityId != null) where.entity = { id: entityId }
-    if (limit == null) return await em.find(RewardPartnerEntity, where)
-    if (offset == null) return await em.find(RewardPartnerEntity, where, { limit })
-    return await em.find(RewardPartnerEntity, where, { limit, offset })
+
+    const options: Record<string, any> = {}
+    if (limit != null) options.limit = limit
+    if (offset != null) options.offset = offset
+    // El filtro global 'active' oculta inactivos por defecto. Solo cuando se piden
+    // explícitamente (vista de admin) lo desactivamos para traerlos junto a los activos.
+    if (includeInactive === true) options.filters = { active: false }
+
+    return await em.find(RewardPartnerEntity, where, options)
   }
 
   async find(property: Record<string, string>): Promise<Nullable<RewardPartnerEntity>> {

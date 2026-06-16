@@ -158,8 +158,9 @@ class RewardPartnerHandler {
     const { offset, limit } = getPaginationParams(req)
 
     const entityId = req.query.entityId
+    const includeInactive = req.query.includeInactive === 'true'
     const listRewardPartners = new ListRewardPartnersUseCase(this.rewardPartnerRepository)
-    const rewardPartners = await listRewardPartners.exec(offset, limit, entityId)
+    const rewardPartners = await listRewardPartners.exec(offset, limit, entityId, includeInactive)
 
     HandleHTTPResponse.OK(rep, 'Reward partners retrieved successfully', rewardPartners)
   }

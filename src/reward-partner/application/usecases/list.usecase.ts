@@ -5,8 +5,13 @@ import type RewardPartnerRepository from '../../domain/repositories/reward-partn
 class ListRewardPartnerUseCase {
   constructor(private readonly repository: RewardPartnerRepository) {}
 
-  async exec(offset: number, limit: number, entityId?: string): Promise<RewardPartnerEntity[]> {
-    const rewardPartner = await this.repository.list(offset, limit, entityId)
+  async exec(
+    offset: number,
+    limit: number,
+    entityId?: string,
+    includeInactive?: boolean
+  ): Promise<RewardPartnerEntity[]> {
+    const rewardPartner = await this.repository.list(offset, limit, entityId, includeInactive)
     if (rewardPartner == null) {
       throw new ErrorRewardPartnerNotFound()
     }
