@@ -37,6 +37,11 @@ interface CorsConfig {
   allowedOrigins: string[]
 }
 
+interface AdminConfig {
+  email: string
+  password: string
+}
+
 interface Config {
   auth: Auth
   server: ServerConfig
@@ -45,6 +50,7 @@ interface Config {
   recaptcha: Recaptcha
   email: EmailConfig
   cors: CorsConfig
+  admin: AdminConfig
 }
 
 const serverConfig: ServerConfig = {
@@ -95,6 +101,13 @@ const corsConfig: CorsConfig = {
       : env.get('CORS_ALLOWED_ORIGINS').default('localhost,127.0.0.1').asArray(',')
 }
 
+// Admin credentials must be provided explicitly via env — never hardcode a default
+// password in source. The seeder consumes these; without them the app fails fast.
+const adminConfig: AdminConfig = {
+  email: env.get('ADMIN_EMAIL').required().asString(),
+  password: env.get('ADMIN_PASSWORD').required().asString()
+}
+
 const EnvVar: Config = {
   auth: authConfig,
   server: serverConfig,
@@ -102,7 +115,8 @@ const EnvVar: Config = {
   testDatabase: testDatabaseConfig,
   recaptcha: recaptchaConfig,
   email: emailConfig,
-  cors: corsConfig
+  cors: corsConfig,
+  admin: adminConfig
 }
 
 export default EnvVar

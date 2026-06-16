@@ -11,9 +11,21 @@ class LoginRewardPartnerUseCase {
   async exec(payload: RewardPartnerLoginPayload): Promise<RewardPartnerEntity> {
     const rewardPartner = await this.findRewardPartner(payload)
 
+    if (!rewardPartner.isActive) {
+      throw new ErrorInvalidCredentialsProvided(
+        'Tu cuenta fue deshabilitada. Contactá a la entidad para más información.'
+      )
+    }
+
     const passwordValid = await rewardPartner.verifyPassword(payload.password)
     if (!passwordValid) {
       throw new ErrorInvalidCredentialsProvided()
+    }
+
+    if (!rewardPartner.isActive) {
+      throw new ErrorInvalidCredentialsProvided(
+        'Tu cuenta fue deshabilitada. Contactá a la entidad para más información.'
+      )
     }
 
     return rewardPartner

@@ -7,7 +7,7 @@ class FindResponsibleByIDUseCase {
 
   async exec(id: string): Promise<ResponsibleEntity> {
     const responsibleFound = await this.repository.find({ id })
-    if (responsibleFound == null) {
+    if (responsibleFound == null || !responsibleFound.isActive) {
       throw new ErrorResponsibleNotFound(id)
     }
 

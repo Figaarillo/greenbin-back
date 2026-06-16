@@ -24,6 +24,7 @@ import bootstrapWasteTransaction from './waste-transaction/waste-transaction.boo
 import bootstrapWaste from './waste/waste.bootstrap'
 import bootstrapStatistics from './statistics/statistics.bootstrap'
 import bootstrapPasswordReset from './auth/password-reset.bootstrap'
+import bootstrapSuperadmin from './superadmin/superadmin.bootstrap'
 import errorMiddleware from './shared/infrastructure/middlewares/error.middleware'
 import runSeeders from './shared/database/seeders/database.seeder'
 
@@ -79,6 +80,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapCouponTransaction(app)
   bootstrapStatistics(app)
   bootstrapPasswordReset(app)
+  await bootstrapSuperadmin(app)
 
   app.setErrorHandler(errorMiddleware)
 
