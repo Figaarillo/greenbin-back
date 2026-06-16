@@ -1,10 +1,14 @@
-packages:
-  - '.'
-allowBuilds:
-  argon2: true
-  bcrypt: true
-  esbuild: true
 onlyBuiltDependencies:
   - argon2
   - bcrypt
   - esbuild
+
+overrides:
+  jws: '>=3.2.3'
+  braces: '>=3.0.3'
+  minimatch: '>=3.1.4'
+  tar: '>=7.5.8'
+  cross-spawn: '>=7.0.5'
+  fast-uri: '>=3.0.3'
+  lodash: '>=4.17.21'
+  picomatch: '>=4.0.2'
