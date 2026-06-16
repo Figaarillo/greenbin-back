@@ -52,7 +52,13 @@ class EntityRoute {
     this.server.put('/api/entity/:id', {
       schema: updateSwaggerSchema,
       preHandler: this.server.auth([this.server.protectOwner('id', Roles.ENTITY)]),
-      handler: async (req: FastifyRequest<{ Body: { description: string }; Params: { id: string } }>, rep) => {
+      handler: async (
+        req: FastifyRequest<{
+          Body: { name?: string; description?: string; password?: string }
+          Params: { id: string }
+        }>,
+        rep
+      ) => {
         await this.handler.update(req, rep)
       }
     })

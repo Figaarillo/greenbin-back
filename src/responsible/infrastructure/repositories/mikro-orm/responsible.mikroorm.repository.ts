@@ -58,7 +58,8 @@ class ResponsibleMikroORMRepository implements ResponsibleRepository {
       throw new ErrorResponsibleNotFound(id, undefined, undefined)
     }
 
-    await em.remove(responsible).flush()
+    responsible.softDelete()
+    await em.flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

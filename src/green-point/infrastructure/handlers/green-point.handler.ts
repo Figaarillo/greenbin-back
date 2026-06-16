@@ -25,8 +25,9 @@ class GreenPointHandler {
     const { offset, limit } = getPaginationParams(req)
 
     const entityId = req.query.entityId
+    const onlyActive = req.query.onlyActive === 'true'
     const listGreenPoints = new ListGreenPointsUseCase(this.greenPointRepository)
-    const greenPoints = await listGreenPoints.exec(offset, limit, entityId)
+    const greenPoints = await listGreenPoints.exec(offset, limit, entityId, onlyActive)
 
     HandleHTTPResponse.OK(rep, 'Green points retrieved successfully', greenPoints)
   }

@@ -11,45 +11,45 @@ interface CouponTransactionSeed {
   couponTitle: string
   neighborUsername: string
   partnerUsername: string
-  status: 'ADQUIRIDO' | 'UTILIZADO' | 'VENCIDO'
+  status: 'ADQUIRIDO' | 'USADO' | 'EXPIRADO'
   daysAgo: number
 }
 
 const COUPON_TRANSACTION_SEEDS: CouponTransactionSeed[] = [
   {
-    couponTitle: '10% de descuento en almacén',
-    neighborUsername: 'cgomez',
-    partnerUsername: 'carrefour_vm',
-    status: 'UTILIZADO',
-    daysAgo: 5
+    couponTitle: '10% en productos de almacén El Progreso',
+    neighborUsername: 'emattalia',
+    partnerUsername: 'almacen_elprogreso',
+    status: 'EXPIRADO',
+    daysAgo: 41
   },
   {
-    couponTitle: '15% descuento en medicamentos',
-    neighborUsername: 'amartinez',
-    partnerUsername: 'farmacia_delpueblo',
-    status: 'ADQUIRIDO',
-    daysAgo: 1
+    couponTitle: '20% en productos de limpieza - El Progreso',
+    neighborUsername: 'emattalia',
+    partnerUsername: 'almacen_elprogreso',
+    status: 'EXPIRADO',
+    daysAgo: 41
   },
   {
-    couponTitle: '25% en artículos de librería',
-    neighborUsername: 'dsanchez',
-    partnerUsername: 'libreria_estudiante',
-    status: 'ADQUIRIDO',
-    daysAgo: 2
+    couponTitle: 'Llevar 3 y pagar 2 en gaseosas - El Progreso',
+    neighborUsername: 'emattalia',
+    partnerUsername: 'almacen_elprogreso',
+    status: 'USADO',
+    daysAgo: 13
   },
   {
-    couponTitle: '20% de descuento en frescos',
-    neighborUsername: 'vtorres',
-    partnerUsername: 'carrefour_vm',
-    status: 'VENCIDO',
-    daysAgo: 20
+    couponTitle: '15% en fiambres y lácteos - Don Juan',
+    neighborUsername: 'emattalia',
+    partnerUsername: 'alm_donjuan',
+    status: 'USADO',
+    daysAgo: 9
   },
   {
-    couponTitle: 'Kit escolar gratis',
-    neighborUsername: 'pherrera',
-    partnerUsername: 'libreria_estudiante',
-    status: 'ADQUIRIDO',
-    daysAgo: 1
+    couponTitle: '10% en compras mayores a $5000 - Don Juan',
+    neighborUsername: 'emattalia',
+    partnerUsername: 'alm_donjuan',
+    status: 'USADO',
+    daysAgo: 9
   }
 ]
 
@@ -86,7 +86,7 @@ async function seedCouponTransactions(
 
     const adquisitionDate = subDays(new Date(), seed.daysAgo)
     const expirationDate = addDays(adquisitionDate, coupon.validDays)
-    const redeemDate = seed.status === 'UTILIZADO' ? subDays(new Date(), seed.daysAgo - 2) : undefined
+    const redeemDate = seed.status === 'USADO' ? subDays(new Date(), seed.daysAgo - 2) : undefined
 
     const ct = new CouponTransactionEntity(
       generateCode(),
@@ -100,8 +100,7 @@ async function seedCouponTransactions(
       partner
     )
 
-    // Descontar puntos del vecino si adquirió el cupón
-    if (seed.status === 'ADQUIRIDO' || seed.status === 'UTILIZADO') {
+    if (seed.status === 'ADQUIRIDO' || seed.status === 'USADO') {
       const updatePayload: { points: number } = { points: coupon.costInPoints }
       neighbor.update(updatePayload as never)
     }

@@ -72,8 +72,10 @@ class EntityEntity extends BaseEntity {
     this.role = Roles.ENTITY
   }
 
-  update(description: string): void {
-    if (description != null && description !== '') this.description = description
+  update(payload: { name?: string; description?: string; password?: string }): void {
+    if (payload.name != null && payload.name !== '') this.name = payload.name
+    if (payload.description != null && payload.description !== '') this.description = payload.description
+    if (payload.password != null && payload.password !== '') this.password = payload.password
   }
 
   @BeforeCreate()

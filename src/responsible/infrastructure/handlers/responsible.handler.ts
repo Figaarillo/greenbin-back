@@ -142,7 +142,7 @@ class ResponsibleHandler {
   }
 
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    if (req.user.role !== Roles.RESPONSIBLE) {
+    if (req.user.role !== Roles.RESPONSIBLE && req.user.role !== Roles.ADMIN) {
       throw new Error('Invalid role')
     }
     HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })
