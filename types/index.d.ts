@@ -1,3 +1,5 @@
+import { type AuthUser } from '../src/auth/domain/entities/auth-user'
+import { type Roles } from '../src/auth/domain/entities/role'
 import { type FastifyReply } from 'fastify'
 
 declare module 'fastify' {
@@ -5,18 +7,14 @@ declare module 'fastify' {
     auth: fastifyAuth
     validateAccessToken: (req: FastifyRequest, rep: FastifyReply) => Promise<void>
     validateRefreshToken: (req: FastifyRequest, rep: FastifyReply) => Promise<void>
-    getTokenRole: (req: FastifyRequest, rep: FastifyReply) => Promise<void>
-    authenticate: (req: FastifyRequest, rep: FastifyReply) => Promise<void>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    protect: (...roles: Roles[]) => any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    protectOwner: (paramKey: string, ...roles: Roles[]) => any
   }
 
   interface FastifyRequest {
-    entity: Record<strign, string>
-    neighbor: Record<strign, string>
-    responsible: Record<strign, string>
-    rewardPartner: Record<strign, string>
-    admin: Record<strign, string>
-    user: Record<strign, string>
-    tokenRole: string
+    user: AuthUser
   }
 
   interface FastifyContextConfig {

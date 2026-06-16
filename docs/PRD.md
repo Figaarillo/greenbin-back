@@ -492,3 +492,155 @@ npm run build                  # Build producción
 ---
 
 *Documento generado el 8 de mayo de 2026*
+## 19. Access Control (OWASP A01)
+
+
+> _Implementado: 27-May-2026 — Rama `fix/broken-access-control`_
+
+#### 10.3.1 Problema original
+
+El backend carecía de autorización real. Decenas de endpoints estaban completamente abiertos (sin autenticación), no había verificación de roles (el decorator `authorizate` existía pero nunca se invocaba), y no había validación de ownership — cualquier usuario autenticado podía operar sobre recursos de cualquier otro usuario. El usuario autenticado se almacenaba en propiedades separadas del request (`req.neighbor`, `req.entity`, `req.responsible`, `req.rewardPartner`) lo cual fragmentaba el acceso y complicaba cualquier middleware transversal.
+
+#### 10.3.2 Solución implementada
+
+**Tres capas de protección:**
+
+| Capa | Middleware | Responsabilidad |
+|------|-----------|-----------------|
+| Autenticación | `validateAccessToken` | Verifica JWT, almacena payload en `req.user` |
+| Roles (RBAC) | `requireRoles(...roles)` | Verifica que `req.user.role` esté en la lista de roles permitidos |
+| Ownership | `requireOwnership(paramKey)` | Verifica que `req.user.sub === req.params[paramKey]` |
+
+**Decorators compuestos (registrados en `auth.bootstrap.ts`):**
+
+- `protect(...roles)` — encadena autenticación + RBAC. Retorna un solo preHandler.
+- `protectOwner(paramKey, ...roles)` — encadena autenticación + RBAC + ownership. Retorna un solo preHandler.
+
+**Interfaz `AuthUser` (`src/auth/domain/entities/auth-user.ts`):**
+
+```typescript
+interface AuthUser {
+  sub: string    // ID del usuario (UUID)
+  role: Roles    // enum: entity | neighbor | responsible | rewardPartner | admin
+  email: string
+  type: string   // 'access' | 'refresh'
+}
+```
+
+**Acceso unificado:** `req.user` reemplaza a `req.neighbor`, `req.entity`, `req.responsible`, `req.rewardPartner`. Todos los handlers usan `req.user.sub` para el ID y `req.user.role` para el rol.
+
+#### 10.3.3 Archivos del sistema de access control
+
+```
+src/auth/
+├── domain/entities/
+│   ├── role.ts                          → Enum Roles
+│   └── auth-user.ts                     → Interfaz AuthUser
+├── infrastructure/middlewares/
+│   ├── validate-access-token.middleware.ts  → Autenticación (sets req.user)
+│   ├── validate-refresh-token.middleware.ts → Refresh token (sets req.user)
+│   ├── require-roles.middleware.ts          → Factory RBAC
+│   └── require-ownership.middleware.ts      → Factory Ownership
+└── auth.bootstrap.ts                    → Registra protect/protectOwner como decorators
+types/index.d.ts                         → Tipado de FastifyInstance y FastifyRequest
+```
+
+#### 10.3.4 Cómo proteger un nuevo endpoint
+
+**Paso 1 — Elegir el nivel de protección:**
+
+| Necesidad | Decorator | Ejemplo |
+|-----------|-----------|---------|
+| Solo autenticado, cualquier rol | `protect(Roles.ENTITY, Roles.NEIGHBOR, Roles.RESPONSIBLE, Roles.REWARD_PARTNER)` | Listar recursos públicos |
+| Autenticado + roles específicos | `protect(Roles.ENTITY, Roles.RESPONSIBLE)` | Crear/modificar recursos de gestión |
+| Autenticado + roles + ownership | `protectOwner('id', Roles.NEIGHBOR)` | Editar/eliminar el propio perfil |
+| Público (sin auth) | No usar preHandler | Login, register, forgot-password |
+
+**Paso 2 — Aplicar en la ruta:**
+
+```typescript
+// Ruta con schema (Swagger) → envolver en this.server.auth([])
+this.server.post('/api/recurso', {
+  schema: miSwaggerSchema,
+  preHandler: this.server.auth([this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE)]),
+  handler: async (req: FastifyRequest<{ Body: MiPayload }>, rep) => {
+    await this.handler.create(req, rep)
+  }
+})
+
+// Ruta sin schema → usar directamente
+this.server.get('/api/recurso/:id', {
+  preHandler: this.server.protect(Roles.ENTITY, Roles.NEIGHBOR),
+  handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+    await this.handler.findByID(req, rep)
+  }
+})
+
+// Ruta con ownership
+this.server.put('/api/recurso/:id', {
+  preHandler: this.server.protectOwner('id', Roles.NEIGHBOR),
+  handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+    await this.handler.update(req, rep)
+  }
+})
+```
+
+> **Importante sobre Fastify + TypeScript:** cuando una ruta tiene `schema` de Swagger, el `preHandler` DEBE estar envuelto en `this.server.auth([...])` para que la resolución de tipos funcione correctamente. Sin schema, se puede usar `this.server.protect(...)` directamente. Esto es una limitación conocida del sistema de tipos de Fastify 4.x.
+
+**Paso 3 — Acceder al usuario en el handler:**
+
+```typescript
+const userId = req.user.sub       // UUID del usuario autenticado
+const userRole = req.user.role    // Roles enum
+const userEmail = req.user.email
+```
+
+#### 10.3.5 Cómo cambiar los permisos de un endpoint existente
+
+Modificar los roles en la llamada a `protect()` o `protectOwner()` en el archivo de rutas correspondiente:
+
+```typescript
+// Antes: solo entity y responsible podían crear cupones
+preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE)
+
+// Después: ahora también reward partner puede crear cupones
+preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.REWARD_PARTNER)
+```
+
+Es un cambio de una sola línea en el archivo `*.route.ts` del módulo.
+
+#### 10.3.6 Permisos actuales por módulo (temporarios)
+
+Los permisos actuales son **placeholders** — la tabla definitiva de permisos por rol no está definida aún por producto. El criterio temporario aplicado:
+
+| Operación | Roles permitidos |
+|-----------|-----------------|
+| **Lectura de recursos** (GET) | Todos los roles autenticados |
+| **Gestión** (POST/PUT/DELETE coupon, green-point, waste-category, waste) | Entity, Responsible |
+| **Transacciones de residuos** (POST waste-transaction) | Entity, Responsible |
+| **Canje de cupones** (POST redeem-coupon) | Neighbor |
+| **Uso de cupones** (POST coupon-transaction/use) | Neighbor, RewardPartner |
+| **Estadísticas de entidad** | Entity, Responsible |
+| **Estadísticas de vecino** | Neighbor, Entity, Responsible |
+| **Editar/eliminar propio perfil** (PUT/DELETE con `:id`) | Rol propio (con ownership check) |
+| **Crear responsables / reward partners** | Entity |
+| **Eliminar responsables / reward partners** | Entity |
+| **Registro y login** | Público (sin auth) |
+
+#### 10.3.7 Endpoints públicos (sin auth)
+
+Los siguientes endpoints NO requieren autenticación por diseño:
+
+- `POST /api/entity` — registro de entidad
+- `POST /api/neighbor` — registro de vecino
+- `POST /api/{entity|neighbor|responsible|reward-partner}/auth/login` — login
+- `GET /api/{entity|neighbor|responsible|reward-partner}/auth/refresh-token` — refresh (usa validateRefreshToken)
+- `POST /api/auth/forgot-password` — solicitar reset de contraseña
+- `POST /api/auth/reset-password` — ejecutar reset de contraseña
+
+---
+
+### 10.4 Estado de los Tests (anterior a access control)
+
+#### 10.4.1 Resumen
+

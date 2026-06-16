@@ -80,16 +80,15 @@ class StatisticsMikroORMRepository implements StatisticsRepository {
 
   async getWasteByPeriod(entityId: string, groupBy: string, from?: Date, to?: Date): Promise<WasteByPeriod[]> {
     const knex = this.getKnex()
-    const validGroupBy = ['day', 'week', 'month', 'year'].includes(groupBy) ? groupBy : 'month'
 
     const query = knex('wastes_transactions_details as wtd')
       .join('wastes_transactions as wt', 'wtd.transaction_id', 'wt.id')
       .join('green_point_entity as gp', 'wt.green_point_id', 'gp.id')
       .where('gp.entity_id', entityId)
-      .groupByRaw(`DATE_TRUNC('${validGroupBy}', wt.date)`)
-      .orderByRaw(`DATE_TRUNC('${validGroupBy}', wt.date) ASC`)
+      .groupByRaw(`DATE_TRUNC('${groupBy}', wt.date)`)
+      .orderByRaw(`DATE_TRUNC('${groupBy}', wt.date) ASC`)
       .select(
-        knex.raw(`DATE_TRUNC('${validGroupBy}', wt.date)::text as "period"`),
+        knex.raw(`DATE_TRUNC('${groupBy}', wt.date)::text as "period"`),
         knex.raw('COALESCE(SUM(wtd.weight), 0)::float as "totalWeight"')
       )
 

@@ -33,6 +33,10 @@ interface EmailConfig {
   appPassword: string
 }
 
+interface CorsConfig {
+  allowedOrigins: string[]
+}
+
 interface Config {
   auth: Auth
   server: ServerConfig
@@ -40,6 +44,7 @@ interface Config {
   testDatabase: DatabaseConfig
   recaptcha: Recaptcha
   email: EmailConfig
+  cors: CorsConfig
 }
 
 const serverConfig: ServerConfig = {
@@ -80,13 +85,24 @@ const emailConfig: EmailConfig = {
   appPassword: env.get('EMAIL_APP_PASSWORD').required().asString()
 }
 
+// In production, CORS origins MUST be provided explicitly (no wildcard, no localhost defaults):
+// env-var only throws on a missing required var when no default is set, so production omits the default.
+// In development/test we fall back to localhost so the local frontend works out of the box.
+const corsConfig: CorsConfig = {
+  allowedOrigins:
+    serverConfig.nodeEnv === 'production'
+      ? env.get('CORS_ALLOWED_ORIGINS').required().asArray(',')
+      : env.get('CORS_ALLOWED_ORIGINS').default('localhost,127.0.0.1').asArray(',')
+}
+
 const EnvVar: Config = {
   auth: authConfig,
   server: serverConfig,
   database: databaseConfig,
   testDatabase: testDatabaseConfig,
   recaptcha: recaptchaConfig,
-  email: emailConfig
+  email: emailConfig,
+  cors: corsConfig
 }
 
 export default EnvVar

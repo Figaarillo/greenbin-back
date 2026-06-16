@@ -124,13 +124,11 @@ class RewardPartnerHandler {
   }
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenRewardPartner = req.rewardPartner as { username: string; email: string; role: string }
-
     const findByEmail = new FindByEmailUseCase(this.rewardPartnerRepository)
-    const rewardPartner = await findByEmail.exec(tokenRewardPartner.email)
+    const rewardPartner = await findByEmail.exec(req.user.email)
 
     const authService = new AuthService(this.jwtStrategy)
-    const accessToken = await authService.generateAccessToken(req.rewardPartner.id, {
+    const accessToken = await authService.generateAccessToken(req.user.sub, {
       username: rewardPartner.username,
       email: rewardPartner.email,
       role: rewardPartner.role
@@ -142,8 +140,7 @@ class RewardPartnerHandler {
   }
 
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenEntity = req.tokenRole
-    if (tokenEntity !== Roles.REWARD_PARTNER) {
+    if (req.user.role !== Roles.REWARD_PARTNER) {
       throw new Error('Invalid role')
     }
     HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })

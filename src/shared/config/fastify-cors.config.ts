@@ -1,12 +1,13 @@
 import { type OriginFunction } from '@fastify/cors'
 import EnvVar from './env-var.config'
 
-const allowedOrigins: string[] = ['localhost']
+const allowedOrigins: string[] = EnvVar.cors.allowedOrigins
 
-const isAllowed: boolean = EnvVar.server.nodeEnv === 'development' || EnvVar.server.nodeEnv === 'test'
+// Requests with no Origin header (curl, server-to-server, same-origin) are only trusted outside production.
+const allowNoOrigin: boolean = EnvVar.server.nodeEnv === 'development' || EnvVar.server.nodeEnv === 'test'
 
 const origin: OriginFunction = (origin, cb) => {
-  if (origin === undefined && isAllowed) {
+  if (origin === undefined && allowNoOrigin) {
     cb(null, true)
     return
   }

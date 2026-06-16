@@ -7,6 +7,7 @@ import {
   registerSwaggerSchema,
   updateSwaggerSchema
 } from '../swagger-schemas/green-point.swagger-schema'
+import { Roles } from '../../../auth/domain/entities/role'
 
 class GreenPointRoute {
   constructor(
@@ -15,37 +16,45 @@ class GreenPointRoute {
   ) {}
 
   setupRoutes(): void {
-    this.server.get(
-      '/api/green-point',
-      { schema: listSwaggerSchema },
-      async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
+    this.server.get('/api/green-point', {
+      schema: listSwaggerSchema,
+      preHandler: this.server.auth([
+        this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.NEIGHBOR, Roles.REWARD_PARTNER)
+      ]),
+      handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
         await this.handler.list(req, rep)
       }
-    )
-    this.server.get(
-      '/api/green-point/:id',
-      { schema: findByIdSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+    })
+    this.server.get('/api/green-point/:id', {
+      schema: findByIdSwaggerSchema,
+      preHandler: this.server.auth([
+        this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.NEIGHBOR, Roles.REWARD_PARTNER)
+      ]),
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
         await this.handler.findByID(req, rep)
       }
-    )
-    this.server.post('/api/green-point', { schema: registerSwaggerSchema }, async (req, rep) => {
-      await this.handler.register(req, rep)
     })
-    this.server.put(
-      '/api/green-point/:id',
-      { schema: updateSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+    this.server.post('/api/green-point', {
+      schema: registerSwaggerSchema,
+      preHandler: this.server.auth([this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE)]),
+      handler: async (req, rep) => {
+        await this.handler.register(req, rep)
+      }
+    })
+    this.server.put('/api/green-point/:id', {
+      schema: updateSwaggerSchema,
+      preHandler: this.server.auth([this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE)]),
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
         await this.handler.update(req, rep)
       }
-    )
-    this.server.delete(
-      '/api/green-point/:id',
-      { schema: deleteSwaggerSchema },
-      async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
+    })
+    this.server.delete('/api/green-point/:id', {
+      schema: deleteSwaggerSchema,
+      preHandler: this.server.auth([this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE)]),
+      handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
         await this.handler.delete(req, rep)
       }
-    )
+    })
   }
 }
 
