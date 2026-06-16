@@ -14,21 +14,9 @@ class LoginResponsibleUseCase {
       throw new ErrorInvalidCredentialsProvided()
     }
 
-    if (!responsible.isActive) {
-      throw new ErrorInvalidCredentialsProvided(
-        'Tu cuenta fue deshabilitada. Contactá a la entidad para más información.'
-      )
-    }
-
     const passwordValid = await responsible.verifyPassword(payload.password)
     if (!passwordValid) {
       throw new ErrorInvalidCredentialsProvided()
-    }
-
-    if (!responsible.isActive) {
-      throw new ErrorInvalidCredentialsProvided(
-        'Tu cuenta fue deshabilitada. Contactá a la entidad para más información.'
-      )
     }
 
     return responsible

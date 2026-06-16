@@ -50,9 +50,6 @@ class ResponsibleEntity extends BaseEntity {
   @ManyToOne()
   entity: EntityEntity
 
-  @Property({ default: true })
-  isActive: boolean = true
-
   constructor(payload: ResponsiblePayload, entity: EntityEntity) {
     super()
     this.firstname = payload.firstname
@@ -87,10 +84,6 @@ class ResponsibleEntity extends BaseEntity {
 
   async verifyPassword(password: string): Promise<boolean> {
     return await verify(this.password, password)
-  }
-
-  softDelete(): void {
-    this.isActive = false
   }
 }
 

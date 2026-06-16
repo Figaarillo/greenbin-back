@@ -20,7 +20,11 @@ export const listSwaggerSchema = {
     type: 'object',
     properties: {
       offset: { type: 'integer', description: 'Offset for pagination' },
-      limit: { type: 'integer', description: 'Limit for pagination' }
+      limit: { type: 'integer', description: 'Limit for pagination' },
+      includeInactive: {
+        type: 'string',
+        description: 'If "true", inactive (soft-deleted) categories are returned alongside active ones'
+      }
     }
   },
   response: {
