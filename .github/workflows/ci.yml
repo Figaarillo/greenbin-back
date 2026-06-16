@@ -112,4 +112,5 @@ jobs:
           EMAIL_APP_PASSWORD: test_password
           ADMIN_EMAIL: admin@example.com
           ADMIN_PASSWORD: test_password
+          CORS_ALLOWED_ORIGINS: localhost
         run: pnpm run test
