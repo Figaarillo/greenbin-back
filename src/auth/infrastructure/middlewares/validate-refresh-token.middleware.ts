@@ -1,9 +1,9 @@
-/* eslint-disable indent */
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { getHeader } from '../../../shared/utils/http.request.util'
 import AuthService from '../../application/service/auth.service'
 import type IJWTStrategy from '../../domain/strategies/jwt.interface.strategy'
+import { type AuthUser } from '../../domain/entities/auth-user'
 
 const validateRefreshToken = async (
   req: FastifyRequest,
@@ -26,22 +26,7 @@ const validateRefreshToken = async (
       return
     }
 
-    switch (token.role) {
-      case 'neighbor':
-        req.neighbor = token
-        break
-      case 'entity':
-        req.entity = token
-        break
-      case 'responsible':
-        req.responsible = token
-        break
-      case 'rewardPartner':
-        req.rewardPartner = token
-        break
-      default:
-        HandleHTTPResponse.Unauthorized(rep, 'Invalid token. Invalid role')
-    }
+    req.user = token as unknown as AuthUser
   } catch (error) {
     if (typeof error === 'object' && error != null) {
       // eslint-disable-next-line @typescript-eslint/no-base-to-string

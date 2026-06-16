@@ -31,6 +31,11 @@ import runSeeders from './shared/database/seeders/database.seeder'
 async function bootstrapApp(port: number, options?: Options): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM(options)
 
+  /* Run pending migrations once on startup (skipped in tests, which manage schema directly) */
+  if (EnvVar.server.nodeEnv !== 'test') {
+    await db.orm.getMigrator().up()
+  }
+
   if (EnvVar.server.nodeEnv === 'development') {
     await runSeeders(db.em)
   }

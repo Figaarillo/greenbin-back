@@ -57,10 +57,13 @@ class StatisticsHandler {
   ): Promise<void> {
     const entityId = getURLParams(req, 'entityId')
     const { from, to, groupBy } = req.query
+    const VALID_GROUP_BY = ['day', 'week', 'month', 'year'] as const
+    type GroupBy = (typeof VALID_GROUP_BY)[number]
+    const safeGroupBy: GroupBy = VALID_GROUP_BY.includes(groupBy as GroupBy) ? (groupBy as GroupBy) : 'month'
     const useCase = new GetWasteByPeriodUseCase(this.repository)
     const result = await useCase.exec(
       entityId,
-      groupBy ?? 'month',
+      safeGroupBy,
       from != null ? new Date(from) : undefined,
       to != null ? new Date(to) : undefined
     )

@@ -2,7 +2,7 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { app } from '../../shared/test/test.setup'
 import {
-  createEntity,
+  createEntityWithToken,
   createNeighbor,
   createNeighborWithToken,
   createWasteCategory,
@@ -13,11 +13,13 @@ import {
 
 describe('Neighbor — integration tests', () => {
   let entityId: string
+  let entityToken: string
   let token: string
 
   beforeEach(async () => {
-    const entity = await createEntity(app)
+    const entity = await createEntityWithToken(app)
     entityId = entity.id
+    entityToken = entity.token
     const neighbor = await createNeighborWithToken(app, entityId)
     token = neighbor.token
   })
@@ -85,7 +87,11 @@ describe('Neighbor — integration tests', () => {
     })
 
     it('el vecino aparece en la entidad al popular', async () => {
-      const res = await app.inject({ method: 'GET', url: `/api/entity/populate?id=${entityId}&with=neighbors` })
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/entity/populate?id=${entityId}&with=neighbors`,
+        headers: { authorization: `Bearer ${entityToken}` }
+      })
       expect(res.statusCode).toBe(200)
       expect(res.json().data.neighbors.length).toBe(1)
     })
@@ -185,13 +191,14 @@ describe('Neighbor — integration tests', () => {
         email: 'conresiduos@test.com',
         dni: 30000006
       })
-      const responsible = await createResponsible(app, entityId)
-      const greenPoint = await createGreenPoint(app, entityId)
-      const category = await createWasteCategory(app)
+      const responsible = await createResponsible(app, entityId, {}, entityToken)
+      const greenPoint = await createGreenPoint(app, entityId, {}, entityToken)
+      const category = await createWasteCategory(app, {}, entityToken)
 
       await app.inject({
         method: 'POST',
         url: '/api/waste/transaction/delivery',
+        headers: { authorization: `Bearer ${entityToken}` },
         body: {
           responsibleId: responsible.id,
           neighborId: neighbor.id,
@@ -211,8 +218,9 @@ describe('Neighbor — integration tests', () => {
   })
 
   describe('PUT /api/neighbor/:id', () => {
-    it('actualiza el teléfono del vecino', async () => {
-      const neighbor = await createNeighbor(app, entityId, {
+    it('actualiza el teléfono del vecino (con su propio token)', async () => {
+      // protectOwner('id', NEIGHBOR): solo el propio vecino puede actualizarse.
+      const neighbor = await createNeighborWithToken(app, entityId, {
         username: 'aactualizar',
         email: 'aactualizar@test.com',
         dni: 30000007
@@ -220,26 +228,41 @@ describe('Neighbor — integration tests', () => {
       const res = await app.inject({
         method: 'PUT',
         url: `/api/neighbor/${neighbor.id}`,
-        headers: { authorization: `Bearer ${token}` },
+        headers: { authorization: `Bearer ${neighbor.token}` },
         body: { phoneNumber: '3535999999' }
       })
       expect(res.statusCode).toBe(200)
     })
 
-    it('devuelve 404 al actualizar id inexistente', async () => {
+    it('devuelve 403 al actualizar el id de otro vecino', async () => {
+      const otro = await createNeighbor(app, entityId, {
+        username: 'ajeno',
+        email: 'ajeno@test.com',
+        dni: 30000077
+      })
+      const res = await app.inject({
+        method: 'PUT',
+        url: `/api/neighbor/${otro.id}`,
+        headers: { authorization: `Bearer ${token}` },
+        body: { phoneNumber: '3535999999' }
+      })
+      expect(res.statusCode).toBe(403)
+    })
+
+    it('devuelve 403 al actualizar id inexistente', async () => {
       const res = await app.inject({
         method: 'PUT',
         url: '/api/neighbor/00000000-0000-0000-0000-000000000000',
         headers: { authorization: `Bearer ${token}` },
         body: { phoneNumber: '3535999999' }
       })
-      expect(res.statusCode).toBe(404)
+      expect(res.statusCode).toBe(403)
     })
   })
 
   describe('DELETE /api/neighbor/:id', () => {
-    it('elimina un vecino existente (soft delete)', async () => {
-      const neighbor = await createNeighbor(app, entityId, {
+    it('elimina un vecino existente con su propio token (soft delete)', async () => {
+      const neighbor = await createNeighborWithToken(app, entityId, {
         username: 'aborrar',
         email: 'aborrar@test.com',
         dni: 30000008
@@ -247,17 +270,17 @@ describe('Neighbor — integration tests', () => {
       const res = await app.inject({
         method: 'DELETE',
         url: `/api/neighbor/${neighbor.id}`,
-        headers: { authorization: `Bearer ${token}` }
+        headers: { authorization: `Bearer ${neighbor.token}` }
       })
       expect(res.statusCode).toBe(200)
     })
-    it('devuelve 404 al eliminar id inexistente', async () => {
+    it('devuelve 403 al eliminar id inexistente', async () => {
       const res = await app.inject({
         method: 'DELETE',
         url: '/api/neighbor/00000000-0000-0000-0000-000000000000',
         headers: { authorization: `Bearer ${token}` }
       })
-      expect(res.statusCode).toBe(404)
+      expect(res.statusCode).toBe(403)
     })
 
     it('devuelve 401 sin token', async () => {

@@ -3,7 +3,7 @@ import JWTStrategy from '../auth/infrastructure/strategies/basic-jwt.strategy'
 import AuthService from '../auth/application/service/auth.service'
 import RecaptchaService from '../auth/application/service/recaptcha.service'
 import { Roles } from '../auth/domain/entities/role'
-import getTokenRole from '../auth/infrastructure/middlewares/get-token-role.middleware'
+import validateAccessToken from '../auth/infrastructure/middlewares/validate-access-token.middleware'
 import HandleHTTPResponse from '../shared/utils/http.reply.util'
 import ResponsibleMikroORMRepository from '../responsible/infrastructure/repositories/mikro-orm/responsible.mikroorm.repository'
 import LoginResponsibleUseCase from '../responsible/application/usecases/login.usecase'
@@ -57,11 +57,11 @@ async function bootstrapSuperadmin(app: FastifyInstance): Promise<void> {
   app.get('/api/superadmin/auth/validate-role', {
     preHandler: app.auth([
       async (req: FastifyRequest, rep: FastifyReply) => {
-        await getTokenRole(req, rep, jwtStrategy)
+        await validateAccessToken(req, rep, jwtStrategy)
       }
     ]),
     handler: async (req: FastifyRequest, rep: FastifyReply) => {
-      if (req.tokenRole !== Roles.ADMIN) {
+      if (req.user.role !== Roles.ADMIN) {
         throw new Error('Invalid role')
       }
       HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })

@@ -20,19 +20,27 @@ class EntityRoute {
   setupRoutes(): void {
     this.server.get('/api/entity', {
       schema: listSwaggerSchema,
+      preHandler: this.server.auth([
+        this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.NEIGHBOR, Roles.REWARD_PARTNER)
+      ]),
       handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
         await this.handler.list(req, rep)
       }
     })
     this.server.get('/api/entity/:id', {
       schema: findByIdSwaggerSchema,
-      preHandler: this.server.auth([this.server.validateAccessToken]),
+      preHandler: this.server.auth([
+        this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.NEIGHBOR, Roles.REWARD_PARTNER)
+      ]),
       handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
         await this.handler.findByID(req, rep)
       }
     })
-    this.server.get('/api/entity/populate', async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
-      await this.handler.findAndPopulate(req, rep)
+    this.server.get('/api/entity/populate', {
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE),
+      handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+        await this.handler.findAndPopulate(req, rep)
+      }
     })
     this.server.post(
       '/api/entity',
@@ -43,7 +51,7 @@ class EntityRoute {
     )
     this.server.put('/api/entity/:id', {
       schema: updateSwaggerSchema,
-      preHandler: this.server.auth([this.server.validateAccessToken]),
+      preHandler: this.server.auth([this.server.protectOwner('id', Roles.ENTITY)]),
       handler: async (
         req: FastifyRequest<{
           Body: { name?: string; description?: string; password?: string }
@@ -56,7 +64,7 @@ class EntityRoute {
     })
     this.server.delete('/api/entity/:id', {
       schema: deleteSwaggerSchema,
-      preHandler: this.server.auth([this.server.validateAccessToken]),
+      preHandler: this.server.auth([this.server.protectOwner('id', Roles.ENTITY)]),
       handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {
         await this.handler.delete(req, rep)
       }
@@ -71,20 +79,11 @@ class EntityRoute {
       }
     })
     this.server.get('/api/entity/auth/validate-role', {
-      preHandler: this.server.auth([this.server.getTokenRole]),
+      preHandler: this.server.auth([this.server.validateAccessToken]),
       handler: async (req, rep) => {
         await this.handler.validateRole(req, rep)
       }
     })
-    this.server.get(
-      '/api/entity/auth/test-role',
-      {
-        config: { allowedRoles: [Roles.ENTITY] }
-      },
-      async (_req, rep) => {
-        rep.send('OK')
-      }
-    )
   }
 }
 
