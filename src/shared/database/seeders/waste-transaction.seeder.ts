@@ -17,77 +17,176 @@ interface TransactionSeed {
 }
 
 const TRANSACTION_SEEDS: TransactionSeed[] = [
-  {
-    responsibleUsername: 'lfernandez',
-    neighborUsername: 'cgomez',
-    greenPointName: 'Punto Verde Plaza Central',
-    daysAgo: 1,
-    details: [
-      { categoryName: 'Plástico', weight: 2.5 },
-      { categoryName: 'Papel y Cartón', weight: 1.8 }
-    ]
-  },
-  {
-    responsibleUsername: 'lfernandez',
-    neighborUsername: 'amartinez',
-    greenPointName: 'Punto Verde Plaza Central',
-    daysAgo: 2,
-    details: [
-      { categoryName: 'Vidrio', weight: 3.0 },
-      { categoryName: 'Metal', weight: 0.5 }
-    ]
-  },
-  {
-    responsibleUsername: 'mrodriguez',
-    neighborUsername: 'dsanchez',
-    greenPointName: 'Punto Verde Barrio San Martín',
-    daysAgo: 3,
-    details: [
-      { categoryName: 'Electrónico', weight: 1.2 },
-      { categoryName: 'Plástico', weight: 1.0 }
-    ]
-  },
-  {
-    responsibleUsername: 'mrodriguez',
-    neighborUsername: 'vtorres',
-    greenPointName: 'Punto Verde Barrio San Martín',
-    daysAgo: 5,
-    details: [
-      { categoryName: 'Papel y Cartón', weight: 4.0 },
-      { categoryName: 'Orgánico', weight: 2.0 }
-    ]
-  },
-  {
-    responsibleUsername: 'lfernandez',
-    neighborUsername: 'cgomez',
-    greenPointName: 'Punto Verde Universidad Nacional',
-    daysAgo: 7,
-    details: [
-      { categoryName: 'Plástico', weight: 1.5 },
-      { categoryName: 'Metal', weight: 1.0 },
-      { categoryName: 'Vidrio', weight: 2.0 }
-    ]
-  },
-  {
-    responsibleUsername: 'slopez',
-    neighborUsername: 'pherrera',
-    greenPointName: 'Punto Verde Barrio Nueva Córdoba',
-    daysAgo: 2,
-    details: [
-      { categoryName: 'Papel y Cartón', weight: 3.5 },
-      { categoryName: 'Plástico', weight: 2.0 }
-    ]
-  },
-  {
-    responsibleUsername: 'slopez',
-    neighborUsername: 'lflores',
-    greenPointName: 'Punto Verde Barrio Nueva Córdoba',
-    daysAgo: 4,
-    details: [
-      { categoryName: 'Electrónico', weight: 0.8 },
-      { categoryName: 'Metal', weight: 1.5 }
-    ]
-  }
+  // malvarez_et — 8 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'malvarez_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'malvarez_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'malvarez_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'malvarez_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'malvarez_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'malvarez_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'malvarez_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 3.5 }, { categoryName: 'Plástico', weight: 0.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'malvarez_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }] },
+
+  // jperez_et — 6 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'jperez_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'jperez_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'jperez_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'jperez_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'jperez_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'jperez_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+
+  // rcastro_et — 10 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'rcastro_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'rcastro_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'rcastro_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'rcastro_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'rcastro_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'rcastro_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'rcastro_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'rcastro_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 3.5 }, { categoryName: 'Plástico', weight: 0.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'rcastro_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Electrónico', weight: 2.2 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'rcastro_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }] },
+
+  // ngimenez_et — 5 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'ngimenez_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'ngimenez_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'ngimenez_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'ngimenez_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'ngimenez_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+
+  // frios_et — 12 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.8 }, { categoryName: 'Textiles', weight: 4 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Electrónico', weight: 2.2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 3.5 }, { categoryName: 'Plástico', weight: 0.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'frios_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Orgánico', weight: 4 }, { categoryName: 'Papel y Cartón', weight: 1 }] },
+
+  // amoreno_et — 7 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'amoreno_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'amoreno_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'amoreno_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'amoreno_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'amoreno_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'amoreno_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'amoreno_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+
+  // cvargas_et — 9 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'cvargas_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'cvargas_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'cvargas_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'cvargas_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'cvargas_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'cvargas_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 3.5 }, { categoryName: 'Plástico', weight: 0.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'cvargas_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'cvargas_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'cvargas_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }] },
+
+  // racosta_et — 11 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Electrónico', weight: 2.2 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.8 }, { categoryName: 'Textiles', weight: 4 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 3.5 }, { categoryName: 'Plástico', weight: 0.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'racosta_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+
+  // lbenitez_et — 6 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'lbenitez_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'lbenitez_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'lbenitez_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'lbenitez_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'lbenitez_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'lbenitez_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+
+  // tibanez_et — 8 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'tibanez_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'tibanez_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'tibanez_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'tibanez_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'tibanez_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'tibanez_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 3.5 }, { categoryName: 'Plástico', weight: 0.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'tibanez_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'tibanez_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+
+  // sromero_et — 5 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'sromero_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'sromero_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'sromero_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'sromero_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'sromero_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+
+  // enavarro_et — 7 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'enavarro_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'enavarro_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'enavarro_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'enavarro_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'enavarro_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'enavarro_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'enavarro_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }] },
+
+  // vpereyra_et — 10 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'vpereyra_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'vpereyra_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'vpereyra_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'vpereyra_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'vpereyra_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'vpereyra_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'vpereyra_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'vpereyra_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'vpereyra_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 3.5 }, { categoryName: 'Plástico', weight: 0.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'vpereyra_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Electrónico', weight: 2.2 }] },
+
+  // hquispe_et — 6 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'hquispe_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'hquispe_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'hquispe_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'hquispe_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'hquispe_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'hquispe_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+
+  // dfuentes_et — 9 transacciones
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'dfuentes_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'dfuentes_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'dfuentes_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Textiles', weight: 2 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'dfuentes_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'dfuentes_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }] },
+  { responsibleUsername: 'fmendez_etruria', neighborUsername: 'dfuentes_et', greenPointName: 'Punto Verde Escuela Municipal', daysAgo: 49, details: [{ categoryName: 'Madera', weight: 0.8 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'dfuentes_et', greenPointName: 'Punto Verde Barrio Los Olivos', daysAgo: 49, details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'dfuentes_et', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 49, details: [{ categoryName: 'Papel y Cartón', weight: 3.5 }, { categoryName: 'Plástico', weight: 0.5 }] },
+  { responsibleUsername: 'gsuarez_etruria', neighborUsername: 'dfuentes_et', greenPointName: 'Punto Verde Plaza San Martín', daysAgo: 49, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Plástico', weight: 3 }, { categoryName: 'Vidrio', weight: 0.8 }] },
+
+  // emattalia — jgonzalez (13 transacciones, 43 días atrás)
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Papel y Cartón', weight: 1.5 }, { categoryName: 'Plástico', weight: 2 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Metal', weight: 0.8 }, { categoryName: 'Vidrio', weight: 3.2 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Orgánico', weight: 2.5 }, { categoryName: 'Plástico', weight: 1.2 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Papel y Cartón', weight: 4 }, { categoryName: 'Vidrio', weight: 2 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Plástico', weight: 1.8 }, { categoryName: 'Vidrio', weight: 2.5 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Metal', weight: 1.2 }, { categoryName: 'Papel y Cartón', weight: 3 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Orgánico', weight: 3 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Metal', weight: 1.5 }, { categoryName: 'Plástico', weight: 2.8 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Orgánico', weight: 1.8 }, { categoryName: 'Plástico', weight: 2.2 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Orgánico', weight: 2.8 }, { categoryName: 'Vidrio', weight: 1 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Papel y Cartón', weight: 2 }, { categoryName: 'Vidrio', weight: 1.5 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Metal', weight: 2 }, { categoryName: 'Plástico', weight: 1 }] },
+  { responsibleUsername: 'jgonzalez', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 43, details: [{ categoryName: 'Plástico', weight: 3 }] },
+
+  // emattalia — rpaez (5 transacciones, distintas fechas)
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 42, details: [{ categoryName: 'Orgánico', weight: 5 }, { categoryName: 'Papel y Cartón', weight: 2 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 42, details: [{ categoryName: 'Electrónico', weight: 100 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 13, details: [{ categoryName: 'Papel y Cartón', weight: 2 }, { categoryName: 'Pilas y Baterías', weight: 0.5 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Etruria Centro', daysAgo: 10, details: [{ categoryName: 'Electrónico', weight: 5 }, { categoryName: 'Papel y Cartón', weight: 10 }] },
+  { responsibleUsername: 'rpaez_etruria', neighborUsername: 'emattalia', greenPointName: 'Punto Verde Acceso Norte', daysAgo: 7, details: [{ categoryName: 'Madera', weight: 3 }, { categoryName: 'Metal', weight: 0.5 }] }
 ]
 
 function daysAgoDate(days: number): Date {

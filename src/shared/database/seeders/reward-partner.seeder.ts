@@ -5,40 +5,64 @@ import type EntityEntity from '../../../entity/domain/entities/entity.entity'
 
 const REWARD_PARTNER_SEEDS = [
   {
-    name: 'Supermercado Carrefour Villa María',
-    username: 'carrefour_vm',
-    address: 'Av. Eduardo Varela 2800, Villa María',
-    cuit: '30-69345023-1',
-    email: 'canje@carrefour-vm.com.ar',
+    name: 'Almacén Don Juan',
+    username: 'alm_donjuan',
+    address: 'Av. San Martín 150, Etruria',
+    cuit: '20-15432678-3',
+    email: 'canje@almacendonjuan.com.ar',
     password: 'Partner2024!',
-    phoneNumber: '353-4555001',
-    coordinates: { latitude: -32.405, longitude: -63.238 },
+    phoneNumber: '3465-420001',
+    coordinates: { latitude: -32.9332, longitude: -62.5847 },
     entityId: '',
-    entityEmail: 'reciclado@villamaria.gob.ar'
+    entityEmail: 'muniEtruria@gmail.com'
   },
   {
-    name: 'Farmacia Del Pueblo',
-    username: 'farmacia_delpueblo',
-    address: 'Bv. Sarmiento 1045, Villa María',
-    cuit: '20-18765432-9',
-    email: 'canje@farmaciadelpueblo.com.ar',
+    name: 'Ferretería El Progreso',
+    username: 'ferr_progreso',
+    address: 'Calle Rivadavia 320, Etruria',
+    cuit: '30-72345678-9',
+    email: 'canje@ferreteriaelprogreso.com.ar',
     password: 'Partner2024!',
-    phoneNumber: '353-4555002',
-    coordinates: { latitude: -32.412, longitude: -63.24 },
+    phoneNumber: '3465-420002',
+    coordinates: { latitude: -32.934, longitude: -62.5835 },
     entityId: '',
-    entityEmail: 'reciclado@villamaria.gob.ar'
+    entityEmail: 'muniEtruria@gmail.com'
   },
   {
-    name: 'Librería El Estudiante',
-    username: 'libreria_estudiante',
-    address: 'Calle 9 de Julio 234, Córdoba',
-    cuit: '27-22334455-6',
-    email: 'canje@elestudiante.com.ar',
+    name: 'Farmacia San Roque',
+    username: 'farm_sanroque',
+    address: 'Bv. Independencia 88, Etruria',
+    cuit: '27-32145678-5',
+    email: 'canje@farmaciasanroque.com.ar',
     password: 'Partner2024!',
-    phoneNumber: '351-4600001',
-    coordinates: { latitude: -31.415, longitude: -64.185 },
+    phoneNumber: '3465-420003',
+    coordinates: { latitude: -32.9325, longitude: -62.5852 },
     entityId: '',
-    entityEmail: 'contacto@ecoverde.org.ar'
+    entityEmail: 'muniEtruria@gmail.com'
+  },
+  {
+    name: 'Panadería La Espiga',
+    username: 'pan_laespiga',
+    address: 'Calle 9 de Julio 210, Etruria',
+    cuit: '23-28765432-4',
+    email: 'canje@panaderiallaespiga.com.ar',
+    password: 'Partner2024!',
+    phoneNumber: '3465-420004',
+    coordinates: { latitude: -32.9318, longitude: -62.5838 },
+    entityId: '',
+    entityEmail: 'muniEtruria@gmail.com'
+  },
+  {
+    name: 'Almacén El Progreso',
+    username: 'almacen_elprogreso',
+    address: 'Calle Belgrano 345, Etruria',
+    cuit: '20-25678901-3',
+    email: 'canje@almacenelprogreso.com.ar',
+    password: 'Partner2024!',
+    phoneNumber: '3533-400010',
+    coordinates: { latitude: -32.948, longitude: -63.254 },
+    entityId: '',
+    entityEmail: 'muniEtruria@gmail.com'
   }
 ]
 

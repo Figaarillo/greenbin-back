@@ -1,7 +1,7 @@
 import { Migrator } from '@mikro-orm/migrations'
 import { defineConfig } from '@mikro-orm/postgresql'
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
-import EnvVar from './shared/config/env-var.config'
+import EnvVar from './shared/config/env-var.config.js'
 
 export default defineConfig({
   dbName: EnvVar.database.name,
