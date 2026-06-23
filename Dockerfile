@@ -11,7 +11,7 @@ RUN npm install -g pnpm@11
 COPY --chown=node:node package.json pnpm-lock.yaml ./
 
 # Cache pnpm store for faster rebuilds
-RUN --mount=type=cache,target=/root/.pnpm-store pnpm install
+RUN --mount=type=cache,id=pnpm-store,target=/root/.pnpm-store pnpm install
 
 # Copy the rest of the source code
 COPY --chown=node:node . .
