@@ -1,5 +1,4 @@
 import type FindCouponByIDUseCase from '../../../coupon/application/usecases/find-by-id.usecase'
-import type UpdateCouponStateUseCase from '../../../coupon/application/usecases/update-state.usecase'
 import type FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find-by-id.usecase'
 import type SubtractNeighborPointsUseCase from '../../../neighbor/application/usecases/substrac-points.usecase'
 import type FindRewardPartnerByIdUseCase from '../../../reward-partner/application/usecases/find-by-id.usecase'
@@ -13,8 +12,7 @@ class RedeemCouponUseCase {
     private readonly findCouponById: FindCouponByIDUseCase,
     private readonly findNeighborById: FindNeighborByIDUseCase,
     private readonly findRewardPartnerById: FindRewardPartnerByIdUseCase,
-    private readonly subtractPoints: SubtractNeighborPointsUseCase,
-    private readonly updateState: UpdateCouponStateUseCase
+    private readonly subtractPoints: SubtractNeighborPointsUseCase
   ) {}
 
   async exec(payload: RedeemCouponPayload): Promise<CouponTransactionEntity> {
@@ -30,12 +28,6 @@ class RedeemCouponUseCase {
       throw new Error('Coupon is not available')
     }
 
-    if (coupon.state === 'ADQUIRIDO') {
-      throw new Error('Coupon already redeemed')
-    }
-
-    await this.subtractPoints.exec(payload.neighborId, coupon.costInPoints)
-    await this.updateState.exec(coupon.id, 'ADQUIRIDO')
     const redeemedDate = new Date()
     const code = Math.floor(Math.random() * 1000000)
       .toString()
@@ -58,6 +50,8 @@ class RedeemCouponUseCase {
     if (transaction == null) {
       throw new Error('Cannot redeem new coupon transaction')
     }
+
+    await this.subtractPoints.exec(payload.neighborId, coupon.costInPoints)
 
     return transaction
   }
