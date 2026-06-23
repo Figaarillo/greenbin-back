@@ -36,8 +36,9 @@ class NeighborHandler {
     const { offset, limit } = getPaginationParams(req)
 
     const entityId = req.query.entityId
+    const includeInactive = req.query.includeInactive === 'true'
     const listNeighbor = new ListNeighborsUseCase(this.neighborRepository)
-    const neighbors = await listNeighbor.exec(offset, limit, entityId)
+    const neighbors = await listNeighbor.exec(offset, limit, entityId, includeInactive)
 
     HandleHTTPResponse.OK(rep, 'Neighbors retrieved successfully', neighbors)
   }
@@ -135,13 +136,6 @@ class NeighborHandler {
 
     const login = new LoginNeighborUseCase(this.neighborRepository)
     const neighbor = await login.exec(paylaod)
-    if (!neighbor.isActive) {
-      throw new Error('La cuenta está deshabilitada.')
-    }
-
-    if (!neighbor.isActive) {
-      throw new Error('La cuenta está deshabilitada.')
-    }
 
     const authService = new AuthService(this.jwtStrategy)
     const accessToken = await authService.generateAccessToken(neighbor.id, {
@@ -163,13 +157,11 @@ class NeighborHandler {
   }
 
   async refreshToken(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenNeighbor = req.neighbor as { username: string; email: string; role: string }
-
     const findByEmail = new FindByEmailUseCase(this.neighborRepository)
-    const neighbor = await findByEmail.exec(tokenNeighbor.email)
+    const neighbor = await findByEmail.exec(req.user.email)
 
     const authService = new AuthService(this.jwtStrategy)
-    const accessToken = await authService.generateAccessToken(req.neighbor.id, {
+    const accessToken = await authService.generateAccessToken(req.user.sub, {
       username: neighbor.username,
       email: neighbor.email,
       role: neighbor.role
@@ -181,8 +173,7 @@ class NeighborHandler {
   }
 
   async validateRole(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const tokenEntity = req.tokenRole
-    if (tokenEntity !== Roles.NEIGHBOR) {
+    if (req.user.role !== Roles.NEIGHBOR) {
       throw new Error('Invalid role')
     }
     HandleHTTPResponse.OK(rep, 'Token checked successfully', { isValid: true })

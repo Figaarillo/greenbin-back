@@ -118,9 +118,10 @@ export const updateSwaggerSchema = {
   body: {
     type: 'object',
     properties: {
-      description: { type: 'string', description: 'Description of the entity.' }
-    },
-    required: ['description']
+      name: { type: 'string', description: 'Name of the entity.' },
+      description: { type: 'string', description: 'Description of the entity.' },
+      password: { type: 'string', description: 'New password for the entity.' }
+    }
   },
   response: {
     200: {

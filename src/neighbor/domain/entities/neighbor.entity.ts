@@ -55,9 +55,6 @@ class NeighborEntity extends BaseEntity {
   @ManyToOne()
   entity: EntityEntity
 
-  @Property({ default: true })
-  isActive: boolean = true
-
   constructor(
     firstname: string,
     lastname: string,
@@ -134,10 +131,6 @@ class NeighborEntity extends BaseEntity {
     }
 
     return birthdate
-  }
-
-  softDelete(): void {
-    this.isActive = false
   }
 }
 

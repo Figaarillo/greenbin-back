@@ -4,11 +4,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
     depends_on:
       - database
     ports:
       - '8080:8080'
+    env_file:
+      - .env
     environment:
       DATABASE_HOST: database
     networks:
@@ -17,7 +19,7 @@ services:
   # ############# DATABASE ############# #
   database:
     image: postgres:16.2-alpine3.19
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASS}
@@ -37,7 +39,7 @@ services:
   # ########### TEST DATABASE ########## #
   database-test:
     image: postgres:16.2-alpine3.19
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${TEST_DATABASE_USER}
       POSTGRES_PASSWORD: ${TEST_DATABASE_PASS}
@@ -57,7 +59,7 @@ services:
   # ############# PGADMIN ############## #
   pgadmin:
     image: dpage/pgadmin4:latest
-    restart: always
+    restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}

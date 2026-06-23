@@ -5,8 +5,8 @@ import type NeighborRepository from '../../domain/repositories/neighbor.reposito
 class ListNeighborsUseCase {
   constructor(private readonly repository: NeighborRepository) {}
 
-  async exec(offset: number, limit: number, entityId?: string): Promise<NeighborEntity[]> {
-    const neighbors = await this.repository.list(offset, limit, entityId)
+  async exec(offset: number, limit: number, entityId?: string, includeInactive?: boolean): Promise<NeighborEntity[]> {
+    const neighbors = await this.repository.list(offset, limit, entityId, includeInactive)
     if (neighbors == null) {
       throw new ErrorNeighborNotFound()
     }

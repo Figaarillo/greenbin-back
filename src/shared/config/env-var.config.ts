@@ -33,6 +33,15 @@ interface EmailConfig {
   appPassword: string
 }
 
+interface CorsConfig {
+  allowedOrigins: string[]
+}
+
+interface AdminConfig {
+  email: string
+  password: string
+}
+
 interface Config {
   auth: Auth
   server: ServerConfig
@@ -40,6 +49,8 @@ interface Config {
   testDatabase: DatabaseConfig
   recaptcha: Recaptcha
   email: EmailConfig
+  cors: CorsConfig
+  admin: AdminConfig
 }
 
 const serverConfig: ServerConfig = {
@@ -56,13 +67,25 @@ const databaseConfig: DatabaseConfig = {
   port: env.get('DATABASE_PORT').required().asPortNumber()
 }
 
-const testDatabaseConfig: DatabaseConfig = {
-  name: env.get('TEST_DATABASE_NAME').required().asString(),
-  user: env.get('TEST_DATABASE_USER').required().asString(),
-  password: env.get('TEST_DATABASE_PASS').required().asString(),
-  host: env.get('TEST_DATABASE_HOST').required().asString(),
-  port: env.get('TEST_DATABASE_PORT').required().asPortNumber()
+// The test database only exists in development/test. In production these vars
+// are never set (and the app never touches the test DB), so requiring them
+// would crash a perfectly valid prod boot. Outside production we keep them
+// required to fail fast when a local/test env is misconfigured.
+function loadTestDatabaseConfig(): DatabaseConfig {
+  if (serverConfig.nodeEnv === 'production') {
+    return { name: '', user: '', password: '', host: '', port: 0 }
+  }
+
+  return {
+    name: env.get('TEST_DATABASE_NAME').required().asString(),
+    user: env.get('TEST_DATABASE_USER').required().asString(),
+    password: env.get('TEST_DATABASE_PASS').required().asString(),
+    host: env.get('TEST_DATABASE_HOST').required().asString(),
+    port: env.get('TEST_DATABASE_PORT').required().asPortNumber()
+  }
 }
+
+const testDatabaseConfig: DatabaseConfig = loadTestDatabaseConfig()
 
 const authConfig: Auth = {
   accessToken: env.get('ACCESS_TOKEN').required().asString(),
@@ -80,13 +103,32 @@ const emailConfig: EmailConfig = {
   appPassword: env.get('EMAIL_APP_PASSWORD').required().asString()
 }
 
+// In production, CORS origins MUST be provided explicitly (no wildcard, no localhost defaults):
+// env-var only throws on a missing required var when no default is set, so production omits the default.
+// In development/test we fall back to localhost so the local frontend works out of the box.
+const corsConfig: CorsConfig = {
+  allowedOrigins:
+    serverConfig.nodeEnv === 'production'
+      ? env.get('CORS_ALLOWED_ORIGINS').required().asArray(',')
+      : env.get('CORS_ALLOWED_ORIGINS').default('localhost,127.0.0.1').asArray(',')
+}
+
+// Admin credentials must be provided explicitly via env — never hardcode a default
+// password in source. The seeder consumes these; without them the app fails fast.
+const adminConfig: AdminConfig = {
+  email: env.get('ADMIN_EMAIL').required().asString(),
+  password: env.get('ADMIN_PASSWORD').required().asString()
+}
+
 const EnvVar: Config = {
   auth: authConfig,
   server: serverConfig,
   database: databaseConfig,
   testDatabase: testDatabaseConfig,
   recaptcha: recaptchaConfig,
-  email: emailConfig
+  email: emailConfig,
+  cors: corsConfig,
+  admin: adminConfig
 }
 
 export default EnvVar

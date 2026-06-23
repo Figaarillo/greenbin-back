@@ -7,11 +7,22 @@ import type GreenPointUpdatePayload from '../../../domain/payloads/green-point.u
 import type GreenPointRepository from '../../../domain/repositories/green-point.repository'
 
 class GreenPointMikroORMRepository implements GreenPointRepository {
-  async list(offset: number, limit: number, entityId?: string): Promise<Nullable<GreenPointEntity[]>> {
+  async list(
+    offset: number,
+    limit: number,
+    entityId?: string,
+    includeInactive?: boolean
+  ): Promise<Nullable<GreenPointEntity[]>> {
     const em = this.getEntityManager()
     const where: Record<string, any> = {}
     if (entityId != null) where.entity = { id: entityId }
-    return await em.find(GreenPointEntity, where, { limit, offset })
+    // El filtro global 'active' oculta inactivos por defecto. Solo cuando se piden
+    // explícitamente (vista de admin) lo desactivamos para traerlos junto a los activos.
+    return await em.find(GreenPointEntity, where, {
+      limit,
+      offset,
+      ...(includeInactive === true ? { filters: { active: false } } : {})
+    })
   }
 
   async find(property: Record<string, string>): Promise<Nullable<GreenPointEntity>> {
@@ -47,7 +58,8 @@ class GreenPointMikroORMRepository implements GreenPointRepository {
       throw new ErrorGreenPointNotFound(id, undefined)
     }
 
-    await em.remove(greenPoint).flush()
+    greenPoint.softDelete()
+    await em.flush()
   }
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

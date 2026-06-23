@@ -42,11 +42,23 @@ class NeighborMikroORMRepository implements NeighborRepository {
     return neighbor
   }
 
-  async list(offset: number, limit: number, entityId?: string): Promise<Nullable<NeighborEntity[]>> {
+  async list(
+    offset: number,
+    limit: number,
+    entityId?: string,
+    includeInactive?: boolean
+  ): Promise<Nullable<NeighborEntity[]>> {
     const em = this.getEntityManager()
     const where: Record<string, any> = {}
     if (entityId != null) where.entity = { id: entityId }
-    return await em.find(NeighborEntity, where, { limit, offset, orderBy: { createdAt: 'ASC' } })
+    // El filtro global 'active' oculta inactivos por defecto. Solo cuando se piden
+    // explícitamente (vista de admin) lo desactivamos para traerlos junto a los activos.
+    return await em.find(NeighborEntity, where, {
+      limit,
+      offset,
+      orderBy: { createdAt: 'ASC' },
+      ...(includeInactive === true ? { filters: { active: false } } : {})
+    })
   }
 
   async changePassword(email: string, newPassword: string): Promise<boolean> {
