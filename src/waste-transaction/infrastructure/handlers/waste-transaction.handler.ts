@@ -1,4 +1,5 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
+import EmailService from '../../../auth/application/service/email.service'
 import FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find-by-id.usecase'
 import type NeighborRepository from '../../../neighbor/domain/repositories/neighbor.repository'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
@@ -86,7 +87,8 @@ class WasteTransactionHandler {
         new FindWasteByIDUseCase(this.wasteRepository)
       ),
       new RegisterWasteUseCase(this.wasteRepository, new FindWasteCategoryByIDUseCase(this.categoryRepository)),
-      new FindNeighborByIDUseCase(this.neighborRepository)
+      new FindNeighborByIDUseCase(this.neighborRepository),
+      new EmailService()
     )
 
     const wasteDelivery = await registerWasteDelivery.exec(req.body)

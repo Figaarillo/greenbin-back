@@ -55,7 +55,13 @@ class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
       WasteTransactionEntity,
       { neighbor: neighborId },
       {
-        populate: ['transactionDetails', 'greenPoint', 'responsible'],
+        populate: [
+          'transactionDetails',
+          'transactionDetails.waste',
+          'transactionDetails.waste.category',
+          'greenPoint',
+          'responsible'
+        ],
         orderBy: { date: 'DESC' },
         filters: { active: false }
       }
@@ -68,7 +74,13 @@ class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
       WasteTransactionEntity,
       { responsible: responsibleId },
       {
-        populate: ['transactionDetails', 'greenPoint', 'neighbor'],
+        populate: [
+          'transactionDetails',
+          'transactionDetails.waste',
+          'transactionDetails.waste.category',
+          'greenPoint',
+          'neighbor'
+        ],
         orderBy: { date: 'DESC' },
         filters: { active: false }
       }

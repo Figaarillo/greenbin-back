@@ -5,7 +5,17 @@ class ListByNeighborUseCase {
   constructor(private readonly repository: CouponTransactionRepository) {}
 
   async exec(neighborId: string): Promise<CouponTransactionEntity[]> {
-    return await this.repository.findByNeighbor(neighborId)
+    const transactions = await this.repository.findByNeighbor(neighborId)
+    const now = new Date()
+
+    for (const t of transactions) {
+      if (t.status === 'ADQUIRIDO' && t.expirationDate < now) {
+        t.status = 'EXPIRADO'
+        await this.repository.update(t.id, t)
+      }
+    }
+
+    return transactions
   }
 }
 
