@@ -36,9 +36,10 @@ class CouponHandler {
 
   async listAvailables(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     const { offset, limit } = getPaginationParams(req)
+    const entityId = req.query.entityId
 
     const listAvailableCoupons = new ListAvailableCouponUseCase(this.couponRepository)
-    const coupons = await listAvailableCoupons.exec(offset, limit)
+    const coupons = await listAvailableCoupons.exec(offset, limit, entityId)
 
     HandleHTTPResponse.OK(rep, 'Coupons availables retrieved successfully', coupons)
   }

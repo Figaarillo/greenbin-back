@@ -7,7 +7,7 @@ import { CouponTransactionStateMachine, CouponTransactionStatus } from '../../do
 class UseCouponUseCase {
   constructor(private readonly repository: CouponTransactionRepository) {}
 
-  async exec(payload: UseCouponPayload): Promise<{ transaction: CouponTransactionEntity; finalAmount: number }> {
+  async exec(payload: UseCouponPayload): Promise<CouponTransactionEntity> {
     const transaction = await this.repository.findByCode(payload.code)
 
     if (transaction == null) {
@@ -28,9 +28,6 @@ class UseCouponUseCase {
       throw new Error('El cupón no está disponible para usar.')
     }
 
-    const discount = transaction.coupon.discount
-    const finalAmount = payload.totalAmount - (payload.totalAmount * discount) / 100
-
     const now = new Date()
     transaction.status = CouponTransactionStatus.USADO
     transaction.redeemDate = now
@@ -41,7 +38,7 @@ class UseCouponUseCase {
     if (updatedTransaction == null) {
       throw new Error('Error updating coupon transaction')
     }
-    return { transaction: updatedTransaction, finalAmount }
+    return updatedTransaction
   }
 }
 

@@ -33,10 +33,10 @@ class StatisticsMikroORMRepository implements StatisticsRepository {
     }
   }
 
-  async getGreenPointsRanking(entityId: string): Promise<GreenPointRanking[]> {
+  async getGreenPointsRanking(entityId: string, from?: Date, to?: Date): Promise<GreenPointRanking[]> {
     const knex = this.getKnex()
 
-    const rows = await knex('wastes_transactions_details as wtd')
+    const query = knex('wastes_transactions_details as wtd')
       .join('wastes_transactions as wt', 'wtd.transaction_id', 'wt.id')
       .join('green_point_entity as gp', 'wt.green_point_id', 'gp.id')
       .where('gp.entity_id', entityId)
@@ -48,6 +48,10 @@ class StatisticsMikroORMRepository implements StatisticsRepository {
         knex.raw('COALESCE(SUM(wtd.weight), 0)::float as "totalWeight"')
       )
 
+    if (from != null) query.where('wt.date', '>=', from)
+    if (to != null) query.where('wt.date', '<=', to)
+
+    const rows = await query
     return rows.map((r: any) => ({
       greenPointId: r.greenPointId,
       name: r.name,
@@ -102,10 +106,10 @@ class StatisticsMikroORMRepository implements StatisticsRepository {
     }))
   }
 
-  async getNeighborDeliveries(neighborId: string): Promise<NeighborDelivery[]> {
+  async getNeighborDeliveries(neighborId: string, from?: Date, to?: Date): Promise<NeighborDelivery[]> {
     const knex = this.getKnex()
 
-    const transactions = await knex('wastes_transactions as wt')
+    const txQuery = knex('wastes_transactions as wt')
       .join('green_point_entity as gp', 'wt.green_point_id', 'gp.id')
       .where('wt.neighbor_id', neighborId)
       .orderBy('wt.date', 'desc')
@@ -115,6 +119,11 @@ class StatisticsMikroORMRepository implements StatisticsRepository {
         'gp.name as greenPointName',
         'wt.total_points as totalPoints'
       )
+
+    if (from != null) txQuery.where('wt.date', '>=', from)
+    if (to != null) txQuery.where('wt.date', '<=', to)
+
+    const transactions = await txQuery
 
     if (transactions.length === 0) return []
 

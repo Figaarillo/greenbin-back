@@ -38,6 +38,36 @@ export const WASTE_CATEGORY_SEEDS = [
     pointsPerWeight: 4,
     description: 'Residuos de cocina, restos de frutas, verduras y poda.',
     co2: 0.9
+  },
+  {
+    name: 'Textiles',
+    pointsPerWeight: 12,
+    description: 'Ropa, telas, calzado y accesorios textiles en desuso.',
+    co2: 3.0
+  },
+  {
+    name: 'Escombros y Construcción',
+    pointsPerWeight: 3,
+    description: 'Restos de demolición, cerámicos, ladrillos y materiales de obra limpia.',
+    co2: 0.7
+  },
+  {
+    name: 'Madera',
+    pointsPerWeight: 5,
+    description: 'Restos de madera limpia, pallets y muebles sin barniz tóxico.',
+    co2: 1.0
+  },
+  {
+    name: 'Aceites y Lubricantes',
+    pointsPerWeight: 20,
+    description: 'Aceite de cocina usado, lubricantes vehiculares y aceites industriales.',
+    co2: 5.0
+  },
+  {
+    name: 'Pilas y Baterías',
+    pointsPerWeight: 30,
+    description: 'Pilas domésticas, baterías de celulares y acumuladores.',
+    co2: 8.0
   }
 ]
 

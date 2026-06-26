@@ -6,10 +6,10 @@ import type NeighborDelivery from '../types/neighbor-delivery.type'
 
 interface StatisticsRepository {
   getTotalRecycled: (entityId: string, from?: Date, to?: Date) => Promise<TotalRecycled>
-  getGreenPointsRanking: (entityId: string) => Promise<GreenPointRanking[]>
+  getGreenPointsRanking: (entityId: string, from?: Date, to?: Date) => Promise<GreenPointRanking[]>
   getWasteByCategory: (entityId: string, from?: Date, to?: Date) => Promise<WasteByCategory[]>
   getWasteByPeriod: (entityId: string, groupBy: string, from?: Date, to?: Date) => Promise<WasteByPeriod[]>
-  getNeighborDeliveries: (neighborId: string) => Promise<NeighborDelivery[]>
+  getNeighborDeliveries: (neighborId: string, from?: Date, to?: Date) => Promise<NeighborDelivery[]>
 }
 
 export default StatisticsRepository

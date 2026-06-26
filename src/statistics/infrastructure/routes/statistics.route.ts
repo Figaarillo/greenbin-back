@@ -21,7 +21,10 @@ class StatisticsRoute {
 
     this.server.get('/api/statistics/entity/:entityId/green-points-ranking', {
       preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE),
-      handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+      handler: async (
+        req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
+        rep
+      ) => {
         await this.handler.getGreenPointsRanking(req, rep)
       }
     })
@@ -48,7 +51,10 @@ class StatisticsRoute {
 
     this.server.get('/api/statistics/neighbor/:neighborId/deliveries', {
       preHandler: this.server.protect(Roles.NEIGHBOR, Roles.ENTITY, Roles.RESPONSIBLE),
-      handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+      handler: async (
+        req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
+        rep
+      ) => {
         await this.handler.getNeighborDeliveries(req, rep)
       }
     })
