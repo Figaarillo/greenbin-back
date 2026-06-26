@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { type EntityManager } from '@mikro-orm/postgresql'
 import ResponsibleEntity from '../../../responsible/domain/entities/responsible.entity'
+import { Roles } from '../../../auth/domain/entities/role'
 import type EntityEntity from '../../../entity/domain/entities/entity.entity'
 
 const RESPONSIBLE_SEEDS = [
@@ -51,10 +52,10 @@ const RESPONSIBLE_SEEDS = [
 ]
 
 async function seedResponsibles(em: EntityManager, entities: EntityEntity[]): Promise<ResponsibleEntity[]> {
-  const existing = await em.count(ResponsibleEntity)
+  const existing = await em.count(ResponsibleEntity, { role: Roles.RESPONSIBLE })
   if (existing > 0) {
     console.log(`[Seeder] Responsible: ya existen ${existing} registros, se omite.`)
-    return await em.find(ResponsibleEntity, {})
+    return await em.find(ResponsibleEntity, { role: Roles.RESPONSIBLE })
   }
 
   const entityMap = new Map(entities.map(e => [e.email, e]))

@@ -38,12 +38,29 @@ const emailConfig = {
     user: env_var_1.default.get('EMAIL_USER').required().asString(),
     appPassword: env_var_1.default.get('EMAIL_APP_PASSWORD').required().asString()
 };
+// In production, CORS origins MUST be provided explicitly (no wildcard, no localhost defaults):
+// env-var only throws on a missing required var when no default is set, so production omits the default.
+// In development/test we fall back to localhost so the local frontend works out of the box.
+const corsConfig = {
+    allowedOrigins: serverConfig.nodeEnv === 'production'
+        ? env_var_1.default.get('CORS_ALLOWED_ORIGINS').required().asArray(',')
+        : env_var_1.default.get('CORS_ALLOWED_ORIGINS').default('localhost,127.0.0.1').asArray(',')
+};
+// Admin credentials must be provided explicitly via env — never hardcode a default
+// password in source. The seeder consumes these; without them the app fails fast.
+const adminConfig = {
+    email: env_var_1.default.get('ADMIN_EMAIL').required().asString(),
+    password: env_var_1.default.get('ADMIN_PASSWORD').required().asString()
+};
 const EnvVar = {
     auth: authConfig,
     server: serverConfig,
     database: databaseConfig,
     testDatabase: testDatabaseConfig,
     recaptcha: recaptchaConfig,
-    email: emailConfig
+    email: emailConfig,
+    cors: corsConfig,
+    admin: adminConfig
 };
 exports.default = EnvVar;
+//# sourceMappingURL=env-var.config.js.map
