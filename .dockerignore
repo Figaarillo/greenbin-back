@@ -1,0 +1,40 @@
+# Dependencies (reinstalled inside the image)
+node_modules
+
+# Build artifacts (rebuilt by `pnpm build`)
+dist
+coverage
+.tsbuildinfo
+
+# Version control & CI
+.git
+.github
+.husky
+
+# Editor / IDE
+.idea
+.vscode
+
+# Local / scratch
+temp
+notes
+docs
+
+# Secrets & env (never ship into the image)
+.env
+*.env
+!.env.example
+
+# Docker & tooling (not needed inside the image)
+Dockerfile
+.dockerignore
+docker-compose.yml
+Makefile
+.atl
+
+# Docs
+README*.md
+
+# Logs
+*.log
+npm-debug.log*

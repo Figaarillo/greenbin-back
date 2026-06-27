@@ -67,13 +67,25 @@ const databaseConfig: DatabaseConfig = {
   port: env.get('DATABASE_PORT').required().asPortNumber()
 }
 
-const testDatabaseConfig: DatabaseConfig = {
-  name: env.get('TEST_DATABASE_NAME').required().asString(),
-  user: env.get('TEST_DATABASE_USER').required().asString(),
-  password: env.get('TEST_DATABASE_PASS').required().asString(),
-  host: env.get('TEST_DATABASE_HOST').required().asString(),
-  port: env.get('TEST_DATABASE_PORT').required().asPortNumber()
+// The test database only exists in development/test. In production these vars
+// are never set (and the app never touches the test DB), so requiring them
+// would crash a perfectly valid prod boot. Outside production we keep them
+// required to fail fast when a local/test env is misconfigured.
+function loadTestDatabaseConfig(): DatabaseConfig {
+  if (serverConfig.nodeEnv === 'production') {
+    return { name: '', user: '', password: '', host: '', port: 0 }
+  }
+
+  return {
+    name: env.get('TEST_DATABASE_NAME').required().asString(),
+    user: env.get('TEST_DATABASE_USER').required().asString(),
+    password: env.get('TEST_DATABASE_PASS').required().asString(),
+    host: env.get('TEST_DATABASE_HOST').required().asString(),
+    port: env.get('TEST_DATABASE_PORT').required().asPortNumber()
+  }
 }
+
+const testDatabaseConfig: DatabaseConfig = loadTestDatabaseConfig()
 
 const authConfig: Auth = {
   accessToken: env.get('ACCESS_TOKEN').required().asString(),
