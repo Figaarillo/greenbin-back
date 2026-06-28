@@ -1,0 +1,14 @@
+# .gitguardian.yml
+# GitGuardian configuration — https://docs.gitguardian.com/
+#
+# Ignora archivos que contienen placeholders intencionales o config de CI,
+# para evitar falsos positivos en cada push.
+version: 2
+
+paths-ignore:
+  # Template de variables de entorno — los valores son placeholders
+  - '.env.example'
+  - '**/.env.example'
+
+  # CI workflow — usa valores de prueba no-sensibles
+  - '.github/workflows/ci.yml'
