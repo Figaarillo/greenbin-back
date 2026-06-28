@@ -2,9 +2,19 @@ import { type MikroORM } from '@mikro-orm/postgresql'
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
 import * as dotenv from 'dotenv'
 import { type FastifyInstance } from 'fastify'
-import { afterAll, afterEach, beforeAll, beforeEach } from 'vitest'
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from 'vitest'
 import bootstrapApp from '../../app'
 import EnvVar from '../config/env-var.config'
+
+// Mock nodemailer so tests never hit a real SMTP server. Covers every
+// EmailService method (it all funnels through transporter.sendMail), keeping
+// email a non-blocking side effect during integration tests.
+vi.mock('nodemailer', () => {
+  const sendMail = vi.fn().mockResolvedValue({ messageId: 'test-message-id' })
+  return {
+    default: { createTransport: vi.fn(() => ({ sendMail })) }
+  }
+})
 
 dotenv.config()
 
