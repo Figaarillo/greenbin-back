@@ -71,10 +71,11 @@ describe('Statistics — integration tests', () => {
     categoryId = category.id
     category2Id = category2.id
 
-    // Crear entregas de base para los tests
-    await createDelivery(entityToken, neighborId, responsibleId, greenPointId, categoryId, 2.0)
-    await createDelivery(entityToken, neighborId, responsibleId, greenPointId, categoryId, 1.5)
-    await createDelivery(entityToken, neighborId, responsibleId, greenPointId, category2Id, 3.0)
+    // Crear entregas de base para los tests.
+    // NOTE: wastes_transactions_details.weight es una columna int, por eso se usan pesos enteros.
+    await createDelivery(entityToken, neighborId, responsibleId, greenPointId, categoryId, 2)
+    await createDelivery(entityToken, neighborId, responsibleId, greenPointId, categoryId, 3)
+    await createDelivery(entityToken, neighborId, responsibleId, greenPointId, category2Id, 4)
   })
 
   describe('GET /api/statistics/entity/:entityId/total-recycled', () => {
@@ -89,14 +90,15 @@ describe('Statistics — integration tests', () => {
 
     it('el peso total es la suma de todas las entregas', async () => {
       const res = await authedGet(`/api/statistics/entity/${entityId}/total-recycled`)
-      // 2.0 + 1.5 + 3.0 = 6.5
-      expect(res.json().data.totalWeight).toBe(6.5)
+      // 2 + 3 + 4 = 9
+      expect(res.json().data.totalWeight).toBe(9)
     })
 
     it('retorna ceros para una entidad sin entregas', async () => {
       const otraEntidad = await createEntity(app, {
         name: 'Sin Entregas',
-        email: 'sinentregas@test.com'
+        email: 'sinentregas@test.com',
+        coordinates: { latitude: -32.5, longitude: -63.3 }
       })
       const res = await authedGet(`/api/statistics/entity/${otraEntidad.id}/total-recycled`)
       expect(res.statusCode).toBe(200)
@@ -130,13 +132,14 @@ describe('Statistics — integration tests', () => {
       expect(item).toHaveProperty('greenPointId')
       expect(item).toHaveProperty('name')
       expect(item).toHaveProperty('totalWeight')
-      expect(item.totalWeight).toBe(6.5)
+      expect(item.totalWeight).toBe(9)
     })
 
     it('retorna array vacío para entidad sin entregas', async () => {
       const otraEntidad = await createEntity(app, {
         name: 'Sin Entregas 2',
-        email: 'sinentregas2@test.com'
+        email: 'sinentregas2@test.com',
+        coordinates: { latitude: -32.51, longitude: -63.31 }
       })
       const res = await authedGet(`/api/statistics/entity/${otraEntidad.id}/green-points-ranking`)
       expect(res.json().data).toEqual([])
@@ -156,8 +159,8 @@ describe('Statistics — integration tests', () => {
       const res = await authedGet(`/api/statistics/entity/${entityId}/waste-by-category`)
       const plastico = res.json().data.find((d: any) => d.categoryName === 'Plástico')
       const vidrio = res.json().data.find((d: any) => d.categoryName === 'Vidrio')
-      expect(plastico.totalWeight).toBe(3.5) // 2.0 + 1.5
-      expect(vidrio.totalWeight).toBe(3.0)
+      expect(plastico.totalWeight).toBe(5) // 2 + 3
+      expect(vidrio.totalWeight).toBe(4)
     })
 
     it('ordena por peso descendente', async () => {
@@ -193,7 +196,8 @@ describe('Statistics — integration tests', () => {
     it('retorna array vacío para entidad sin entregas', async () => {
       const otraEntidad = await createEntity(app, {
         name: 'Sin Entregas 3',
-        email: 'sinentregas3@test.com'
+        email: 'sinentregas3@test.com',
+        coordinates: { latitude: -32.52, longitude: -63.32 }
       })
       const res = await authedGet(`/api/statistics/entity/${otraEntidad.id}/waste-by-period`)
       expect(res.json().data).toEqual([])
@@ -229,7 +233,11 @@ describe('Statistics — integration tests', () => {
     })
 
     it('retorna array vacío para un vecino sin entregas', async () => {
-      const otraEntidad = await createEntity(app, { name: 'Entidad Extra', email: 'extra@test.com' })
+      const otraEntidad = await createEntity(app, {
+        name: 'Entidad Extra',
+        email: 'extra@test.com',
+        coordinates: { latitude: -32.53, longitude: -63.33 }
+      })
       const vecinoSinEntregas = await createNeighborWithToken(app, otraEntidad.id, {
         username: 'sinentregas',
         email: 'sinentregas@vecino.com',

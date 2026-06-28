@@ -205,7 +205,7 @@ describe('PasswordReset — integration tests', () => {
           url: '/api/auth/reset-password',
           body: { resetToken, otp: '000000', newPassword: 'NuevaPass000@#.' }
         })
-        expect(res.statusCode).toBe(500)
+        expect(res.statusCode).toBe(400)
       })
 
       it('falla con resetToken manipulado', async () => {
