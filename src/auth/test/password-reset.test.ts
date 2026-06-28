@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import { app } from '../../shared/test/test.setup'
 import {
   createEntity,
+  createEntityWithToken,
   createNeighborWithToken,
   createResponsible,
   createRewardPartner,
@@ -89,8 +90,8 @@ describe('PasswordReset — integration tests', () => {
 
     describe('userType: responsible', () => {
       it('retorna resetToken para un responsable existente', async () => {
-        const entity = await createEntity(app)
-        await createResponsible(app, entity.id)
+        const entity = await createEntityWithToken(app)
+        await createResponsible(app, entity.id, {}, entity.token)
         const res = await app.inject({
           method: 'POST',
           url: '/api/auth/forgot-password',
@@ -103,8 +104,8 @@ describe('PasswordReset — integration tests', () => {
 
     describe('userType: reward-partner', () => {
       it('retorna resetToken para un local adherido existente', async () => {
-        const entity = await createEntity(app)
-        await createRewardPartner(app, entity.id)
+        const entity = await createEntityWithToken(app)
+        await createRewardPartner(app, entity.id, {}, entity.token)
         const res = await app.inject({
           method: 'POST',
           url: '/api/auth/forgot-password',
@@ -204,7 +205,7 @@ describe('PasswordReset — integration tests', () => {
           url: '/api/auth/reset-password',
           body: { resetToken, otp: '000000', newPassword: 'NuevaPass000@#.' }
         })
-        expect(res.statusCode).toBe(500)
+        expect(res.statusCode).toBe(400)
       })
 
       it('falla con resetToken manipulado', async () => {
@@ -217,7 +218,7 @@ describe('PasswordReset — integration tests', () => {
             newPassword: 'NuevaPass000@#.'
           }
         })
-        expect(res.statusCode).toBe(500)
+        expect(res.statusCode).toBe(400)
       })
     })
 
@@ -244,8 +245,8 @@ describe('PasswordReset — integration tests', () => {
 
     describe('flujo completo con responsable', () => {
       it('cambia la contraseña de un responsable exitosamente', async () => {
-        const entity = await createEntity(app)
-        await createResponsible(app, entity.id)
+        const entity = await createEntityWithToken(app)
+        await createResponsible(app, entity.id, {}, entity.token)
 
         const forgotRes = await app.inject({
           method: 'POST',
@@ -266,8 +267,8 @@ describe('PasswordReset — integration tests', () => {
 
     describe('flujo completo con local adherido', () => {
       it('cambia la contraseña de un local adherido exitosamente', async () => {
-        const entity = await createEntity(app)
-        await createRewardPartner(app, entity.id)
+        const entity = await createEntityWithToken(app)
+        await createRewardPartner(app, entity.id, {}, entity.token)
 
         const forgotRes = await app.inject({
           method: 'POST',

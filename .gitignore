@@ -121,3 +121,7 @@ notes
 
 # WebStorm project
 .idea
+
+# Generated JS artifacts inside src (from manual tsc compilation)
+src/shared/config/*.d.ts
+src/shared/config/*.js.map
