@@ -12,7 +12,9 @@ services:
     env_file:
       - .env
     environment:
+      NODE_ENV: development
       DATABASE_HOST: database
+      DATABASE_PORT: 5432
     networks:
       - dev-network
 

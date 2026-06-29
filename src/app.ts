@@ -27,6 +27,7 @@ import bootstrapPasswordReset from './auth/password-reset.bootstrap'
 import bootstrapSuperadmin from './superadmin/superadmin.bootstrap'
 import errorMiddleware from './shared/infrastructure/middlewares/error.middleware'
 import runSeeders from './shared/database/seeders/database.seeder'
+import seedProduction from './shared/database/seeders/production.seeder'
 
 async function bootstrapApp(port: number, options?: Options): Promise<{ app: FastifyInstance; db: Services }> {
   const db = await initMikroORM(options)
@@ -38,6 +39,10 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
 
   if (EnvVar.server.nodeEnv === 'development') {
     await runSeeders(db.em)
+  }
+
+  if (EnvVar.server.nodeEnv === 'production') {
+    await seedProduction(db.em)
   }
   const fastify = new FastifyConifg(EnvVar.server.nodeEnv)
   const app = fastify.server
