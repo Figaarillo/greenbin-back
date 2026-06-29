@@ -1,0 +1,24 @@
+name: Release Please
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    name: Release Please
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          # GITHUB_TOKEN is enough to start. BUT a release PR opened with it
+          # will NOT trigger the required CI checks (master ruleset), so it
+          # can't be merged. When that bites, create a PAT/App token and use:
+          #   token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
