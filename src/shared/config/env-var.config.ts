@@ -42,6 +42,16 @@ interface AdminConfig {
   password: string
 }
 
+interface ProdEntityConfig {
+  name: string
+  email: string
+  description: string
+  city: string
+  province: string
+  latitude: number
+  longitude: number
+}
+
 interface Config {
   auth: Auth
   server: ServerConfig
@@ -51,6 +61,7 @@ interface Config {
   email: EmailConfig
   cors: CorsConfig
   admin: AdminConfig
+  prodEntity: ProdEntityConfig
 }
 
 const serverConfig: ServerConfig = {
@@ -120,6 +131,19 @@ const adminConfig: AdminConfig = {
   password: env.get('ADMIN_PASSWORD').required().asString()
 }
 
+// Entity config for production bootstrap. All have sensible defaults so the admin
+// can log in and update entity details later via the API. Only override if you
+// need a specific entity name or location from the first deploy.
+const prodEntityConfig: ProdEntityConfig = {
+  name: env.get('PROD_ENTITY_NAME').default('Administración').asString(),
+  email: env.get('PROD_ENTITY_EMAIL').default(adminConfig.email).asString(),
+  description: env.get('PROD_ENTITY_DESCRIPTION').default('Entidad inicial del sistema').asString(),
+  city: env.get('PROD_ENTITY_CITY').default('Ciudad').asString(),
+  province: env.get('PROD_ENTITY_PROVINCE').default('Provincia').asString(),
+  latitude: env.get('PROD_ENTITY_LAT').default('-31.42').asFloat(),
+  longitude: env.get('PROD_ENTITY_LNG').default('-62.08').asFloat()
+}
+
 const EnvVar: Config = {
   auth: authConfig,
   server: serverConfig,
@@ -128,7 +152,8 @@ const EnvVar: Config = {
   recaptcha: recaptchaConfig,
   email: emailConfig,
   cors: corsConfig,
-  admin: adminConfig
+  admin: adminConfig,
+  prodEntity: prodEntityConfig
 }
 
 export default EnvVar
