@@ -62,7 +62,7 @@ async function seedProduction(em: EntityManager): Promise<void> {
           lastname: 'Admin',
           username: 'superadmin',
           email: EnvVar.admin.email,
-        password: EnvVar.prodEntity.password,
+          password: EnvVar.admin.password,
           dni: 99999999,
           phoneNumber: '000-000000',
           entityId: entity.id
