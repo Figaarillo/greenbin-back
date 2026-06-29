@@ -46,6 +46,7 @@ interface ProdEntityConfig {
   name: string
   email: string
   description: string
+  password: string
   city: string
   province: string
   latitude: number
@@ -138,6 +139,7 @@ const prodEntityConfig: ProdEntityConfig = {
   name: env.get('PROD_ENTITY_NAME').default('Administración').asString(),
   email: env.get('PROD_ENTITY_EMAIL').default(adminConfig.email).asString(),
   description: env.get('PROD_ENTITY_DESCRIPTION').default('Entidad inicial del sistema').asString(),
+  password: env.get('PROD_ENTITY_PASSWORD').default(adminConfig.password).asString(),
   city: env.get('PROD_ENTITY_CITY').default('Ciudad').asString(),
   province: env.get('PROD_ENTITY_PROVINCE').default('Provincia').asString(),
   latitude: env.get('PROD_ENTITY_LAT').default('-31.42').asFloat(),
