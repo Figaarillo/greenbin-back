@@ -108,9 +108,9 @@ describe('Entity — integration tests', () => {
       expect(res.json().data.length).toBe(1)
     })
 
-    it('devuelve 401 sin token', async () => {
+    it('devuelve 200 sin token (endpoint público)', async () => {
       const res = await app.inject({ method: 'GET', url: '/api/entity?offset=0&limit=10' })
-      expect(res.statusCode).toBe(401)
+      expect(res.statusCode).toBe(200)
     })
   })
 
