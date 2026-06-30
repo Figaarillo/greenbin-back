@@ -70,6 +70,11 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
     return 'Hello, World!'
   })
 
+  app.get('/health', async (_req, rep) => {
+    console.log('[Health] OK')
+    return await rep.status(200).send({ status: 'ok' })
+  })
+
   /* Register the entities */
   bootstrapAuth(app)
   bootstrapEntity(app)
