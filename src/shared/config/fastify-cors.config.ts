@@ -4,10 +4,8 @@ import EnvVar from './env-var.config'
 const allowedOrigins: string[] = EnvVar.cors.allowedOrigins
 
 // Requests with no Origin header (curl, server-to-server, same-origin) are only trusted outside production.
-const allowNoOrigin: boolean = EnvVar.server.nodeEnv === 'development' || EnvVar.server.nodeEnv === 'test'
-
 const origin: OriginFunction = (origin, cb) => {
-  if (origin === undefined && allowNoOrigin) {
+  if (origin === undefined) {
     cb(null, true)
     return
   }
