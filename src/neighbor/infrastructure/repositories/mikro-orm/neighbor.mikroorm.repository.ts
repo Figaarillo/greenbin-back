@@ -9,8 +9,10 @@ import type NeighborRepository from '../../../domain/repositories/neighbor.repos
 class NeighborMikroORMRepository implements NeighborRepository {
   async find(property: Record<string, any>): Promise<Nullable<NeighborEntity>> {
     // FIX: acepta any para permitir buscar por number (dni) además de string
+    // Poblamos 'entity' para que el vecino traiga su entidad completa (name, city,
+    // coordinates) en una sola consulta. El password de la entidad es hidden/lazy: no se expone.
     const em = this.getEntityManager()
-    return await em.findOne(NeighborEntity, property)
+    return await em.findOne(NeighborEntity, property, { populate: ['entity'] })
   }
 
   async findWithWaste(property: Record<string, string>): Promise<Nullable<NeighborEntity>> {
