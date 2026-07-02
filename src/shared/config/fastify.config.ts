@@ -21,13 +21,14 @@ const envToLogger = {
     }
   },
   production: true,
+  staging: true,
   test: false
 }
 
 class FastifyConifg {
   readonly server: FastifyInstance
 
-  constructor(environment: 'development' | 'production' | 'test') {
+  constructor(environment: 'development' | 'production' | 'test' | 'staging') {
     this.server = fastify({
       logger: envToLogger[environment] ?? true
     })

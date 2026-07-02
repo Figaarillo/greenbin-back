@@ -37,7 +37,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
     await db.orm.getMigrator().up()
   }
 
-  if (EnvVar.server.nodeEnv === 'development') {
+  if (EnvVar.server.nodeEnv === 'development' || EnvVar.server.nodeEnv === 'staging') {
     await runSeeders(db.em)
   }
 

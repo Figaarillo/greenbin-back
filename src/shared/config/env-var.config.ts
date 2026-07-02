@@ -6,7 +6,7 @@ dotenv.config()
 interface ServerConfig {
   port: number
   host: string
-  nodeEnv: 'development' | 'production' | 'test'
+  nodeEnv: 'development' | 'production' | 'test' | 'staging'
 }
 
 interface DatabaseConfig {
@@ -68,7 +68,7 @@ interface Config {
 const serverConfig: ServerConfig = {
   port: env.get('SERVER_PORT').required().default(8080).asPortNumber(),
   host: env.get('SERVER_HOST').required().asString(),
-  nodeEnv: env.get('NODE_ENV').required().asEnum(['development', 'production', 'test'])
+  nodeEnv: env.get('NODE_ENV').required().asEnum(['development', 'production', 'test', 'staging'])
 }
 
 const databaseConfig: DatabaseConfig = {
@@ -84,7 +84,7 @@ const databaseConfig: DatabaseConfig = {
 // would crash a perfectly valid prod boot. Outside production we keep them
 // required to fail fast when a local/test env is misconfigured.
 function loadTestDatabaseConfig(): DatabaseConfig {
-  if (serverConfig.nodeEnv === 'production') {
+  if (serverConfig.nodeEnv === 'production' || serverConfig.nodeEnv === 'staging') {
     return { name: '', user: '', password: '', host: '', port: 0 }
   }
 
