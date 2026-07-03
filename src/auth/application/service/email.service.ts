@@ -34,6 +34,26 @@ class EmailService {
     })
   }
 
+  async sendRegistrationOtp(to: string, otp: string): Promise<void> {
+    await this.transporter.sendMail({
+      from: `"GreenBin" <${EnvVar.email.user}>`,
+      to,
+      subject: 'Verificá tu cuenta de GreenBin',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+          <h2 style="color: #4caf50;">GreenBin</h2>
+          <p>¡Bienvenido/a! Estás a un paso de crear tu cuenta.</p>
+          <p>Para verificar tu correo, ingresá este código:</p>
+          <div style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #4caf50; text-align: center; padding: 20px 0;">
+            ${otp}
+          </div>
+          <p>Este código expira en <strong>10 minutos</strong>.</p>
+          <p>Si no intentaste registrarte, ignorá este email.</p>
+        </div>
+      `
+    })
+  }
+
   async sendWasteDeliveryConfirmation(
     to: string,
     neighborName: string,

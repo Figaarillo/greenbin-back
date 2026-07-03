@@ -1,5 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/application/service/auth.service'
+import OtpService from '../../../auth/application/service/otp.service'
 import RecaptchaService from '../../../auth/application/service/recaptcha.service'
 import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
@@ -43,7 +44,22 @@ class RewardPartnerHandler {
   }
 
   async register(req: FastifyRequest, rep: FastifyReply): Promise<void> {
-    const payload: RewardPartnerPayload = req.body as RewardPartnerPayload
+    const { registerToken, otp, ...payload } = req.body as RewardPartnerPayload & {
+      registerToken: string
+      otp: string
+    }
+
+    const otpService = new OtpService()
+    try {
+      const otpPayload = otpService.verify(registerToken, otp)
+      if (otpPayload.email !== payload.email || otpPayload.userType !== 'reward-partner') {
+        HandleHTTPResponse.BadRequest(rep, 'El código no corresponde a este email')
+        return
+      }
+    } catch {
+      HandleHTTPResponse.BadRequest(rep, 'Código de verificación inválido o expirado')
+      return
+    }
 
     const validateRegisterRewardPartnerSchema = new RewardPartnerSchemaValidator(RegisterRewardPartnerDTO, payload)
     validateRegisterRewardPartnerSchema.exec()

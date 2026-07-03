@@ -1,4 +1,5 @@
 import { type FastifyInstance } from 'fastify'
+import jwt from 'jsonwebtoken'
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -93,6 +94,24 @@ function authHeaders(token?: string): Record<string, string> {
   return token != null && token.length > 0 ? { authorization: `Bearer ${token}` } : {}
 }
 
+// Pide un OTP de registro y lo extrae del JWT devuelto (nodemailer está mockeado
+// en test.setup, así que no se envía correo real). Permite testear el alta que
+// ahora exige verificación por mail.
+export async function requestRegisterOtp(
+  app: FastifyInstance,
+  email: string,
+  userType: 'neighbor' | 'reward-partner'
+): Promise<{ registerToken: string; otp: string }> {
+  const res = await app.inject({
+    method: 'POST',
+    url: '/api/auth/register/request-otp',
+    body: { email, userType }
+  })
+  const { registerToken } = res.json().data as { registerToken: string }
+  const payload = jwt.decode(registerToken) as { otp: string }
+  return { registerToken, otp: payload.otp }
+}
+
 export async function createEntity(app: FastifyInstance, overrides = {}): Promise<Record<string, string>> {
   const res = await app.inject({
     method: 'POST',
@@ -131,10 +150,12 @@ export async function createNeighbor(
   entityId: string,
   overrides = {}
 ): Promise<Record<string, string>> {
+  const body = { ...NEIGHBOR_FIXTURE, entityId, ...overrides }
+  const { registerToken, otp } = await requestRegisterOtp(app, body.email, 'neighbor')
   const res = await app.inject({
     method: 'POST',
     url: '/api/neighbor',
-    body: { ...NEIGHBOR_FIXTURE, entityId, ...overrides }
+    body: { ...body, registerToken, otp }
   })
   return res.json().data
 }
@@ -172,11 +193,13 @@ export async function createRewardPartner(
   overrides = {},
   token?: string
 ): Promise<Record<string, string>> {
+  const body = { ...REWARD_PARTNER_FIXTURE, entityId, ...overrides }
+  const { registerToken, otp } = await requestRegisterOtp(app, body.email, 'reward-partner')
   const res = await app.inject({
     method: 'POST',
     url: '/api/reward-partner',
     headers: authHeaders(token),
-    body: { ...REWARD_PARTNER_FIXTURE, entityId, ...overrides }
+    body: { ...body, registerToken, otp }
   })
   if (res.statusCode >= 400) {
     throw new Error(`Failed to create reward partner: ${res.statusCode} - ${res.body}`)
