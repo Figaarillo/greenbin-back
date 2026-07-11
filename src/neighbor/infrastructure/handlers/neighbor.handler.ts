@@ -1,5 +1,6 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import AuthService from '../../../auth/application/service/auth.service'
+import OtpService from '../../../auth/application/service/otp.service'
 import RecaptchaService from '../../../auth/application/service/recaptcha.service'
 import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
@@ -65,14 +66,31 @@ class NeighborHandler {
   }
 
   async register(req: FastifyRequest<{ Body: NeighborPayload }>, rep: FastifyReply): Promise<void> {
-    const validateRegisterNeighborSchema = new NeighborSchemaValidator(RegisterNeighborDTO, req.body)
+    const { registerToken, otp, ...payload } = req.body as NeighborPayload & {
+      registerToken: string
+      otp: string
+    }
+
+    const otpService = new OtpService()
+    try {
+      const otpPayload = otpService.verify(registerToken, otp)
+      if (otpPayload.email !== payload.email || otpPayload.userType !== 'neighbor') {
+        HandleHTTPResponse.BadRequest(rep, 'El código no corresponde a este email')
+        return
+      }
+    } catch {
+      HandleHTTPResponse.BadRequest(rep, 'Código de verificación inválido o expirado')
+      return
+    }
+
+    const validateRegisterNeighborSchema = new NeighborSchemaValidator(RegisterNeighborDTO, payload)
     validateRegisterNeighborSchema.exec()
 
     const registerNeighbor = new RegisterNeighborUseCase(
       this.neighborRepository,
       new FindEntityByIDUseCase(this.entityRepository)
     )
-    const neighbor = await registerNeighbor.exec(req.body)
+    const neighbor = await registerNeighbor.exec(payload)
 
     const authService = new AuthService(this.jwtStrategy)
     const accessToken = await authService.generateAccessToken(neighbor.id, {

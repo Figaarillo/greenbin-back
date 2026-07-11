@@ -5,6 +5,7 @@ import {
   createEntityWithToken,
   createRewardPartner,
   createRewardPartnerWithToken,
+  requestRegisterOtp,
   REWARD_PARTNER_FIXTURE
 } from '../../shared/test/test-helpers'
 
@@ -29,6 +30,7 @@ describe('RewardPartner — integration tests', () => {
 
   describe('POST /api/reward-partner', () => {
     it('crea un local adherido vinculado a una entidad existente', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'nuevopart@test.com', 'reward-partner')
       const res = await app.inject({
         method: 'POST',
         url: '/api/reward-partner',
@@ -40,7 +42,9 @@ describe('RewardPartner — integration tests', () => {
           name: 'Nuevo Local',
           entityId,
           cuit: '20123456789',
-          coordinates: { latitude: -32.41, longitude: -63.24 }
+          coordinates: { latitude: -32.41, longitude: -63.24 },
+          registerToken,
+          otp
         }
       })
       expect(res.statusCode).toBe(201)
@@ -59,6 +63,7 @@ describe('RewardPartner — integration tests', () => {
     })
 
     it('devuelve 404 con entityId inexistente', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'noentpart@test.com', 'reward-partner')
       const res = await app.inject({
         method: 'POST',
         url: '/api/reward-partner',
@@ -70,7 +75,9 @@ describe('RewardPartner — integration tests', () => {
           name: 'No Ent Local',
           entityId: '00000000-0000-0000-0000-000000000000',
           cuit: '20234567891',
-          coordinates: { latitude: -32.415, longitude: -63.245 }
+          coordinates: { latitude: -32.415, longitude: -63.245 },
+          registerToken,
+          otp
         }
       })
       expect(res.statusCode).toBe(404)
@@ -89,6 +96,7 @@ describe('RewardPartner — integration tests', () => {
         },
         entityToken
       )
+      const { registerToken, otp } = await requestRegisterOtp(app, 'duppart2@test.com', 'reward-partner')
       const res = await app.inject({
         method: 'POST',
         url: '/api/reward-partner',
@@ -100,13 +108,16 @@ describe('RewardPartner — integration tests', () => {
           name: 'Dup Local 2',
           entityId,
           cuit: '20345678912',
-          coordinates: { latitude: -32.425, longitude: -63.255 }
+          coordinates: { latitude: -32.425, longitude: -63.255 },
+          registerToken,
+          otp
         }
       })
       expect(res.statusCode).toBe(409)
     })
 
     it('devuelve 400 con CUIT con formato inválido', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'cuitpart@test.com', 'reward-partner')
       const res = await app.inject({
         method: 'POST',
         url: '/api/reward-partner',
@@ -118,7 +129,9 @@ describe('RewardPartner — integration tests', () => {
           name: 'Cuit Local',
           entityId,
           cuit: '123',
-          coordinates: { latitude: -32.43, longitude: -63.26 }
+          coordinates: { latitude: -32.43, longitude: -63.26 },
+          registerToken,
+          otp
         }
       })
       expect(res.statusCode).toBe(400)
