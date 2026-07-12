@@ -4,6 +4,8 @@ import type RewardPartnerRepository from '../../../reward-partner/domain/reposit
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
+import { Roles } from '../../../auth/domain/entities/role'
+import type { AuthUser } from '../../../auth/domain/entities/auth-user'
 import DeleteCouponUseCase from '../../application/usecases/delete.usecase'
 import FindCouponWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
 import FindCouponByIDUseCase from '../../application/usecases/find-by-id.usecase'
@@ -13,6 +15,7 @@ import UpdateCouponUseCase from '../../application/usecases/update.usecase'
 import type CouponPayload from '../../domain/payloads/coupon.payload'
 import type CouponUpdatePayload from '../../domain/payloads/coupon.update.payload'
 import type CouponRepository from '../../domain/repositories/coupon.repository'
+import ErrorCouponOwnershipMismatch from '../../domain/errors/coupon-ownership-mismatch.error'
 import CouponQueryParams from '../dtos/query-params.dto'
 import RegisterCouponDTO from '../dtos/register-coupon.dto'
 import UpdateCouponDTO from '../dtos/update-coupon.dto'
@@ -69,6 +72,12 @@ class CouponHandler {
     const validateRegisterCouponsSchema = new CouponSchemaValidator(RegisterCouponDTO, req.body)
     validateRegisterCouponsSchema.exec()
 
+    // Un reward-partner solo puede crear cupones a su propio nombre; no puede
+    // atribuirle un cupón a otro local pasando un rewardPartnerId ajeno.
+    if (req.user.role === Roles.REWARD_PARTNER && req.body.rewardPartnerId !== req.user.sub) {
+      throw new ErrorCouponOwnershipMismatch()
+    }
+
     const findRewardPartner = new FindRewardPartnerByIdUseCase(this.rewardPartnerRepository)
     const registerCoupon = new RegisterCouponUseCase(this.couponRepository, findRewardPartner)
     const coupon = await registerCoupon.exec(req.body)
@@ -88,6 +97,8 @@ class CouponHandler {
     const schemaValidator = new CouponSchemaValidator(UpdateCouponDTO, req.body)
     schemaValidator.exec()
 
+    await this.assertOwnership(id, req.user)
+
     const updateCoupon = new UpdateCouponUseCase(this.couponRepository)
     await updateCoupon.exec(id, req.body)
 
@@ -100,10 +111,25 @@ class CouponHandler {
     const schemaValidator = new CouponSchemaValidator(CheckIdDTO, { id })
     schemaValidator.exec()
 
+    await this.assertOwnership(id, req.user)
+
     const deleteCoupon = new DeleteCouponUseCase(this.couponRepository)
     await deleteCoupon.exec(id)
 
     HandleHTTPResponse.OK(rep, 'Coupon deleted successfully', { id })
+  }
+
+  // Entidad y Responsable mantienen su acceso amplio (sin cambios); solo a
+  // reward-partner se lo restringe a sus propios cupones.
+  private async assertOwnership(id: string, user: AuthUser): Promise<void> {
+    if (user.role !== Roles.REWARD_PARTNER) return
+
+    const findCoupon = new FindCouponByIDUseCase(this.couponRepository)
+    const coupon = await findCoupon.exec(id)
+
+    if (coupon.rewardPartner.id !== user.sub) {
+      throw new ErrorCouponOwnershipMismatch()
+    }
   }
 }
 
