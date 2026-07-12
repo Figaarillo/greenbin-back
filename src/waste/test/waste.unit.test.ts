@@ -37,16 +37,23 @@ describe('WasteEntity — unit tests', () => {
       expect(points).toBe(20)
     })
 
-    it('calcula con decimales sin pérdida de precisión', () => {
+    it('redondea al entero más cercano cuando el resultado tiene decimales', () => {
+      const waste = makeWaste(0.5, 25) // electrónico: 0.5 × 25 = 12.5 → 13
+      const points = waste.calculatePoints()
+      expect(points).toBe(13)
+    })
+
+    it('redondea hacia abajo cuando el decimal es menor a 0.5', () => {
+      const waste = makeWaste(1.3, 10) // 1.3 × 10 = 13 exacto, no aplica; usamos un caso con .4x
+      waste.weight = 1.24
+      const points = waste.calculatePoints()
+      expect(points).toBe(12) // 1.24 × 10 = 12.4 → 12
+    })
+
+    it('mantiene el valor cuando el resultado ya es un entero', () => {
       const waste = makeWaste(1.5, 10)
       const points = waste.calculatePoints()
       expect(points).toBe(15)
-    })
-
-    it('calcula correctamente con categorías de alto valor', () => {
-      const waste = makeWaste(0.5, 25) // electrónico
-      const points = waste.calculatePoints()
-      expect(points).toBe(12.5)
     })
 
     it('asigna el resultado a this.points', () => {

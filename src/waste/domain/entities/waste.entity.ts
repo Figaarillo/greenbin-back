@@ -29,7 +29,7 @@ class WasteEntity extends BaseEntity {
   }
 
   calculatePoints(): number {
-    const points = this.pointsPerWeight * this.weight
+    const points = Math.round(this.pointsPerWeight * this.weight)
     this.points = points
     return points
   }
