@@ -12,6 +12,7 @@ import initMikroORM, { type Services } from './db'
 import bootstrapEntity from './entity/entity.bootstrap'
 import bootstrapGreenPoint from './green-point/green-point.bootstrap'
 import bootstrapNeighbor from './neighbor/neighbor.bootstrap'
+import bootstrapNotification from './notification/notification.bootstrap'
 import bootstrapResponsible from './responsible/responsible.bootstrap'
 import bootstrapRewardPartner from './reward-partner/reward-partner.bootstrap'
 import EnvVar from './shared/config/env-var.config'
@@ -89,6 +90,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapWasteTransactionDetail(app)
   bootstrapCoupon(app)
   bootstrapCouponTransaction(app)
+  bootstrapNotification(app)
   bootstrapStatistics(app)
   bootstrapPasswordReset(app)
   bootstrapRegisterVerification(app)
