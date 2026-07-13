@@ -2,6 +2,7 @@ import { type FastifyInstance, type FastifyRequest } from 'fastify'
 import { Roles } from '../../../auth/domain/entities/role'
 import type NotificationHandler from '../handlers/notification.handler'
 import type NotificationPreferencePatch from '../../domain/payloads/notification-preference.payload'
+import type SubscribePushPayload from '../../domain/payloads/subscribe-push.payload'
 
 // Solo estos 3 roles reciben notificaciones en este alcance (ver plan): un
 // vecino compra/canjea cupones y recibe entregas, un local crea cupones, un
@@ -49,6 +50,30 @@ class NotificationRoute {
       preHandler: this.server.protect(...NOTIFIABLE_ROLES),
       handler: async (req: FastifyRequest<{ Body: NotificationPreferencePatch }>, rep) => {
         await this.handler.updatePreferenceHandler(req, rep)
+      }
+    })
+    this.server.get('/api/notifications/push/public-key', {
+      preHandler: this.server.protect(...NOTIFIABLE_ROLES),
+      handler: (req, rep) => {
+        this.handler.getPushPublicKey(req, rep)
+      }
+    })
+    this.server.post('/api/notifications/push/subscribe', {
+      preHandler: this.server.protect(...NOTIFIABLE_ROLES),
+      handler: async (req: FastifyRequest<{ Body: SubscribePushPayload }>, rep) => {
+        await this.handler.subscribePushHandler(req, rep)
+      }
+    })
+    this.server.delete('/api/notifications/push/subscribe', {
+      preHandler: this.server.protect(...NOTIFIABLE_ROLES),
+      handler: async (req: FastifyRequest<{ Body: { endpoint: string } }>, rep) => {
+        await this.handler.unsubscribePushHandler(req, rep)
+      }
+    })
+    this.server.get('/api/notifications/stream', {
+      preHandler: this.server.protect(...NOTIFIABLE_ROLES),
+      handler: (req, rep) => {
+        this.handler.streamHandler(req, rep)
       }
     })
   }

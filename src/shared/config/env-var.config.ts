@@ -33,6 +33,12 @@ interface EmailConfig {
   appPassword: string
 }
 
+interface PushConfig {
+  publicKey: string
+  privateKey: string
+  contactEmail: string
+}
+
 interface CorsConfig {
   allowedOrigins: string[]
 }
@@ -60,6 +66,7 @@ interface Config {
   testDatabase: DatabaseConfig
   recaptcha: Recaptcha
   email: EmailConfig
+  push: PushConfig
   cors: CorsConfig
   admin: AdminConfig
   prodEntity: ProdEntityConfig
@@ -115,6 +122,12 @@ const emailConfig: EmailConfig = {
   appPassword: env.get('EMAIL_APP_PASSWORD').required().asString()
 }
 
+const pushConfig: PushConfig = {
+  publicKey: env.get('VAPID_PUBLIC_KEY').required().asString(),
+  privateKey: env.get('VAPID_PRIVATE_KEY').required().asString(),
+  contactEmail: env.get('VAPID_CONTACT_EMAIL').default(emailConfig.user).asString()
+}
+
 // In production, CORS origins MUST be provided explicitly (no wildcard, no localhost defaults):
 // env-var only throws on a missing required var when no default is set, so production omits the default.
 // In development/test we fall back to localhost so the local frontend works out of the box.
@@ -153,6 +166,7 @@ const EnvVar: Config = {
   testDatabase: testDatabaseConfig,
   recaptcha: recaptchaConfig,
   email: emailConfig,
+  push: pushConfig,
   cors: corsConfig,
   admin: adminConfig,
   prodEntity: prodEntityConfig

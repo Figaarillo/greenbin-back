@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from 'vitest'
 import type EmailService from '../../auth/application/service/email.service'
 import { Roles } from '../../auth/domain/entities/role'
 import NotificationDispatcher from '../application/service/notification-dispatcher.service'
+import type PushNotificationService from '../application/service/push-notification.service'
+import type RealtimeBroadcaster from '../domain/services/realtime-broadcaster'
 import type FindOrCreateNotificationPreferenceUseCase from '../application/usecases/find-or-create-preference.usecase'
 import type RegisterNotificationUseCase from '../application/usecases/register.usecase'
 import { NotificationCategory } from '../domain/enums/notification-category.enum'
@@ -14,7 +16,9 @@ function makeDispatcher(
   return new NotificationDispatcher(
     findOrCreatePreference as FindOrCreateNotificationPreferenceUseCase,
     registerNotification as RegisterNotificationUseCase,
-    {} as unknown as EmailService
+    {} as unknown as EmailService,
+    { sendToRecipient: vi.fn() } as unknown as PushNotificationService,
+    { send: vi.fn() } as unknown as RealtimeBroadcaster
   )
 }
 

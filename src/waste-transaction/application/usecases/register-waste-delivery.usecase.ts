@@ -58,6 +58,10 @@ class RegisterWasteDeliveryUseCase {
       category: NotificationCategory.POINTS_DELIVERED,
       title: 'Entrega registrada',
       body: `Se registró tu entrega y sumaste ${transaction.totalPoints} puntos.`,
+      // totalPoints es el saldo del vecino YA con esta entrega sumada (addPoints
+      // corrió arriba, en el loop): el front lo usa como valor final para animar
+      // el contador desde el saldo anterior hasta este.
+      data: { points: transaction.totalPoints, totalPoints: neighbor.points },
       sendEmail: async emailService => {
         await emailService.sendWasteDeliveryConfirmation(
           neighbor.email,

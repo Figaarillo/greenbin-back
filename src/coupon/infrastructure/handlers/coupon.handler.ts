@@ -1,6 +1,8 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import FindRewardPartnerByIdUseCase from '../../../reward-partner/application/usecases/find-by-id.usecase'
 import type RewardPartnerRepository from '../../../reward-partner/domain/repositories/reward-partner.repository'
+import ListNeighborsUseCase from '../../../neighbor/application/usecases/list.usecase'
+import type NeighborRepository from '../../../neighbor/domain/repositories/neighbor.repository'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
@@ -26,7 +28,8 @@ import createNotificationDispatcher from '../../../notification/notification-dis
 class CouponHandler {
   constructor(
     private readonly couponRepository: CouponRepository,
-    private readonly rewardPartnerRepository: RewardPartnerRepository
+    private readonly rewardPartnerRepository: RewardPartnerRepository,
+    private readonly neighborRepository: NeighborRepository
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
@@ -80,10 +83,12 @@ class CouponHandler {
     }
 
     const findRewardPartner = new FindRewardPartnerByIdUseCase(this.rewardPartnerRepository)
+    const listNeighbors = new ListNeighborsUseCase(this.neighborRepository)
     const registerCoupon = new RegisterCouponUseCase(
       this.couponRepository,
       findRewardPartner,
-      createNotificationDispatcher()
+      createNotificationDispatcher(),
+      listNeighbors
     )
     const coupon = await registerCoupon.exec(req.body)
 
