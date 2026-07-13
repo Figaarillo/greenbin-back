@@ -109,8 +109,18 @@ class NotificationHandler {
   // apenas este metodo retorna). El stream queda abierto hasta que el cliente
   // cierra la conexion (`req.raw` emite 'close').
   streamHandler(req: FastifyRequest, rep: FastifyReply): void {
+    // @fastify/cors ya cargo estos headers via reply.header() en su hook
+    // onRequest, pero hijack() + writeHead() manual pisan por completo el
+    // envio normal de Fastify y se pierden si no se copian aca.
+    const corsHeaders: Record<string, string> = {}
+    const allowOrigin = rep.getHeader('access-control-allow-origin')
+    if (typeof allowOrigin === 'string') corsHeaders['Access-Control-Allow-Origin'] = allowOrigin
+    const allowCredentials = rep.getHeader('access-control-allow-credentials')
+    if (typeof allowCredentials === 'string') corsHeaders['Access-Control-Allow-Credentials'] = allowCredentials
+
     rep.hijack()
     rep.raw.writeHead(200, {
+      ...corsHeaders,
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache, no-transform',
       Connection: 'keep-alive'
