@@ -86,17 +86,24 @@ function makeUseCase(dispatch: ReturnType<typeof vi.fn>): RedeemCouponUseCase {
 }
 
 describe('RedeemCouponUseCase — notificaciones', () => {
-  it('dispara COUPON_PURCHASED al vecino que compró el cupón', async () => {
+  it('dispara COUPON_PURCHASED al vecino que compró el cupón y al local dueño', async () => {
     const dispatch = vi.fn()
     const useCase = makeUseCase(dispatch)
 
     await useCase.exec({ neighborId: mockNeighbor.id, couponId: mockCoupon.id })
 
-    expect(dispatch).toHaveBeenCalledTimes(1)
-    const event = dispatch.mock.calls[0][0]
-    expect(event.recipientId).toBe(mockNeighbor.id)
-    expect(event.recipientRole).toBe(Roles.NEIGHBOR)
-    expect(event.category).toBe(NotificationCategory.COUPON_PURCHASED)
-    expect(typeof event.sendEmail).toBe('function')
+    expect(dispatch).toHaveBeenCalledTimes(2)
+
+    const neighborEvent = dispatch.mock.calls[0][0]
+    expect(neighborEvent.recipientId).toBe(mockNeighbor.id)
+    expect(neighborEvent.recipientRole).toBe(Roles.NEIGHBOR)
+    expect(neighborEvent.category).toBe(NotificationCategory.COUPON_PURCHASED)
+    expect(typeof neighborEvent.sendEmail).toBe('function')
+
+    const rewardPartnerEvent = dispatch.mock.calls[1][0]
+    expect(rewardPartnerEvent.recipientId).toBe(mockRewardPartner.id)
+    expect(rewardPartnerEvent.recipientRole).toBe(Roles.REWARD_PARTNER)
+    expect(rewardPartnerEvent.category).toBe(NotificationCategory.COUPON_PURCHASED)
+    expect(rewardPartnerEvent.sendEmail).toBeUndefined()
   })
 })

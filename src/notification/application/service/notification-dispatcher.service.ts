@@ -1,8 +1,10 @@
 import type EmailService from '../../../auth/application/service/email.service'
 import type { Roles } from '../../../auth/domain/entities/role'
 import type { NotificationCategory } from '../../domain/enums/notification-category.enum'
+import type RealtimeBroadcaster from '../../domain/services/realtime-broadcaster'
 import type FindOrCreateNotificationPreferenceUseCase from '../usecases/find-or-create-preference.usecase'
 import type RegisterNotificationUseCase from '../usecases/register.usecase'
+import type PushNotificationService from './push-notification.service'
 
 interface NotificationEvent {
   recipientId: string
@@ -10,6 +12,9 @@ interface NotificationEvent {
   category: NotificationCategory
   title: string
   body: string
+  /** Datos estructurados para consumidores en vivo (SSE): ids, montos, etc.
+   *  No se persiste ni se manda por mail, solo viaja al front conectado. */
+  data?: Record<string, unknown>
   /** Closure: cada use case decide qué método de EmailService llamar y con qué
    *  argumentos. El dispatcher no necesita conocer la firma de cada mail.
    *  Si se omite, el evento solo genera notificación in-app (sin mail). */
@@ -27,7 +32,9 @@ class NotificationDispatcher {
   constructor(
     private readonly findOrCreatePreference: FindOrCreateNotificationPreferenceUseCase,
     private readonly registerNotification: RegisterNotificationUseCase,
-    private readonly emailService: EmailService
+    private readonly emailService: EmailService,
+    private readonly pushService: PushNotificationService,
+    private readonly realtimeBroadcaster: RealtimeBroadcaster
   ) {}
 
   async dispatch(event: NotificationEvent): Promise<void> {
@@ -40,6 +47,26 @@ class NotificationDispatcher {
       await this.registerNotification.exec(event)
     } catch (error) {
       console.error('[NotificationDispatcher] no se pudo persistir la notificación in-app', error)
+    }
+
+    try {
+      await this.pushService.sendToRecipient(event.recipientId, event.recipientRole, {
+        title: event.title,
+        body: event.body
+      })
+    } catch (error) {
+      console.error('[NotificationDispatcher] no se pudo enviar el push', error)
+    }
+
+    try {
+      this.realtimeBroadcaster.send(event.recipientId, event.recipientRole, {
+        category: event.category,
+        title: event.title,
+        body: event.body,
+        data: event.data
+      })
+    } catch (error) {
+      console.error('[NotificationDispatcher] no se pudo emitir el evento en vivo', error)
     }
 
     if (event.sendEmail == null) return

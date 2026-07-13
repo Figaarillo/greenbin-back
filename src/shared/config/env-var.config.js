@@ -38,6 +38,11 @@ const emailConfig = {
     user: env_var_1.default.get('EMAIL_USER').required().asString(),
     appPassword: env_var_1.default.get('EMAIL_APP_PASSWORD').required().asString()
 };
+const pushConfig = {
+    publicKey: env_var_1.default.get('VAPID_PUBLIC_KEY').required().asString(),
+    privateKey: env_var_1.default.get('VAPID_PRIVATE_KEY').required().asString(),
+    contactEmail: env_var_1.default.get('VAPID_CONTACT_EMAIL').default(emailConfig.user).asString()
+};
 // In production, CORS origins MUST be provided explicitly (no wildcard, no localhost defaults):
 // env-var only throws on a missing required var when no default is set, so production omits the default.
 // In development/test we fall back to localhost so the local frontend works out of the box.
@@ -59,6 +64,7 @@ const EnvVar = {
     testDatabase: testDatabaseConfig,
     recaptcha: recaptchaConfig,
     email: emailConfig,
+    push: pushConfig,
     cors: corsConfig,
     admin: adminConfig
 };

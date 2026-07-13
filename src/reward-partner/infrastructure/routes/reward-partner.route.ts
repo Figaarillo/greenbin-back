@@ -30,7 +30,7 @@ class RewardPartnerRoute {
       }
     })
     this.server.get('/api/reward-partner', {
-      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.REWARD_PARTNER),
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.REWARD_PARTNER, Roles.NEIGHBOR),
       handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
         await this.handler.list(req, rep)
       }

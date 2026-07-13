@@ -66,6 +66,7 @@ class RedeemCouponUseCase {
       category: NotificationCategory.COUPON_PURCHASED,
       title: 'Cupón comprado',
       body: `Compraste "${coupon.title}". Código: ${code}. Vence el ${expirationDate.toLocaleDateString('es-AR')}.`,
+      data: { transactionId: transaction.id, couponId: coupon.id },
       sendEmail: async emailService => {
         await emailService.sendCouponPurchaseConfirmation(
           neighbor.email,
@@ -75,6 +76,18 @@ class RedeemCouponUseCase {
           expirationDate
         )
       }
+    })
+
+    // Al local: que vea en vivo que le compraron el cupón, sin refrescar.
+    // Solo in-app/push por ahora (mismo patrón que register-waste-delivery
+    // usa para el responsable): no se pidió un mail para este aviso.
+    void this.notificationDispatcher.dispatch({
+      recipientId: rewardPartner.id,
+      recipientRole: Roles.REWARD_PARTNER,
+      category: NotificationCategory.COUPON_PURCHASED,
+      title: 'Cupón comprado',
+      body: `${neighbor.firstname} ${neighbor.lastname} compró "${coupon.title}".`,
+      data: { transactionId: transaction.id, couponId: coupon.id }
     })
 
     return transaction

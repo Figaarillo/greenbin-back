@@ -1,15 +1,22 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { getURLParams } from '../../../shared/utils/http.request.util'
+import EnvVar from '../../../shared/config/env-var.config'
 import type ListNotificationsByRecipientUseCase from '../../application/usecases/list-by-recipient.usecase'
 import type CountUnreadNotificationsUseCase from '../../application/usecases/count-unread.usecase'
 import type MarkNotificationAsReadUseCase from '../../application/usecases/mark-as-read.usecase'
 import type MarkAllNotificationsAsReadUseCase from '../../application/usecases/mark-all-as-read.usecase'
 import type FindOrCreateNotificationPreferenceUseCase from '../../application/usecases/find-or-create-preference.usecase'
 import type UpdateNotificationPreferenceUseCase from '../../application/usecases/update-preference.usecase'
+import type SubscribePushUseCase from '../../application/usecases/subscribe-push.usecase'
+import type UnsubscribePushUseCase from '../../application/usecases/unsubscribe-push.usecase'
 import NotificationSchemaValidator from '../middlewares/notification-schema-validator.middleware'
 import UpdateNotificationPreferenceDTO from '../dtos/update-preference.dto'
+import SubscribePushDTO from '../dtos/subscribe-push.dto'
+import UnsubscribePushDTO from '../dtos/unsubscribe-push.dto'
 import type NotificationPreferencePatch from '../../domain/payloads/notification-preference.payload'
+import type SubscribePushPayload from '../../domain/payloads/subscribe-push.payload'
+import type { SseConnectionRegistry } from '../realtime/sse-connection-registry'
 
 class NotificationHandler {
   constructor(
@@ -18,7 +25,10 @@ class NotificationHandler {
     private readonly markAsRead: MarkNotificationAsReadUseCase,
     private readonly markAllAsRead: MarkAllNotificationsAsReadUseCase,
     private readonly findOrCreatePreference: FindOrCreateNotificationPreferenceUseCase,
-    private readonly updatePreference: UpdateNotificationPreferenceUseCase
+    private readonly updatePreference: UpdateNotificationPreferenceUseCase,
+    private readonly subscribePush: SubscribePushUseCase,
+    private readonly unsubscribePush: UnsubscribePushUseCase,
+    private readonly realtimeRegistry: SseConnectionRegistry
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
@@ -70,6 +80,55 @@ class NotificationHandler {
     const preference = await this.updatePreference.exec(req.user.sub, req.user.role, patch)
 
     HandleHTTPResponse.OK(rep, 'Notification preference updated successfully', preference)
+  }
+
+  getPushPublicKey(_req: FastifyRequest, rep: FastifyReply): void {
+    HandleHTTPResponse.OK(rep, 'Push public key retrieved successfully', { publicKey: EnvVar.push.publicKey })
+  }
+
+  async subscribePushHandler(req: FastifyRequest<{ Body: SubscribePushPayload }>, rep: FastifyReply): Promise<void> {
+    const validator = new NotificationSchemaValidator(SubscribePushDTO, req.body)
+    const payload = validator.exec()
+
+    await this.subscribePush.exec(req.user.sub, req.user.role, payload)
+
+    HandleHTTPResponse.OK(rep, 'Push subscription registered successfully')
+  }
+
+  async unsubscribePushHandler(req: FastifyRequest<{ Body: { endpoint: string } }>, rep: FastifyReply): Promise<void> {
+    const validator = new NotificationSchemaValidator(UnsubscribePushDTO, req.body)
+    const { endpoint } = validator.exec()
+
+    await this.unsubscribePush.exec(endpoint)
+
+    HandleHTTPResponse.OK(rep, 'Push subscription removed successfully')
+  }
+
+  // Conexion SSE de larga duracion: hijack() le saca a Fastify el control de
+  // la respuesta (si no, intenta serializarla/cerrarla como una request normal
+  // apenas este metodo retorna). El stream queda abierto hasta que el cliente
+  // cierra la conexion (`req.raw` emite 'close').
+  streamHandler(req: FastifyRequest, rep: FastifyReply): void {
+    rep.hijack()
+    rep.raw.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      Connection: 'keep-alive'
+    })
+    rep.raw.write(': connected\n\n')
+
+    this.realtimeRegistry.subscribe(req.user.sub, req.user.role, rep)
+
+    // Sin heartbeat, proxies/balanceadores intermedios cortan la conexion por
+    // inactividad mucho antes de que haya un evento real que emitir.
+    const heartbeat = setInterval(() => {
+      rep.raw.write(': heartbeat\n\n')
+    }, 25000)
+
+    req.raw.on('close', () => {
+      clearInterval(heartbeat)
+      this.realtimeRegistry.unsubscribe(req.user.sub, req.user.role, rep)
+    })
   }
 }
 
