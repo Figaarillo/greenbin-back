@@ -19,6 +19,7 @@ import type UseCouponPayload from '../../domain/payloads/use-coupon.payload'
 import UseCouponDTO from '../dtos/use-coupon.dto'
 import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
 import ListByRewardPartnerUseCase from '../../application/usecases/list-by-reward-partner.usecase'
+import createNotificationDispatcher from '../../../notification/notification-dispatcher.factory'
 
 class CouponTransactionHandler {
   constructor(
@@ -39,7 +40,8 @@ class CouponTransactionHandler {
         findCouponById,
         findNeighborById,
         findRewardPartnerById,
-        subtractPoints
+        subtractPoints,
+        createNotificationDispatcher()
       )
       const redeemedCoupon = await redeemCouponUseCase.exec(req.body)
 
@@ -102,7 +104,7 @@ class CouponTransactionHandler {
       const schemaValidator = new CouponSchemaValidator(UseCouponDTO, payload)
       schemaValidator.exec()
 
-      const useCoupon = new UseCouponUseCase(this.couponTransactionRepository)
+      const useCoupon = new UseCouponUseCase(this.couponTransactionRepository, createNotificationDispatcher())
       const result = await useCoupon.exec(payload)
 
       HandleHTTPResponse.OK(rep, 'Coupon used successfully', {

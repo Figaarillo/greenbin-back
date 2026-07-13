@@ -103,6 +103,73 @@ class EmailService {
       `
     })
   }
+
+  async sendCouponPurchaseConfirmation(
+    to: string,
+    neighborName: string,
+    couponTitle: string,
+    code: string,
+    expirationDate: Date
+  ): Promise<void> {
+    const formattedDate = expirationDate.toLocaleDateString('es-AR')
+
+    await this.transporter.sendMail({
+      from: `"GreenBin" <${EnvVar.email.user}>`,
+      to,
+      subject: `¡Compraste "${couponTitle}"!`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #333;">
+          <h2 style="color: #4caf50;">GreenBin</h2>
+          <p>¡Hola, <strong>${neighborName}</strong>!</p>
+          <p>Compraste el cupón <strong>${couponTitle}</strong>. Tu código de canje es:</p>
+          <div style="font-size: 28px; font-weight: bold; letter-spacing: 4px; color: #4caf50; text-align: center; padding: 16px 0;">
+            ${code}
+          </div>
+          <p>Tenés tiempo de canjearlo hasta el <strong>${formattedDate}</strong>.</p>
+          <p style="color: #777; font-size: 13px;">
+            Mostrá este código en el local para canjearlo.<br/>
+            — El equipo de GreenBin
+          </p>
+        </div>
+      `
+    })
+  }
+
+  async sendCouponRedeemedConfirmation(to: string, neighborName: string, couponTitle: string): Promise<void> {
+    await this.transporter.sendMail({
+      from: `"GreenBin" <${EnvVar.email.user}>`,
+      to,
+      subject: `Canjeaste "${couponTitle}"`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #333;">
+          <h2 style="color: #4caf50;">GreenBin</h2>
+          <p>¡Hola, <strong>${neighborName}</strong>!</p>
+          <p>Canjeaste con éxito el cupón <strong>${couponTitle}</strong>. ¡Que lo disfrutes!</p>
+          <p style="color: #777; font-size: 13px;">
+            — El equipo de GreenBin
+          </p>
+        </div>
+      `
+    })
+  }
+
+  async sendCouponCreatedConfirmation(to: string, partnerName: string, couponTitle: string): Promise<void> {
+    await this.transporter.sendMail({
+      from: `"GreenBin" <${EnvVar.email.user}>`,
+      to,
+      subject: `Tu cupón "${couponTitle}" ya está publicado`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #333;">
+          <h2 style="color: #4caf50;">GreenBin</h2>
+          <p>¡Hola, <strong>${partnerName}</strong>!</p>
+          <p>Tu cupón <strong>${couponTitle}</strong> fue creado y ya está disponible en el catálogo para que los vecinos lo canjeen.</p>
+          <p style="color: #777; font-size: 13px;">
+            — El equipo de GreenBin
+          </p>
+        </div>
+      `
+    })
+  }
 }
 
 export default EmailService

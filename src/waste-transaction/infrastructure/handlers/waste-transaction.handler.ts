@@ -1,7 +1,9 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
-import EmailService from '../../../auth/application/service/email.service'
 import FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find-by-id.usecase'
 import type NeighborRepository from '../../../neighbor/domain/repositories/neighbor.repository'
+import FindResponsibleByIDUseCase from '../../../responsible/application/usecases/find-by-id.usecase'
+import type ResponsibleRepository from '../../../responsible/domain/repositories/responsible.repository'
+import createNotificationDispatcher from '../../../notification/notification-dispatcher.factory'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { getURLParams } from '../../../shared/utils/http.request.util'
@@ -31,7 +33,8 @@ class WasteTransactionHandler {
     private readonly transactionRepository: WasteTransactionRepository,
     private readonly wasteRepository: WasteRepository,
     private readonly neighborRepository: NeighborRepository,
-    private readonly categoryRepository: WasteCategoryRepository
+    private readonly categoryRepository: WasteCategoryRepository,
+    private readonly responsibleRepository: ResponsibleRepository
   ) {}
 
   async findByID(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
@@ -88,7 +91,8 @@ class WasteTransactionHandler {
       ),
       new RegisterWasteUseCase(this.wasteRepository, new FindWasteCategoryByIDUseCase(this.categoryRepository)),
       new FindNeighborByIDUseCase(this.neighborRepository),
-      new EmailService()
+      new FindResponsibleByIDUseCase(this.responsibleRepository),
+      createNotificationDispatcher()
     )
 
     const wasteDelivery = await registerWasteDelivery.exec(req.body)

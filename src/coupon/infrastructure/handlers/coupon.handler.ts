@@ -21,6 +21,7 @@ import RegisterCouponDTO from '../dtos/register-coupon.dto'
 import UpdateCouponDTO from '../dtos/update-coupon.dto'
 import CouponSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 import ListAvailableCouponUseCase from '../../application/usecases/list-available-coupon.usecase'
+import createNotificationDispatcher from '../../../notification/notification-dispatcher.factory'
 
 class CouponHandler {
   constructor(
@@ -79,7 +80,11 @@ class CouponHandler {
     }
 
     const findRewardPartner = new FindRewardPartnerByIdUseCase(this.rewardPartnerRepository)
-    const registerCoupon = new RegisterCouponUseCase(this.couponRepository, findRewardPartner)
+    const registerCoupon = new RegisterCouponUseCase(
+      this.couponRepository,
+      findRewardPartner,
+      createNotificationDispatcher()
+    )
     const coupon = await registerCoupon.exec(req.body)
 
     HandleHTTPResponse.Created(rep, 'Coupon registered successfully', coupon)

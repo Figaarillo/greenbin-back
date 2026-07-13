@@ -2,6 +2,9 @@ import type FindCouponByIDUseCase from '../../../coupon/application/usecases/fin
 import type FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find-by-id.usecase'
 import type SubtractNeighborPointsUseCase from '../../../neighbor/application/usecases/substrac-points.usecase'
 import type FindRewardPartnerByIdUseCase from '../../../reward-partner/application/usecases/find-by-id.usecase'
+import { Roles } from '../../../auth/domain/entities/role'
+import { NotificationCategory } from '../../../notification/domain/enums/notification-category.enum'
+import type NotificationDispatcher from '../../../notification/application/service/notification-dispatcher.service'
 import CouponTransactionEntity from '../../domain/entities/coupon-transaction.entity'
 import type RedeemCouponPayload from '../../domain/payloads/redeem-coupon.payload'
 import type CouponTransactionRepository from '../../domain/repositories/coupon-transaction.repository'
@@ -12,7 +15,8 @@ class RedeemCouponUseCase {
     private readonly findCouponById: FindCouponByIDUseCase,
     private readonly findNeighborById: FindNeighborByIDUseCase,
     private readonly findRewardPartnerById: FindRewardPartnerByIdUseCase,
-    private readonly subtractPoints: SubtractNeighborPointsUseCase
+    private readonly subtractPoints: SubtractNeighborPointsUseCase,
+    private readonly notificationDispatcher: NotificationDispatcher
   ) {}
 
   async exec(payload: RedeemCouponPayload): Promise<CouponTransactionEntity> {
@@ -52,6 +56,26 @@ class RedeemCouponUseCase {
     }
 
     await this.subtractPoints.exec(payload.neighborId, coupon.costInPoints)
+
+    // Sin await a proposito: el dispatcher es self-contained (nunca deja una
+    // promesa rechazada sin capturar), asi que no bloquea la respuesta HTTP
+    // con la latencia del mail.
+    void this.notificationDispatcher.dispatch({
+      recipientId: neighbor.id,
+      recipientRole: Roles.NEIGHBOR,
+      category: NotificationCategory.COUPON_PURCHASED,
+      title: 'Cupón comprado',
+      body: `Compraste "${coupon.title}". Código: ${code}. Vence el ${expirationDate.toLocaleDateString('es-AR')}.`,
+      sendEmail: async emailService => {
+        await emailService.sendCouponPurchaseConfirmation(
+          neighbor.email,
+          `${neighbor.firstname} ${neighbor.lastname}`,
+          coupon.title,
+          code,
+          expirationDate
+        )
+      }
+    })
 
     return transaction
   }

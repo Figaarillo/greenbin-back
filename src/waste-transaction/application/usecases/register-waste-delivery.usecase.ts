@@ -1,7 +1,10 @@
-import type EmailService from '../../../auth/application/service/email.service'
 import type FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find-by-id.usecase'
+import type FindResponsibleByIDUseCase from '../../../responsible/application/usecases/find-by-id.usecase'
 import type RegisterWasteTransactionDetailUseCase from '../../../waste-transaction-detail/application/usecases/register.usecase'
 import type RegisterWasteUseCase from '../../../waste/application/usecases/register.usecase'
+import { Roles } from '../../../auth/domain/entities/role'
+import { NotificationCategory } from '../../../notification/domain/enums/notification-category.enum'
+import type NotificationDispatcher from '../../../notification/application/service/notification-dispatcher.service'
 import type WasteTransactionEntity from '../../domain/entities/waste-transaction.entity'
 import type WasteDeliveryPayload from '../../domain/payloads/waste-delivery.payload'
 import type RegisterWasteTransactionUseCase from './register.usecase'
@@ -14,14 +17,16 @@ class RegisterWasteDeliveryUseCase {
     private readonly registerTransactionDetail: RegisterWasteTransactionDetailUseCase,
     private readonly registerWaste: RegisterWasteUseCase,
     private readonly findNeighborByID: FindNeighborByIDUseCase,
-    private readonly emailService: EmailService
+    private readonly findResponsibleByID: FindResponsibleByIDUseCase,
+    private readonly notificationDispatcher: NotificationDispatcher
   ) {}
 
   async exec(payload: WasteDeliveryPayload): Promise<WasteTransactionEntity> {
     const transaction = await this.registerTransaction.exec(payload)
-    const { wastes, neighborId } = payload
+    const { wastes, neighborId, responsibleId } = payload
 
     const neighbor = await this.findNeighborByID.exec(neighborId)
+    const responsible = await this.findResponsibleByID.exec(responsibleId)
     const wasteDetails: Array<{ categoryName: string; weight: number }> = []
 
     for (const waste of wastes) {
@@ -47,11 +52,31 @@ class RegisterWasteDeliveryUseCase {
     transaction.calculateTotalPoints()
     const updatedTransaction = await this.updateTransaction.exec(transaction.id, transaction)
 
-    await this.emailService.sendWasteDeliveryConfirmation(
-      neighbor.email,
-      `${neighbor.firstname} ${neighbor.lastname}`,
-      wasteDetails
-    )
+    void this.notificationDispatcher.dispatch({
+      recipientId: neighbor.id,
+      recipientRole: Roles.NEIGHBOR,
+      category: NotificationCategory.POINTS_DELIVERED,
+      title: 'Entrega registrada',
+      body: `Se registró tu entrega y sumaste ${transaction.totalPoints} puntos.`,
+      sendEmail: async emailService => {
+        await emailService.sendWasteDeliveryConfirmation(
+          neighbor.email,
+          `${neighbor.firstname} ${neighbor.lastname}`,
+          wasteDetails
+        )
+      }
+    })
+
+    // Al responsable solo in-app por ahora: el pedido no especificó canal de
+    // mail para él. Si se pide despues, es agregar un sendEmail acá, sin
+    // tocar el dispatcher.
+    void this.notificationDispatcher.dispatch({
+      recipientId: responsible.id,
+      recipientRole: Roles.RESPONSIBLE,
+      category: NotificationCategory.POINTS_DELIVERED,
+      title: 'Entrega de puntos registrada',
+      body: `Registraste una entrega para ${neighbor.firstname} ${neighbor.lastname} (${transaction.totalPoints} pts).`
+    })
 
     return updatedTransaction
   }
