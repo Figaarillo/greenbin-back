@@ -1,5 +1,11 @@
+import { RequestContext } from '@mikro-orm/core'
 import { type FastifyInstance } from 'fastify'
 import jwt from 'jsonwebtoken'
+import { Roles } from '../../auth/domain/entities/role'
+import EntityMikroORMRepository from '../../entity/infrastructure/repositories/mikro-orm/entity.mikroorm.repository'
+import ResponsibleEntity from '../../responsible/domain/entities/responsible.entity'
+import ResponsibleMikroORMRepository from '../../responsible/infrastructure/repositories/mikro-orm/responsible.mikroorm.repository'
+import { orm } from './test.setup'
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -56,6 +62,16 @@ export const RESPONSIBLE_FIXTURE = {
   password: 'Test123@#.',
   dni: 28456789,
   phoneNumber: '3534100001'
+}
+
+export const ADMIN_FIXTURE = {
+  firstname: 'Super',
+  lastname: 'Admin',
+  username: 'superadmintest',
+  email: 'admin@test.com',
+  password: 'Test123@#.',
+  dni: 90000001,
+  phoneNumber: '000-000001'
 }
 
 export const REWARD_PARTNER_FIXTURE = {
@@ -295,4 +311,43 @@ export async function createResponsibleWithToken(
   const created = await createResponsible(app, entityId, overrides, creatorToken)
   const token = await loginResponsible(app, fixture.email, fixture.password)
   return { id: created.id, token }
+}
+
+// Admin is NOT a separate table — it's a ResponsibleEntity row with role=ADMIN
+// (see production.seeder.ts). There is no public register endpoint that sets that role
+// (POST /api/responsible always creates role=RESPONSIBLE), so tests seed it directly via
+// MikroORM, mirroring the production seeder.
+export async function createAdmin(
+  entityId: string,
+  overrides: Partial<typeof ADMIN_FIXTURE> = {}
+): Promise<{ id: string; email: string; password: string }> {
+  const fixture = { ...ADMIN_FIXTURE, ...overrides }
+
+  return await RequestContext.create(orm.em.fork(), async () => {
+    const entityRepo = new EntityMikroORMRepository()
+    const responsibleRepo = new ResponsibleMikroORMRepository()
+
+    const entity = await entityRepo.find({ id: entityId })
+    if (entity == null) {
+      throw new Error(`Failed to create admin: entity ${entityId} not found`)
+    }
+
+    const admin = new ResponsibleEntity(
+      {
+        firstname: fixture.firstname,
+        lastname: fixture.lastname,
+        username: fixture.username,
+        email: fixture.email,
+        password: fixture.password,
+        dni: fixture.dni,
+        phoneNumber: fixture.phoneNumber,
+        entityId
+      },
+      entity
+    )
+    admin.role = Roles.ADMIN
+    await responsibleRepo.save(admin)
+
+    return { id: admin.id, email: fixture.email, password: fixture.password }
+  })
 }
