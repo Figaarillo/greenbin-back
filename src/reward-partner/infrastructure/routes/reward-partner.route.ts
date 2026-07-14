@@ -35,9 +35,12 @@ class RewardPartnerRoute {
         await this.handler.list(req, rep)
       }
     })
+    // Público (sin auth) a propósito: alta de local adherido desde el selector
+    // "no tengo cuenta" (unified-login spec, REMOVED Requirements > Entity-authenticated
+    // guard on public reward-partner registration). Sigue gateado por OTP de email +
+    // validación de CUIT (AFIP) en RewardPartnerHandler.register, no por un guard de rol.
     this.server.post('/api/reward-partner', {
       schema: registerSwaggerSchema,
-      preHandler: this.server.auth([this.server.protect(Roles.ENTITY)]),
       handler: async (req, rep) => {
         await this.handler.register(req, rep)
       }

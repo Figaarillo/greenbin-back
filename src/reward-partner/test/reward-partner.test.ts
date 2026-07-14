@@ -53,13 +53,48 @@ describe('RewardPartner — integration tests', () => {
       expect(body.data).toHaveProperty('accessToken')
     })
 
-    it('devuelve 401 sin token', async () => {
+    // El guard `protect(Roles.ENTITY)` fue removido a propósito: el alta de local adherido
+    // es autoservicio público desde el selector "no tengo cuenta" (unified-login spec,
+    // REMOVED Requirements > Entity-authenticated guard on public reward-partner
+    // registration). Sigue gateado por OTP de email + validación de CUIT (AFIP), no por auth.
+    it('permite el registro público sin token cuando el OTP es válido', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'publicpart@test.com', 'reward-partner')
       const res = await app.inject({
         method: 'POST',
         url: '/api/reward-partner',
-        body: { ...REWARD_PARTNER_FIXTURE, entityId }
+        body: {
+          ...REWARD_PARTNER_FIXTURE,
+          username: 'publicpart',
+          email: 'publicpart@test.com',
+          name: 'Local Público',
+          entityId,
+          cuit: '20456789123',
+          coordinates: { latitude: -32.44, longitude: -63.27 },
+          registerToken,
+          otp
+        }
       })
-      expect(res.statusCode).toBe(401)
+      expect(res.statusCode).toBe(201)
+      expect(res.json().data.id).toBeTruthy()
+    })
+
+    it('sin token igual exige un OTP válido: no es un alta totalmente abierta', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/reward-partner',
+        body: {
+          ...REWARD_PARTNER_FIXTURE,
+          username: 'noOtpPart',
+          email: 'noOtpPart@test.com',
+          name: 'Sin OTP',
+          entityId,
+          cuit: '20567891234',
+          coordinates: { latitude: -32.45, longitude: -63.28 },
+          registerToken: 'token.invalido.manipulado',
+          otp: '000000'
+        }
+      })
+      expect(res.statusCode).toBe(400)
     })
 
     it('devuelve 404 con entityId inexistente', async () => {
