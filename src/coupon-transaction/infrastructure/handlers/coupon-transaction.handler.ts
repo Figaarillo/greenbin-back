@@ -19,6 +19,7 @@ import type UseCouponPayload from '../../domain/payloads/use-coupon.payload'
 import UseCouponDTO from '../dtos/use-coupon.dto'
 import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.usecase'
 import ListByRewardPartnerUseCase from '../../application/usecases/list-by-reward-partner.usecase'
+import GetRewardPartnerStatsUseCase from '../../application/usecases/get-reward-partner-stats.usecase'
 import createNotificationDispatcher from '../../../notification/notification-dispatcher.factory'
 
 class CouponTransactionHandler {
@@ -69,12 +70,16 @@ class CouponTransactionHandler {
     }
   }
 
-  async listByNeighbor(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+  async listByNeighbor(
+    req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
+    rep: FastifyReply
+  ): Promise<void> {
     try {
       const neighborId = getURLParams(req, 'neighborId')
+      const { offset, limit } = this.optionalPagination(req)
 
       const listByNeighborUseCase = new ListByNeighborUseCase(this.couponTransactionRepository)
-      const transactions = await listByNeighborUseCase.exec(neighborId)
+      const transactions = await listByNeighborUseCase.exec(neighborId, offset, limit)
 
       HandleHTTPResponse.OK(rep, 'Coupon transactions retrieved successfully', transactions)
     } catch (error: any) {
@@ -83,17 +88,60 @@ class CouponTransactionHandler {
     }
   }
 
-  async listByRewardPartner(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
+  async listByRewardPartner(
+    req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
+    rep: FastifyReply
+  ): Promise<void> {
     try {
       const rewardPartnerId = getURLParams(req, 'rewardPartnerId')
+      const { offset, limit } = this.optionalPagination(req)
 
       const listByRewardPartnerUseCase = new ListByRewardPartnerUseCase(this.couponTransactionRepository)
-      const transactions = await listByRewardPartnerUseCase.exec(rewardPartnerId)
+      const transactions = await listByRewardPartnerUseCase.exec(rewardPartnerId, offset, limit)
 
       HandleHTTPResponse.OK(rep, 'Coupon transactions retrieved successfully', transactions)
     } catch (error: any) {
       const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
       rep.status(statusCode).send({ message: error.message })
+    }
+  }
+
+  async getRewardPartnerStats(
+    req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
+    rep: FastifyReply
+  ): Promise<void> {
+    try {
+      const rewardPartnerId = getURLParams(req, 'rewardPartnerId')
+      const { from, to } = req.query
+
+      const getStatsUseCase = new GetRewardPartnerStatsUseCase(this.couponTransactionRepository)
+      const stats = await getStatsUseCase.exec(
+        rewardPartnerId,
+        from != null ? new Date(from) : undefined,
+        to != null ? new Date(to) : undefined
+      )
+
+      HandleHTTPResponse.OK(rep, 'Reward partner stats retrieved successfully', stats)
+    } catch (error: any) {
+      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
+      rep.status(statusCode).send({ message: error.message })
+    }
+  }
+
+  // offset/limit son genuinamente opcionales acá (a diferencia de
+  // getPaginationParams, que exige ambos): sin ellos, el endpoint sigue
+  // devolviendo la lista completa como siempre.
+  private optionalPagination(req: FastifyRequest<{ Querystring: Record<string, string> }>): {
+    offset?: number
+    limit?: number
+  } {
+    const rawOffset = req.query.offset
+    const rawLimit = req.query.limit
+    const offset = rawOffset != null && rawOffset !== '' ? parseInt(rawOffset) : undefined
+    const limit = rawLimit != null && rawLimit !== '' ? parseInt(rawLimit) : undefined
+    return {
+      offset: offset != null && !Number.isNaN(offset) ? offset : undefined,
+      limit: limit != null && !Number.isNaN(limit) ? limit : undefined
     }
   }
 

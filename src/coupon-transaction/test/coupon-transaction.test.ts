@@ -142,6 +142,107 @@ describe('CouponTransaction — integration tests', () => {
       expect(res.statusCode).toBe(200)
       expect(res.json().data.length).toBe(0)
     })
+
+    it('respeta offset/limit cuando se pasan, sin romper el caso sin params', async () => {
+      await app.inject({
+        method: 'POST',
+        url: '/api/redeem-coupon',
+        headers: { authorization: `Bearer ${neighborToken}` },
+        body: { couponId, neighborId }
+      })
+
+      const sinParams = await app.inject({
+        method: 'GET',
+        url: `/api/coupon-transaction/neighbor/${neighborId}`,
+        headers: { authorization: `Bearer ${neighborToken}` }
+      })
+      expect(sinParams.json().data.length).toBe(1)
+
+      const conLimite = await app.inject({
+        method: 'GET',
+        url: `/api/coupon-transaction/neighbor/${neighborId}?offset=0&limit=1`,
+        headers: { authorization: `Bearer ${neighborToken}` }
+      })
+      expect(conLimite.statusCode).toBe(200)
+      expect(conLimite.json().data.length).toBe(1)
+    })
+  })
+
+  describe('GET /api/coupon-transaction/reward-partner/:rewardPartnerId/stats', () => {
+    it('devuelve stats en cero para un local sin canjes', async () => {
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/coupon-transaction/reward-partner/${rewardPartnerId}/stats`,
+        headers: { authorization: `Bearer ${rewardPartnerToken}` }
+      })
+      expect(res.statusCode).toBe(200)
+      const data = res.json().data
+      expect(data.totalUsado).toBe(0)
+      expect(data.uniqueNeighbors).toBe(0)
+      expect(data.newNeighbors).toBe(0)
+      expect(data.byCoupon).toEqual([])
+    })
+
+    it('cuenta un canje usado como vecino nuevo, con los puntos gastados', async () => {
+      const redeemRes = await app.inject({
+        method: 'POST',
+        url: '/api/redeem-coupon',
+        headers: { authorization: `Bearer ${neighborToken}` },
+        body: { couponId, neighborId }
+      })
+      const code = redeemRes.json().data.code
+
+      await app.inject({
+        method: 'POST',
+        url: '/api/coupon-transaction/use',
+        headers: { authorization: `Bearer ${rewardPartnerToken}` },
+        body: { code, rewardPartnerId, totalAmount: 1000 }
+      })
+
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/coupon-transaction/reward-partner/${rewardPartnerId}/stats`,
+        headers: { authorization: `Bearer ${rewardPartnerToken}` }
+      })
+      expect(res.statusCode).toBe(200)
+      const data = res.json().data
+      expect(data.totalUsado).toBe(1)
+      expect(data.totalPuntos).toBe(50)
+      expect(data.uniqueNeighbors).toBe(1)
+      expect(data.newNeighbors).toBe(1)
+      expect(data.avgVisitsPerNeighbor).toBe(1)
+      expect(data.byCoupon.length).toBe(1)
+      expect(data.byCoupon[0].couponId).toBe(couponId)
+      expect(data.byCoupon[0].redemptions).toBe(1)
+      expect(data.byCoupon[0].newNeighbors).toBe(1)
+      expect(data.byCoupon[0].pointsSpent).toBe(50)
+    })
+
+    it('filtra por rango de fechas con from/to', async () => {
+      const redeemRes = await app.inject({
+        method: 'POST',
+        url: '/api/redeem-coupon',
+        headers: { authorization: `Bearer ${neighborToken}` },
+        body: { couponId, neighborId }
+      })
+      const code = redeemRes.json().data.code
+      await app.inject({
+        method: 'POST',
+        url: '/api/coupon-transaction/use',
+        headers: { authorization: `Bearer ${rewardPartnerToken}` },
+        body: { code, rewardPartnerId, totalAmount: 1000 }
+      })
+
+      const mañana = new Date()
+      mañana.setDate(mañana.getDate() + 1)
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/coupon-transaction/reward-partner/${rewardPartnerId}/stats?from=${mañana.toISOString()}`,
+        headers: { authorization: `Bearer ${rewardPartnerToken}` }
+      })
+      expect(res.statusCode).toBe(200)
+      expect(res.json().data.totalUsado).toBe(0)
+    })
   })
 
   describe('GET /api/coupon-transaction/:id', () => {
