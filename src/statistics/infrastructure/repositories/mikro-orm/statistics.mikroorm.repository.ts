@@ -7,6 +7,7 @@ import type GreenPointRanking from '../../../domain/types/green-point-ranking.ty
 import type WasteByCategory from '../../../domain/types/waste-by-category.type'
 import type WasteByPeriod from '../../../domain/types/waste-by-period.type'
 import type NeighborDelivery from '../../../domain/types/neighbor-delivery.type'
+import type NeighborRanking from '../../../domain/types/neighbor-ranking.type'
 
 class StatisticsMikroORMRepository implements StatisticsRepository {
   async getTotalRecycled(entityId: string, from?: Date, to?: Date): Promise<TotalRecycled> {
@@ -155,6 +156,37 @@ class StatisticsMikroORMRepository implements StatisticsRepository {
       greenPointName: t.greenPointName,
       totalPoints: t.totalPoints,
       details: detailsMap.get(t.transactionId) ?? []
+    }))
+  }
+
+  async getNeighborRankingByGreenPoint(greenPointId: string, from?: Date, to?: Date): Promise<NeighborRanking[]> {
+    const knex = this.getKnex()
+
+    const query = knex('wastes_transactions_details as wtd')
+      .join('wastes_transactions as wt', 'wtd.transaction_id', 'wt.id')
+      .join('neighbors as n', 'wt.neighbor_id', 'n.id')
+      .where('wt.green_point_id', greenPointId)
+      .groupBy('n.id', 'n.firstname', 'n.lastname')
+      .orderByRaw('SUM(wtd.weight) DESC')
+      .limit(10)
+      .select(
+        'n.id as neighborId',
+        'n.firstname as firstname',
+        'n.lastname as lastname',
+        knex.raw('COALESCE(SUM(wtd.weight), 0)::float as "totalWeight"'),
+        knex.raw('COALESCE(SUM(wtd.points), 0)::int as "totalPoints"')
+      )
+
+    if (from != null) query.where('wt.date', '>=', from)
+    if (to != null) query.where('wt.date', '<=', to)
+
+    const rows = await query
+    return rows.map((r: any) => ({
+      neighborId: r.neighborId,
+      firstname: r.firstname,
+      lastname: r.lastname,
+      totalWeight: r.totalWeight,
+      totalPoints: r.totalPoints
     }))
   }
 
