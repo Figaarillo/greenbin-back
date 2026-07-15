@@ -278,7 +278,12 @@ describe('Statistics — integration tests', () => {
     })
 
     it('retorna array vacío para un punto verde sin entregas', async () => {
-      const otroPuntoVerde = await createGreenPoint(app, entityId, {}, entityToken)
+      const otroPuntoVerde = await createGreenPoint(
+        app,
+        entityId,
+        { coordinates: { latitude: -32.42, longitude: -63.25 } },
+        entityToken
+      )
       const res = await authedGet(`/api/statistics/green-point/${otroPuntoVerde.id}/neighbor-ranking`)
       expect(res.json().data).toEqual([])
     })
