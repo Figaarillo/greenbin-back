@@ -99,7 +99,7 @@ class NotificationHandler {
     const validator = new NotificationSchemaValidator(UnsubscribePushDTO, req.body)
     const { endpoint } = validator.exec()
 
-    await this.unsubscribePush.exec(endpoint)
+    await this.unsubscribePush.exec(endpoint, req.user.sub, req.user.role)
 
     HandleHTTPResponse.OK(rep, 'Push subscription removed successfully')
   }
