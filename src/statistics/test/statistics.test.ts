@@ -256,4 +256,36 @@ describe('Statistics — integration tests', () => {
       }
     })
   })
+
+  describe('GET /api/statistics/green-point/:greenPointId/neighbor-ranking', () => {
+    it('retorna el ranking de vecinos del punto verde', async () => {
+      const res = await authedGet(`/api/statistics/green-point/${greenPointId}/neighbor-ranking`)
+      expect(res.statusCode).toBe(200)
+      const data = res.json().data
+      expect(Array.isArray(data)).toBe(true)
+      expect(data.length).toBe(1)
+    })
+
+    it('cada item tiene neighborId, firstname, lastname, totalWeight y totalPoints', async () => {
+      const res = await authedGet(`/api/statistics/green-point/${greenPointId}/neighbor-ranking`)
+      const item = res.json().data[0]
+      expect(item).toHaveProperty('neighborId')
+      expect(item).toHaveProperty('firstname')
+      expect(item).toHaveProperty('lastname')
+      expect(item).toHaveProperty('totalWeight')
+      expect(item).toHaveProperty('totalPoints')
+      expect(item.totalWeight).toBe(9) // 2 + 3 + 4
+    })
+
+    it('retorna array vacío para un punto verde sin entregas', async () => {
+      const otroPuntoVerde = await createGreenPoint(
+        app,
+        entityId,
+        { coordinates: { latitude: -32.42, longitude: -63.25 } },
+        entityToken
+      )
+      const res = await authedGet(`/api/statistics/green-point/${otroPuntoVerde.id}/neighbor-ranking`)
+      expect(res.json().data).toEqual([])
+    })
+  })
 })

@@ -7,6 +7,7 @@ import GetGreenPointsRankingUseCase from '../../application/usecases/get-green-p
 import GetWasteByCategoryUseCase from '../../application/usecases/get-waste-by-category.usecase'
 import GetWasteByPeriodUseCase from '../../application/usecases/get-waste-by-period.usecase'
 import GetNeighborDeliveriesUseCase from '../../application/usecases/get-neighbor-deliveries.usecase'
+import GetNeighborRankingByGreenPointUseCase from '../../application/usecases/get-neighbor-ranking-by-green-point.usecase'
 
 class StatisticsHandler {
   constructor(private readonly repository: StatisticsRepository) {}
@@ -88,6 +89,21 @@ class StatisticsHandler {
       to != null ? new Date(to) : undefined
     )
     HandleHTTPResponse.OK(rep, 'Neighbor deliveries retrieved successfully', result)
+  }
+
+  async getNeighborRankingByGreenPoint(
+    req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
+    rep: FastifyReply
+  ): Promise<void> {
+    const greenPointId = getURLParams(req, 'greenPointId')
+    const { from, to } = req.query
+    const useCase = new GetNeighborRankingByGreenPointUseCase(this.repository)
+    const result = await useCase.exec(
+      greenPointId,
+      from != null ? new Date(from) : undefined,
+      to != null ? new Date(to) : undefined
+    )
+    HandleHTTPResponse.OK(rep, 'Neighbor ranking retrieved successfully', result)
   }
 }
 

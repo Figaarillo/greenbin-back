@@ -17,7 +17,13 @@ const errorMiddleware: (error: FastifyError, request: FastifyRequest, reply: Fas
   const patchedError = Object.assign(error, { statusCode })
 
   const { message, code, stack } = ErrorFactory.create(patchedError)
-  console.error('\x1b[0;31m' + stack)
+  // Solo lo que es realmente un error de servidor va a stderr con stack.
+  // Credenciales inválidas, validaciones, 404, etc. son parte del flujo
+  // normal de la app (y de sus tests) — loguearlos como error genera ruido
+  // y hace parecer que algo se rompió cuando no es así.
+  if (code >= 500) {
+    console.error('\x1b[0;31m' + stack)
+  }
   res.status(code).send({ code, message })
 }
 

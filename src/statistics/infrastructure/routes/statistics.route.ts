@@ -58,6 +58,16 @@ class StatisticsRoute {
         await this.handler.getNeighborDeliveries(req, rep)
       }
     })
+
+    this.server.get('/api/statistics/green-point/:greenPointId/neighbor-ranking', {
+      preHandler: this.server.protect(Roles.RESPONSIBLE, Roles.ENTITY),
+      handler: async (
+        req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
+        rep
+      ) => {
+        await this.handler.getNeighborRankingByGreenPoint(req, rep)
+      }
+    })
   }
 }
 
