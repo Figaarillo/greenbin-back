@@ -4,8 +4,8 @@ import type CouponTransactionEntity from '../../domain/entities/coupon-transacti
 class ListByNeighborUseCase {
   constructor(private readonly repository: CouponTransactionRepository) {}
 
-  async exec(neighborId: string): Promise<CouponTransactionEntity[]> {
-    const transactions = await this.repository.findByNeighbor(neighborId)
+  async exec(neighborId: string, offset?: number, limit?: number): Promise<CouponTransactionEntity[]> {
+    const transactions = await this.repository.findByNeighbor(neighborId, offset, limit)
     const now = new Date()
 
     for (const t of transactions) {

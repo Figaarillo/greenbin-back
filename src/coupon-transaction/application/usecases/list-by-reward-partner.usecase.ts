@@ -4,8 +4,8 @@ import type CouponTransactionEntity from '../../domain/entities/coupon-transacti
 class ListByRewardPartnerUseCase {
   constructor(private readonly repository: CouponTransactionRepository) {}
 
-  async exec(rewardPartnerId: string): Promise<CouponTransactionEntity[]> {
-    return await this.repository.findByRewardPartner(rewardPartnerId)
+  async exec(rewardPartnerId: string, offset?: number, limit?: number): Promise<CouponTransactionEntity[]> {
+    return await this.repository.findByRewardPartner(rewardPartnerId, offset, limit)
   }
 }
 
