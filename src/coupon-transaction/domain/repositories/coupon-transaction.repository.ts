@@ -12,6 +12,9 @@ interface CouponTransactionRepository {
   save: (transaction: CouponTransactionEntity) => Promise<Nullable<CouponTransactionEntity>>
   update: (id: string, transaction: CouponTransactionEntity) => Promise<Nullable<CouponTransactionEntity>>
   getRewardPartnerStats: (rewardPartnerId: string, from?: Date, to?: Date) => Promise<RewardPartnerStats>
+  /** ADQUIRIDO, vencen dentro de `withinDays` días, y todavía no se avisó. */
+  findExpiringSoon: (withinDays: number) => Promise<CouponTransactionEntity[]>
+  markExpirationNotified: (id: string) => Promise<void>
 }
 
 export default CouponTransactionRepository
