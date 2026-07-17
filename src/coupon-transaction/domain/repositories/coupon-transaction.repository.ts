@@ -3,7 +3,6 @@ import type CouponTransactionEntity from '../entities/coupon-transaction.entity'
 import type RewardPartnerStats from '../types/reward-partner-stats.type'
 
 interface CouponTransactionRepository {
-  list: (offset?: number, limit?: number) => Promise<Nullable<CouponTransactionEntity[]>>
   find: (property: Record<string, string>) => Promise<Nullable<CouponTransactionEntity>>
   findById: (id: string) => Promise<Nullable<CouponTransactionEntity>>
   findByNeighbor: (neighborId: string, offset?: number, limit?: number) => Promise<CouponTransactionEntity[]>

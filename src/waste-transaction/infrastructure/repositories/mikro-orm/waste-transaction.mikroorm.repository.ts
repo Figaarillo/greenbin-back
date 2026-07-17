@@ -8,8 +8,6 @@ import NeighborEntity from '../../../../neighbor/domain/entities/neighbor.entity
 import GreenPointEntity from '../../../../green-point/domain/entities/green-point.entity'
 
 class WasteTransactionMikroORMRepository implements WasteTransactionRepository {
-  list!: (offset?: number | undefined, limit?: number | undefined) => Promise<Nullable<WasteTransactionEntity[]>>
-
   async find(property: Record<string, string>): Promise<Nullable<WasteTransactionEntity>> {
     const em = this.getEntityManager()
     return await em.findOne(WasteTransactionEntity, property)

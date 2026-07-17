@@ -15,7 +15,6 @@ export const SwaggerConfig: SwaggerOptions = {
       contact: {
         name: 'Support Team',
         email: 'glom.tech.24@gmail.com'
-        // url: 'https://greenbin.com/support'
       },
       license: {
         name: 'Licensed under MIT',
@@ -27,10 +26,6 @@ export const SwaggerConfig: SwaggerOptions = {
         url: `http://${EnvVar.server.host}:${EnvVar.server.port}`,
         description: 'Development server'
       }
-      // {
-      //   url: 'https://api.greenbin.com',
-      //   description: 'Production server'
-      // }
     ],
     tags: [
       { name: 'user', description: 'User related endpoints, such as registration and authentication.' },

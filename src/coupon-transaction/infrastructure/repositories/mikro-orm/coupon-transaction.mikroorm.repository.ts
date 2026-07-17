@@ -7,8 +7,6 @@ import type CouponTransactionRepository from '../../../domain/repositories/coupo
 import type RewardPartnerStats from '../../../domain/types/reward-partner-stats.type'
 
 class CouponTransactionMikroORMRepository implements CouponTransactionRepository {
-  list!: (offset?: number | undefined, limit?: number | undefined) => Promise<Nullable<CouponTransactionEntity[]>>
-
   async find(property: Record<string, string>): Promise<Nullable<CouponTransactionEntity>> {
     const em = this.getEntityManager()
     return await em.findOne(CouponTransactionEntity, property)

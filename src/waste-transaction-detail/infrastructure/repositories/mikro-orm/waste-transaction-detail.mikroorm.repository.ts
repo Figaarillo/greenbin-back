@@ -6,8 +6,6 @@ import type WasteTransactionDetailRepository from '../../../domain/repositories/
 import WasteTransactionEntity from '../../../../waste-transaction/domain/entities/waste-transaction.entity'
 
 class WasteTransactionDetailMikroORMRepository implements WasteTransactionDetailRepository {
-  list!: (offset?: number | undefined, limit?: number | undefined) => Promise<Nullable<WasteTransactionDetailEntity[]>>
-
   async find(property: Record<string, string>): Promise<Nullable<WasteTransactionDetailEntity>> {
     const em = this.getEntityManager()
     return await em.findOne(WasteTransactionDetailEntity, property)
