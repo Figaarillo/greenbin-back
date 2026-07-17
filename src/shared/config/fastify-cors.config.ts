@@ -26,9 +26,7 @@ const origin: OriginFunction = (origin, cb) => {
 
 export const FastifyCorsConfig = {
   origin,
-  // methods: ['...'], default: GET,HEAD,PUT,PATCH,POST,DELETE
   allowedHeaders: ['Content-Type', 'Authorization'],
-  // exposedHeaders: ['X-My-Custom-Header'],
   credentials: true,
   maxAge: 86400 // 24 hours
 }

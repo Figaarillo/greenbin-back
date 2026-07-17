@@ -6,8 +6,6 @@ import type WasteRepository from '../../../domain/repositories/waste.repository'
 import WasteCategoryEntity from '../../../../waste-category/domain/entities/waste-category.entity'
 
 class WasteMikroORMRepository implements WasteRepository {
-  list!: (offset?: number | undefined, limit?: number | undefined) => Promise<Nullable<WasteEntity[]>>
-
   async find(property: Record<string, string>): Promise<Nullable<WasteEntity>> {
     const em = this.getEntityManager()
     // Desactivamos el filtro 'active' para que la categoría se popule aunque esté
