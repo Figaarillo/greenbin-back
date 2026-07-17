@@ -1,7 +1,7 @@
 # Propuesta 03 — Franjas Horarias en GreenPoints
 
 > **Prioridad sugerida:** Alta
-> **Esfuerzo estimado:** Bajo (1 sprint)
+> **Esfuerzo estimado:** Bajo-Medio (1-2 sprints, incluye capacidad/stock en 2.7)
 > **Dependencias:** Ninguna
 
 ## 1. Problema
@@ -180,12 +180,50 @@ class GetGreenPointStatusUseCase {
 3. **Cache**: El status de "abierto/cerrado" se puede cachear 5 minutos.
 4. **Testing**: Probar bordes como horario nocturno (ej: 22:00-02:00), green points 24h, cambios de día.
 
-### 2.7 Futuras Extensiones
+### 2.7 Señal de Capacidad / Stock
 
-- **Capacidad por franja**: Límite de kg que puede recibir el punto en cada horario
-- **Notificación de cierre no programado**: El entity puede marcar "cerrado hoy" y se notifica a vecinos (#01)
-- **Turnos**: Integración con sistema de turnos/reservas
-- **Historial**: Registrar cambios de horario para auditoría
+Además de horarios, un punto verde tampoco tiene hoy noción de "cuánto lleva acumulado" — el responsable y la entidad no tienen forma de saber si un punto está por saturarse sin ir a mirarlo físicamente, y el vecino no sabe si tiene sentido ir si el punto ya está lleno.
+
+```typescript
+// Extensión a GreenPointEntity existente:
+// @Property({ nullable: true })
+// capacityKg: number          // capacidad máxima antes de necesitar retiro (opcional, null = sin límite)
+//
+// @Property({ default: 0 })
+// currentLoadKg: number = 0   // acumulado desde el último retiro/vaciado
+```
+
+**Cómo se actualiza `currentLoadKg`:**
+
+- Se incrementa automáticamente en `register-waste-delivery.usecase.ts` (ya existente), sumando el peso total de la entrega registrada — es un cambio aditivo de una línea en un use case que ya tiene el peso calculado, no requiere lógica nueva.
+- Se resetea a `0` cuando el responsable/entidad registra un "retiro" (endpoint nuevo, `POST /api/green-point/:id/empty`, marca `currentLoadKg = 0` y guarda la fecha de vaciado para historial).
+
+**Endpoints nuevos:**
+
+```typescript
+// Estado de capacidad (público, mismo criterio que /status de horarios)
+GET /api/green-point/:greenPointId/capacity
+→ {
+    capacityKg: 500 | null,
+    currentLoadKg: 320,
+    pctFull: 64,               // null si no tiene capacityKg definido
+    nearFull: false            // true si pctFull >= 85 (umbral configurable)
+  }
+
+// Registrar vaciado (solo Responsible/Entity)
+POST /api/green-point/:greenPointId/empty
+```
+
+**Señal visual para el vecino:** en `visualizar-pv` (mapa de puntos verdes), el pin puede cambiar de color o mostrar un badge cuando `nearFull === true` — mismo patrón de pines diferenciados que ya usa `map-view.component.ts` para puntos verdes vs. locales adheridos, solo se agrega una variante de color.
+
+**Alerta al responsable/entidad:** cuando `pctFull` cruza el umbral, se dispara una notificación (`GREEN_POINT_NEAR_CAPACITY`, ver #01) al responsable del punto — mismo mecanismo de disparo que ya usa `register-waste-delivery.usecase.ts` para notificar puntos acumulados, solo agrega una segunda categoría de evento en el mismo punto de inserción.
+
+### 2.8 Futuras Extensiones
+
+- **Capacidad por franja**: límite de kg que puede recibir el punto en cada horario específico (más granular que el límite total de 2.7).
+- **Notificación de cierre no programado**: el entity puede marcar "cerrado hoy" y se notifica a vecinos (#01).
+- **Turnos**: integración con sistema de turnos/reservas (ver propuesta #09, que depende de esta).
+- **Historial**: registrar cambios de horario y de vaciado para auditoría.
 
 ---
 

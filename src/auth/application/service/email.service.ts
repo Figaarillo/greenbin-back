@@ -153,6 +153,31 @@ class EmailService {
     })
   }
 
+  async sendCouponExpiringSoon(
+    to: string,
+    neighborName: string,
+    couponTitle: string,
+    expirationDate: Date
+  ): Promise<void> {
+    const formattedDate = expirationDate.toLocaleDateString('es-AR')
+
+    await this.transporter.sendMail({
+      from: `"GreenBin" <${EnvVar.email.user}>`,
+      to,
+      subject: `Tu cupón "${couponTitle}" está por vencer`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; color: #333;">
+          <h2 style="color: #4caf50;">GreenBin</h2>
+          <p>¡Hola, <strong>${neighborName}</strong>!</p>
+          <p>Tu cupón <strong>${couponTitle}</strong> vence el <strong>${formattedDate}</strong> y todavía no lo usaste.</p>
+          <p style="color: #777; font-size: 13px;">
+            — El equipo de GreenBin
+          </p>
+        </div>
+      `
+    })
+  }
+
   async sendCouponCreatedConfirmation(to: string, partnerName: string, couponTitle: string): Promise<void> {
     await this.transporter.sendMail({
       from: `"GreenBin" <${EnvVar.email.user}>`,

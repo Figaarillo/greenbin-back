@@ -22,6 +22,12 @@ class CouponTransactionEntity extends BaseEntity {
   @Property()
   expirationDate: Date
 
+  // Se setea la primera vez que se notifica al vecino que este cupón está por
+  // vencer, para que el job diario no lo vuelva a notificar en la próxima
+  // corrida (idempotencia, no hay otra forma de saber "ya avisé esto").
+  @Property({ nullable: true })
+  expirationNotifiedAt?: Date
+
   @Property()
   costInPoints: number
 

@@ -200,6 +200,31 @@ class CouponTransactionMikroORMRepository implements CouponTransactionRepository
     }
   }
 
+  async findExpiringSoon(withinDays: number): Promise<CouponTransactionEntity[]> {
+    const em = this.getEntityManager()
+    const now = new Date()
+    const limit = new Date(now.getTime() + withinDays * 24 * 60 * 60 * 1000)
+
+    return await em.find(
+      CouponTransactionEntity,
+      {
+        status: 'ADQUIRIDO',
+        expirationDate: { $gte: now, $lte: limit },
+        expirationNotifiedAt: null
+      },
+      { populate: ['coupon', 'neighbor', 'rewardPartner'] }
+    )
+  }
+
+  async markExpirationNotified(id: string): Promise<void> {
+    const em = this.getEntityManager()
+    const entity = await em.findOne(CouponTransactionEntity, { id })
+    if (entity == null) return
+
+    entity.expirationNotifiedAt = new Date()
+    await em.flush()
+  }
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   private getEntityManager() {
     const em = RequestContext.getEntityManager()
