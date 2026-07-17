@@ -70,6 +70,10 @@ class NotificationDispatcher {
     }
 
     if (event.sendEmail == null) return
+    // Switch maestro de mail: independiente del gate por categoría de arriba.
+    // Si no se pudo leer la preferencia, se asume habilitado (mismo criterio
+    // que el resto del dispatcher).
+    if (preference != null && !preference.emailEnabled) return
 
     try {
       await event.sendEmail(this.emailService)

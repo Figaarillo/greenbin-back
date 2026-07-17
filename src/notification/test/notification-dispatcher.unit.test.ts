@@ -115,4 +115,33 @@ describe('NotificationDispatcher — unit tests', () => {
 
     expect(registerExec).toHaveBeenCalledTimes(1)
   })
+
+  it('con emailEnabled en false, registra in-app pero no envía el mail', async () => {
+    const preference = new NotificationPreferenceEntity('neighbor-1', Roles.NEIGHBOR)
+    preference.emailEnabled = false
+
+    const registerExec = vi.fn()
+    const sendEmail = vi.fn()
+    const dispatcher = makeDispatcher({ exec: async () => preference }, { exec: registerExec })
+
+    await dispatcher.dispatch({ ...baseEvent, sendEmail })
+
+    expect(registerExec).toHaveBeenCalledTimes(1)
+    expect(sendEmail).not.toHaveBeenCalled()
+  })
+
+  it('con emailEnabled en false pero la categoría también deshabilitada, tampoco registra in-app', async () => {
+    const preference = new NotificationPreferenceEntity('neighbor-1', Roles.NEIGHBOR)
+    preference.emailEnabled = false
+    preference.couponPurchased = false
+
+    const registerExec = vi.fn()
+    const sendEmail = vi.fn()
+    const dispatcher = makeDispatcher({ exec: async () => preference }, { exec: registerExec })
+
+    await dispatcher.dispatch({ ...baseEvent, sendEmail })
+
+    expect(registerExec).not.toHaveBeenCalled()
+    expect(sendEmail).not.toHaveBeenCalled()
+  })
 })

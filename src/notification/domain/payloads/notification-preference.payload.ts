@@ -3,6 +3,7 @@ interface NotificationPreferencePatch {
   couponRedeemed?: boolean
   couponCreated?: boolean
   pointsDelivered?: boolean
+  emailEnabled?: boolean
 }
 
 export default NotificationPreferencePatch

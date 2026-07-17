@@ -1567,6 +1567,22 @@
           "comment": null,
           "enumItems": [],
           "mappedType": "boolean"
+        },
+        "email_enabled": {
+          "name": "email_enabled",
+          "type": "bool",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "unique": false,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "default": "true",
+          "comment": null,
+          "enumItems": [],
+          "mappedType": "boolean"
         }
       },
       "name": "notification_preferences",

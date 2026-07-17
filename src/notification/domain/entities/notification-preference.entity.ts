@@ -29,6 +29,12 @@ class NotificationPreferenceEntity extends BaseEntity {
   @Property({ default: true })
   pointsDelivered: boolean = true
 
+  // Switch maestro de canal: independiente de las categorías de arriba. Un
+  // evento solo manda mail si SU categoría está habilitada Y este flag está
+  // en true. No reemplaza el opt-out por categoría del in-app/push.
+  @Property({ default: true })
+  emailEnabled: boolean = true
+
   constructor(recipientId: string, recipientRole: Roles) {
     super()
     this.recipientId = recipientId
@@ -56,6 +62,7 @@ class NotificationPreferenceEntity extends BaseEntity {
     if (patch.couponRedeemed != null) this.couponRedeemed = patch.couponRedeemed
     if (patch.couponCreated != null) this.couponCreated = patch.couponCreated
     if (patch.pointsDelivered != null) this.pointsDelivered = patch.pointsDelivered
+    if (patch.emailEnabled != null) this.emailEnabled = patch.emailEnabled
   }
 }
 
