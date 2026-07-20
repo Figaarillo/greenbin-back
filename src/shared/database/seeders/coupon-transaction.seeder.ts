@@ -17,39 +17,39 @@ interface CouponTransactionSeed {
 
 const COUPON_TRANSACTION_SEEDS: CouponTransactionSeed[] = [
   {
-    couponTitle: '10% en productos de almacén El Progreso',
+    couponTitle: '20% en frutas de estación - Silveira',
     neighborUsername: 'emattalia',
-    partnerUsername: 'almacen_elprogreso',
+    partnerUsername: 'verd_silveira',
     status: 'EXPIRADO',
     daysAgo: 41
   },
   {
-    couponTitle: '20% en productos de limpieza - El Progreso',
+    couponTitle: '15% en pollo entero - Santa Lucía',
     neighborUsername: 'emattalia',
-    partnerUsername: 'almacen_elprogreso',
-    status: 'EXPIRADO',
-    daysAgo: 41
-  },
-  {
-    couponTitle: 'Llevar 3 y pagar 2 en gaseosas - El Progreso',
-    neighborUsername: 'emattalia',
-    partnerUsername: 'almacen_elprogreso',
+    partnerUsername: 'poll_santalucia',
     status: 'USADO',
     daysAgo: 13
   },
   {
-    couponTitle: '15% en fiambres y lácteos - Don Juan',
+    couponTitle: '10% en compras superiores a $8000 - Etruria',
     neighborUsername: 'emattalia',
-    partnerUsername: 'alm_donjuan',
+    partnerUsername: 'super_etruria',
     status: 'USADO',
     daysAgo: 9
   },
   {
-    couponTitle: '10% en compras mayores a $5000 - Don Juan',
+    couponTitle: '2x1 en cerveza artesanal - La Cabra',
     neighborUsername: 'emattalia',
-    partnerUsername: 'alm_donjuan',
-    status: 'USADO',
-    daysAgo: 9
+    partnerUsername: 'bar_lacabra',
+    status: 'ADQUIRIDO',
+    daysAgo: 5
+  },
+  {
+    couponTitle: '15% en picadas para dos - La Cabra',
+    neighborUsername: 'emattalia',
+    partnerUsername: 'bar_lacabra',
+    status: 'ADQUIRIDO',
+    daysAgo: 3
   }
 ]
 
