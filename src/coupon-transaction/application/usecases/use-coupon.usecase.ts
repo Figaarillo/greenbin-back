@@ -17,7 +17,7 @@ class UseCouponUseCase {
     const transaction = await this.repository.findByCode(payload.code)
 
     if (transaction == null) {
-      throw new ErrorCouponCodeNotFound(payload.code)
+      throw new ErrorCouponCodeNotFound()
     }
 
     if (transaction.rewardPartner.id !== payload.rewardPartnerId) {
