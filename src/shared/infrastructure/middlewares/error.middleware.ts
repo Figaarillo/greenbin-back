@@ -12,8 +12,9 @@ const errorMiddleware: (error: FastifyError, request: FastifyRequest, reply: Fas
     return
   }
 
-  const domainCode = (error as unknown as { code?: number }).code
-  const statusCode = error.statusCode ?? domainCode ?? 400
+  const domainCode = (error as unknown as { code?: unknown }).code
+  const validDomainCode = typeof domainCode === 'number' ? domainCode : undefined
+  const statusCode = error.statusCode ?? validDomainCode ?? 400
   const patchedError = Object.assign(error, { statusCode })
 
   const { message, code, stack } = ErrorFactory.create(patchedError)

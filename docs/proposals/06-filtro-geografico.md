@@ -142,7 +142,99 @@ CREATE INDEX idx_reward_partner_location ON reward_partner USING GIST (location)
 
 // Reward partners cercanos a una ubicación
 GET /api/reward-partner/nearby?lat=&lng=&radius=5&limit=20
-→ partners[] with distance
+→ partners[] with distance   █ 󰋜                                                         12:12󱑂 
+ 🞈  ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: enp1s0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether e8:80:88:6a:14:7d brd ff:ff:ff:ff:ff:ff
+3: virbr0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 52:54:00:cb:6f:6b brd ff:ff:ff:ff:ff:ff
+    inet 192.168.122.1/24 brd 192.168.122.255 scope global virbr0
+       valid_lft forever preferred_lft forever
+4: wlp2s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether bc:f4:d4:ad:db:61 brd ff:ff:ff:ff:ff:ff
+    inet 10.10.3.142/24 brd 10.10.3.255 scope global dynamic noprefixroute wlp2s0
+       valid_lft 509sec preferred_lft 509sec
+    inet6 fe80::e597:dd92:2fe6:1d64/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+5: br-d9754932cc6b: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether 72:d4:ab:78:af:0d brd ff:ff:ff:ff:ff:ff
+    inet 172.24.0.1/16 brd 172.24.255.255 scope global br-d9754932cc6b
+       valid_lft forever preferred_lft forever
+6: br-2f5f2bb27c03: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether d2:24:da:4d:f7:a5 brd ff:ff:ff:ff:ff:ff
+    inet 172.22.0.1/16 brd 172.22.255.255 scope global br-2f5f2bb27c03
+       valid_lft forever preferred_lft forever
+7: br-3439f732d074: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether b6:06:2b:e4:14:be brd ff:ff:ff:ff:ff:ff
+    inet 172.19.0.1/16 brd 172.19.255.255 scope global br-3439f732d074
+       valid_lft forever preferred_lft forever
+8: br-3da2bba1527d: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether ea:88:25:2b:ca:a5 brd ff:ff:ff:ff:ff:ff
+    inet 172.23.0.1/16 brd 172.23.255.255 scope global br-3da2bba1527d
+       valid_lft forever preferred_lft forever
+9: docker_gwbridge: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether 6a:2f:ba:21:64:51 brd ff:ff:ff:ff:ff:ff
+    inet 172.18.0.1/16 brd 172.18.255.255 scope global docker_gwbridge
+       valid_lft forever preferred_lft forever
+10: br-a9a2952b6696: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether 9a:8f:e1:da:74:c5 brd ff:ff:ff:ff:ff:ff
+    inet 172.21.0.1/16 brd 172.21.255.255 scope global br-a9a2952b6696
+       valid_lft forever preferred_lft forever
+11: br-aef1d6ce86ca: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether 9a:22:99:5e:16:eb brd ff:ff:ff:ff:ff:ff
+    inet 172.25.0.1/16 brd 172.25.255.255 scope global br-aef1d6ce86ca
+       valid_lft forever preferred_lft forever
+12: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether 1a:79:d3:67:40:d2 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+16: br-4cbd8eedd240: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether 7a:0c:7f:74:dc:3b brd ff:ff:ff:ff:ff:ff
+    inet 172.20.0.1/16 brd 172.20.255.255 scope global br-4cbd8eedd240
+       valid_lft forever preferred_lft forever
+    inet6 fe80::780c:7fff:fe74:dc3b/64 scope link
+       valid_lft forever preferred_lft forever
+17: vethfbbb123@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-4cbd8eedd240 state UP group default
+    link/ether 22:77:1e:94:bf:50 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::2077:1eff:fe94:bf50/64 scope link
+       valid_lft forever preferred_lft forever
+18: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 500
+    link/none
+    inet 10.10.4.165/24 brd 10.10.4.255 scope global noprefixroute tun0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c34f:123c:5bed:8ba7/64 scope link stable-privacy
+       valid_lft forever preferred_lft forever
+
+   █ 󰋜                                                                                                                                                                       12:13󱑂 
+ 🞈  ip route
+default via 10.10.3.1 dev wlp2s0 proto dhcp metric 600
+10.10.1.0/24 via 10.10.4.1 dev tun0 proto static metric 50
+10.10.2.0/24 via 10.10.4.1 dev tun0 proto static metric 50
+10.10.3.0/24 dev wlp2s0 proto kernel scope link src 10.10.3.142 metric 600
+10.10.3.1 dev wlp2s0 proto static scope link metric 50
+10.10.4.0/24 dev tun0 proto kernel scope link src 10.10.4.165 metric 50
+10.10.7.0/24 via 10.10.4.1 dev tun0 proto static metric 50
+10.48.0.0/13 via 10.10.4.1 dev tun0 proto static metric 50
+169.254.0.0/16 dev virbr0 scope link metric 1000 linkdown
+172.16.1.0/24 via 10.10.4.1 dev tun0 proto static metric 50
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown
+172.18.0.0/16 dev docker_gwbridge proto kernel scope link src 172.18.0.1 linkdown
+172.19.0.0/16 dev br-3439f732d074 proto kernel scope link src 172.19.0.1 linkdown
+172.20.0.0/16 dev br-4cbd8eedd240 proto kernel scope link src 172.20.0.1
+172.21.0.0/16 dev br-a9a2952b6696 proto kernel scope link src 172.21.0.1 linkdown
+172.22.0.0/16 dev br-2f5f2bb27c03 proto kernel scope link src 172.22.0.1 linkdown
+172.23.0.0/16 dev br-3da2bba1527d proto kernel scope link src 172.23.0.1 linkdown
+172.24.0.0/16 dev br-d9754932cc6b proto kernel scope link src 172.24.0.1 linkdown
+172.25.0.0/16 dev br-aef1d6ce86ca proto kernel scope link src 172.25.0.1 linkdown
+181.96.124.121 via 10.10.4.1 dev tun0 proto static metric 50
+192.168.122.0/24 dev virbr0 proto kernel scope link src 192.168.122.1 linkdown
+200.43.210.121 via 10.10.4.1 dev tun0 proto static metric 50
 
 // Reward partners cercanos a un green point
 GET /api/reward-partner/nearby-green-point/:greenPointId?radius=5

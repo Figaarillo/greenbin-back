@@ -1,22 +1,15 @@
-import nodemailer from 'nodemailer'
-import EnvVar from '../../../shared/config/env-var.config'
+import type IMailStrategy from '../../domain/strategies/mail.interface.strategy'
+import createMailStrategy from '../../infrastructure/strategies/mail-strategy.factory'
 
 class EmailService {
-  private readonly transporter: nodemailer.Transporter
+  private readonly mailStrategy: IMailStrategy
 
-  constructor() {
-    this.transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: EnvVar.email.user,
-        pass: EnvVar.email.appPassword
-      }
-    })
+  constructor(mailStrategy: IMailStrategy = createMailStrategy()) {
+    this.mailStrategy = mailStrategy
   }
 
   async sendPasswordResetOtp(to: string, otp: string): Promise<void> {
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.mailStrategy.send({
       to,
       subject: 'Código para restablecer tu contraseña',
       html: `
@@ -35,8 +28,7 @@ class EmailService {
   }
 
   async sendRegistrationOtp(to: string, otp: string): Promise<void> {
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.mailStrategy.send({
       to,
       subject: 'Verificá tu cuenta de GreenBin',
       html: `
@@ -70,8 +62,7 @@ class EmailService {
       })
       .join('')
 
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.mailStrategy.send({
       to,
       subject: '¡Entrega de residuos registrada con éxito!',
       html: `
@@ -113,8 +104,7 @@ class EmailService {
   ): Promise<void> {
     const formattedDate = expirationDate.toLocaleDateString('es-AR')
 
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.mailStrategy.send({
       to,
       subject: `¡Compraste "${couponTitle}"!`,
       html: `
@@ -136,8 +126,7 @@ class EmailService {
   }
 
   async sendCouponRedeemedConfirmation(to: string, neighborName: string, couponTitle: string): Promise<void> {
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.mailStrategy.send({
       to,
       subject: `Canjeaste "${couponTitle}"`,
       html: `
@@ -161,8 +150,7 @@ class EmailService {
   ): Promise<void> {
     const formattedDate = expirationDate.toLocaleDateString('es-AR')
 
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.mailStrategy.send({
       to,
       subject: `Tu cupón "${couponTitle}" está por vencer`,
       html: `
@@ -179,8 +167,7 @@ class EmailService {
   }
 
   async sendCouponCreatedConfirmation(to: string, partnerName: string, couponTitle: string): Promise<void> {
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.mailStrategy.send({
       to,
       subject: `Tu cupón "${couponTitle}" ya está publicado`,
       html: `

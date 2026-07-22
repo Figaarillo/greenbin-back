@@ -29,8 +29,10 @@ interface Recaptcha {
 }
 
 interface EmailConfig {
-  user: string
-  appPassword: string
+  provider: 'resend' | 'nodemailer'
+  from: string
+  gmail: { user: string; appPassword: string }
+  resend: { apiKey: string }
 }
 
 interface PushConfig {
@@ -117,15 +119,33 @@ const recaptchaConfig: Recaptcha = {
   secretKey: env.get('RECAPTCHA_SECRET_KEY').required().asString()
 }
 
+// MAIL_PROVIDER selects the mail strategy (see auth/infrastructure/strategies).
+// Defaults to nodemailer so existing deployments keep working without touching
+// their .env; switching to Resend is a one-line env change, no code changes.
+const mailProviderName = env.get('MAIL_PROVIDER').default('nodemailer').asEnum(['resend', 'nodemailer'])
+const gmailUser = env.get('EMAIL_USER').required().asString()
+
 const emailConfig: EmailConfig = {
-  user: env.get('EMAIL_USER').required().asString(),
-  appPassword: env.get('EMAIL_APP_PASSWORD').required().asString()
+  provider: mailProviderName,
+  from: env.get('EMAIL_FROM').default(gmailUser).asString(),
+  gmail: {
+    user: gmailUser,
+    appPassword: env.get('EMAIL_APP_PASSWORD').required().asString()
+  },
+  resend: {
+    // Only required when actually selected as the active provider, so nodemailer-only
+    // setups never need a Resend account.
+    apiKey:
+      mailProviderName === 'resend'
+        ? env.get('RESEND_API_KEY').required().asString()
+        : env.get('RESEND_API_KEY').default('').asString()
+  }
 }
 
 const pushConfig: PushConfig = {
   publicKey: env.get('VAPID_PUBLIC_KEY').required().asString(),
   privateKey: env.get('VAPID_PRIVATE_KEY').required().asString(),
-  contactEmail: env.get('VAPID_CONTACT_EMAIL').default(emailConfig.user).asString()
+  contactEmail: env.get('VAPID_CONTACT_EMAIL').default(emailConfig.from).asString()
 }
 
 // In production, CORS origins MUST be provided explicitly (no wildcard, no localhost defaults):
