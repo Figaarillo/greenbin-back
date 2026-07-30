@@ -36,7 +36,13 @@ class PasswordResetHandler {
     const otp = this.otpService.generate()
     const token = this.otpService.createToken(email, otp, userType)
 
-    await this.emailService.sendPasswordResetOtp(email, otp)
+    try {
+      await this.emailService.sendPasswordResetOtp(email, otp)
+    } catch (error) {
+      console.error('[PasswordReset] Failed to send OTP email:', error)
+      HandleHTTPResponse.InternalServerError(rep, 'No se pudo enviar el correo de verificación')
+      return
+    }
 
     HandleHTTPResponse.OK(rep, 'Código enviado al correo', { resetToken: token })
   }
