@@ -36,7 +36,12 @@ class RegisterVerificationHandler {
     const otp = this.otpService.generate()
     const registerToken = this.otpService.createToken(email, otp, userType)
 
-    await this.emailService.sendRegistrationOtp(email, otp)
+    try {
+      await this.emailService.sendRegistrationOtp(email, otp)
+    } catch {
+      HandleHTTPResponse.InternalServerError(rep, 'No se pudo enviar el código de verificación por correo')
+      return
+    }
 
     HandleHTTPResponse.OK(rep, 'Código enviado al correo', { registerToken })
   }
