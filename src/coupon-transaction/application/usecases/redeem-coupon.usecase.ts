@@ -24,6 +24,15 @@ class RedeemCouponUseCase {
     const coupon = await this.findCouponById.exec(payload.couponId)
     const rewardPartner = await this.findRewardPartnerById.exec(coupon.rewardPartner as unknown as string)
 
+    const alreadyOwned = await this.repository.find({
+      neighbor: payload.neighborId,
+      coupon: payload.couponId,
+      status: 'ADQUIRIDO'
+    })
+    if (alreadyOwned != null) {
+      throw new Error('Ya canjeaste este cupón. Usalo antes de volver a canjearlo')
+    }
+
     if (coupon.costInPoints > neighbor.points) {
       throw new Error('You do not have enough points to redeem this coupon')
     }

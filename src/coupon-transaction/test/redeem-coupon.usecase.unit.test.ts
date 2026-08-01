@@ -68,7 +68,10 @@ mockCoupon.costInPoints = 50
 mockNeighbor.points = 100
 
 function makeUseCase(dispatch: ReturnType<typeof vi.fn>): RedeemCouponUseCase {
-  const repository = { save: async (tx: CouponTransactionEntity) => tx } as unknown as CouponTransactionRepository
+  const repository = {
+    save: async (tx: CouponTransactionEntity) => tx,
+    find: async () => null
+  } as unknown as CouponTransactionRepository
   const findCouponById = { exec: async () => mockCoupon } as unknown as FindCouponByIDUseCase
   const findNeighborById = { exec: async () => mockNeighbor } as unknown as FindNeighborByIDUseCase
   const findRewardPartnerById = { exec: async () => mockRewardPartner } as unknown as FindRewardPartnerByIdUseCase
@@ -105,5 +108,34 @@ describe('RedeemCouponUseCase — notificaciones', () => {
     expect(rewardPartnerEvent.recipientRole).toBe(Roles.REWARD_PARTNER)
     expect(rewardPartnerEvent.category).toBe(NotificationCategory.COUPON_PURCHASED)
     expect(rewardPartnerEvent.sendEmail).toBeUndefined()
+  })
+})
+
+describe('RedeemCouponUseCase — canje duplicado', () => {
+  it('rechaza el canje si el vecino ya tiene ese cupón ADQUIRIDO sin usar', async () => {
+    const dispatch = vi.fn()
+    const repository = {
+      save: async (tx: CouponTransactionEntity) => tx,
+      find: async () => ({}) as unknown as CouponTransactionEntity
+    } as unknown as CouponTransactionRepository
+    const findCouponById = { exec: async () => mockCoupon } as unknown as FindCouponByIDUseCase
+    const findNeighborById = { exec: async () => mockNeighbor } as unknown as FindNeighborByIDUseCase
+    const findRewardPartnerById = { exec: async () => mockRewardPartner } as unknown as FindRewardPartnerByIdUseCase
+    const subtractPoints = { exec: async () => {} } as unknown as SubtractNeighborPointsUseCase
+    const notificationDispatcher = { dispatch } as unknown as NotificationDispatcher
+
+    const useCase = new RedeemCouponUseCase(
+      repository,
+      findCouponById,
+      findNeighborById,
+      findRewardPartnerById,
+      subtractPoints,
+      notificationDispatcher
+    )
+
+    await expect(useCase.exec({ neighborId: mockNeighbor.id, couponId: mockCoupon.id })).rejects.toThrow(
+      'Ya canjeaste este cupón. Usalo antes de volver a canjearlo'
+    )
+    expect(dispatch).not.toHaveBeenCalled()
   })
 })
