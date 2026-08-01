@@ -68,6 +68,12 @@ export const WASTE_CATEGORY_SEEDS = [
     pointsPerWeight: 30,
     description: 'Pilas domésticas, baterías de celulares y acumuladores.',
     co2: 8.0
+  },
+  {
+    name: 'Otros',
+    pointsPerWeight: 2,
+    description: 'Residuos que no encuadran en ninguna otra categoría.',
+    co2: 0.5
   }
 ]
 
