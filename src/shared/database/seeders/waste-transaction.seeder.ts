@@ -17,10 +17,10 @@ interface TransactionSeed {
 }
 
 const TRANSACTION_SEEDS: TransactionSeed[] = [
-  // malvarez_et — 8 transacciones
+  // axeleonardi — 6 transacciones (176 pts totales, 2 del mes en curso)
   {
     responsibleUsername: 'rpaez_etruria',
-    neighborUsername: 'malvarez_et',
+    neighborUsername: 'axeleonardi',
     greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
@@ -30,62 +30,48 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   },
   {
     responsibleUsername: 'gsuarez_etruria',
-    neighborUsername: 'malvarez_et',
+    neighborUsername: 'axeleonardi',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
-      { categoryName: 'Metal', weight: 2 },
-      { categoryName: 'Vidrio', weight: 1.5 }
+      { categoryName: 'Metal', weight: 1 },
+      { categoryName: 'Vidrio', weight: 1 }
     ]
   },
   {
     responsibleUsername: 'fmendez_etruria',
-    neighborUsername: 'malvarez_et',
+    neighborUsername: 'axeleonardi',
     greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'gsuarez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'ISGP',
-    daysAgo: 49,
-    details: [
-      { categoryName: 'Metal', weight: 1.2 },
-      { categoryName: 'Plástico', weight: 3 },
-      { categoryName: 'Vidrio', weight: 0.8 }
-    ]
-  },
-  {
-    responsibleUsername: 'rpaez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'Colegio Malvinas',
-    daysAgo: 49,
-    details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
-  },
-  {
     responsibleUsername: 'fmendez_etruria',
-    neighborUsername: 'malvarez_et',
+    neighborUsername: 'axeleonardi',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
-    details: [{ categoryName: 'Madera', weight: 0.8 }]
-  },
-  {
-    responsibleUsername: 'gsuarez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'Colegio Malvinas',
-    daysAgo: 49,
-    details: [
-      { categoryName: 'Papel y Cartón', weight: 3.5 },
-      { categoryName: 'Plástico', weight: 0.5 }
-    ]
+    details: [{ categoryName: 'Madera', weight: 1 }]
   },
   {
     responsibleUsername: 'rpaez_etruria',
-    neighborUsername: 'malvarez_et',
+    neighborUsername: 'axeleonardi',
     greenPointName: 'ISGP',
-    daysAgo: 49,
-    details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
+    daysAgo: 0,
+    details: [
+      { categoryName: 'Plástico', weight: 2 },
+      { categoryName: 'Papel y Cartón', weight: 1 }
+    ]
+  },
+  {
+    responsibleUsername: 'gsuarez_etruria',
+    neighborUsername: 'axeleonardi',
+    greenPointName: 'Colegio Malvinas',
+    daysAgo: 0,
+    details: [
+      { categoryName: 'Aceites y Lubricantes', weight: 3 },
+      { categoryName: 'Vidrio', weight: 1 },
+      { categoryName: 'Plástico', weight: 1 }
+    ]
   },
 
   // jperez_et — 6 transacciones

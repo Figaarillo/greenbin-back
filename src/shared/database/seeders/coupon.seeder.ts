@@ -161,6 +161,17 @@ const COUPON_SEEDS = [
     state: 'AVAILABLE',
     rewardPartnerId: '',
     partnerUsername: 'bar_lacabra'
+  },
+  {
+    title: 'Cena para dos con vino incluido - La Cabra',
+    description: 'Canjeá este cupón por una cena para dos personas con una botella de vino incluida.',
+    discount: 100,
+    isAvailable: true,
+    validDays: 20,
+    costInPoints: 185,
+    state: 'AVAILABLE',
+    rewardPartnerId: '',
+    partnerUsername: 'bar_lacabra'
   }
 ]
 
