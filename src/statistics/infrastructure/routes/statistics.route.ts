@@ -19,6 +19,30 @@ class StatisticsRoute {
       }
     })
 
+    this.server.get('/api/statistics/entity/:entityId/co2-avoided', {
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE),
+      handler: async (
+        req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
+        rep
+      ) => {
+        await this.handler.getCo2Avoided(req, rep)
+      }
+    })
+
+    this.server.get('/api/statistics/entity/:entityId/points-balance', {
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE),
+      handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+        await this.handler.getPointsBalance(req, rep)
+      }
+    })
+
+    this.server.get('/api/statistics/entity/:entityId/counts', {
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE),
+      handler: async (req: FastifyRequest<{ Params: Record<string, string> }>, rep) => {
+        await this.handler.getEntityCounts(req, rep)
+      }
+    })
+
     this.server.get('/api/statistics/entity/:entityId/green-points-ranking', {
       preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE),
       handler: async (
@@ -26,6 +50,16 @@ class StatisticsRoute {
         rep
       ) => {
         await this.handler.getGreenPointsRanking(req, rep)
+      }
+    })
+
+    this.server.get('/api/statistics/entity/:entityId/reward-partners-ranking', {
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE),
+      handler: async (
+        req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
+        rep
+      ) => {
+        await this.handler.getRewardPartnersRanking(req, rep)
       }
     })
 
