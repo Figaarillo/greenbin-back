@@ -218,6 +218,76 @@ describe('CouponTransaction — integration tests', () => {
       expect(data.byCoupon[0].pointsSpent).toBe(50)
     })
 
+    it('byCoupon separa el total de canjes de los efectivamente usados', async () => {
+      // Un vecino no puede canjear dos veces el mismo cupón, así que el segundo
+      // canje —el que queda sin usar— va sobre otro cupón del mismo local.
+      const canjear = async (id: string): Promise<string> => {
+        const res = await app.inject({
+          method: 'POST',
+          url: '/api/redeem-coupon',
+          headers: { authorization: `Bearer ${neighborToken}` },
+          body: { couponId: id, neighborId }
+        })
+        return res.json().data.code as string
+      }
+
+      const code = await canjear(couponId)
+      await app.inject({
+        method: 'POST',
+        url: '/api/coupon-transaction/use',
+        headers: { authorization: `Bearer ${rewardPartnerToken}` },
+        body: { code, rewardPartnerId, totalAmount: 1000 }
+      })
+
+      const cupon2 = await createCoupon(
+        app,
+        rewardPartnerId,
+        { costInPoints: 20, title: 'Cupón sin usar' },
+        entityToken
+      )
+      await canjear(cupon2.id)
+
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/coupon-transaction/reward-partner/${rewardPartnerId}/stats`,
+        headers: { authorization: `Bearer ${rewardPartnerToken}` }
+      })
+      const byCoupon = res.json().data.byCoupon as Array<{
+        couponId: string
+        total: number
+        redemptions: number
+      }>
+
+      const usado = byCoupon.find(c => c.couponId === couponId)
+      expect(usado?.total).toBe(1)
+      expect(usado?.redemptions).toBe(1)
+
+      const sinUsar = byCoupon.find(c => c.couponId === cupon2.id)
+      expect(sinUsar?.total).toBe(1)
+      expect(sinUsar?.redemptions).toBe(0)
+    })
+
+    it('lista un cupón canjeado aunque todavía no se haya usado', async () => {
+      await app.inject({
+        method: 'POST',
+        url: '/api/redeem-coupon',
+        headers: { authorization: `Bearer ${neighborToken}` },
+        body: { couponId, neighborId }
+      })
+
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/coupon-transaction/reward-partner/${rewardPartnerId}/stats`,
+        headers: { authorization: `Bearer ${rewardPartnerToken}` }
+      })
+      const data = res.json().data
+      // Un cupón que nadie presenta es justamente la señal que el local necesita ver.
+      expect(data.byCoupon.length).toBe(1)
+      expect(data.byCoupon[0].total).toBe(1)
+      expect(data.byCoupon[0].redemptions).toBe(0)
+      expect(data.byCoupon[0].pointsSpent).toBe(0)
+    })
+
     it('filtra por rango de fechas con from/to', async () => {
       const redeemRes = await app.inject({
         method: 'POST',

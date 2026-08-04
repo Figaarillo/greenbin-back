@@ -159,26 +159,39 @@ class CouponTransactionMikroORMRepository implements CouponTransactionRepository
       {
         couponId: string
         title: string
+        total: number
         redemptions: number
         neighbors: Set<string>
         newNeighbors: number
         pointsSpent: number
       }
     >()
-    for (const r of usados) {
-      const entry = byCouponMap.get(r.couponId) ?? {
-        couponId: r.couponId,
-        title: r.couponTitle,
+
+    const entryFor = (couponId: string, title: string): NonNullable<ReturnType<typeof byCouponMap.get>> => {
+      const entry = byCouponMap.get(couponId) ?? {
+        couponId,
+        title,
+        total: 0,
         redemptions: 0,
         neighbors: new Set<string>(),
         newNeighbors: 0,
         pointsSpent: 0
       }
+      byCouponMap.set(couponId, entry)
+      return entry
+    }
+
+    // Se recorren TODAS las transacciones, no sólo las usadas: un cupón que se
+    // canjea y nadie presenta nunca aparecería, y es justo la señal que el local
+    // necesita ver. `total` permite además calcular la conversión por cupón.
+    for (const r of rows) entryFor(r.couponId, r.couponTitle).total++
+
+    for (const r of usados) {
+      const entry = entryFor(r.couponId, r.couponTitle)
       entry.redemptions++
       entry.neighbors.add(r.neighborId)
       entry.pointsSpent += r.costInPoints ?? 0
       if (isFirstVisit(r)) entry.newNeighbors++
-      byCouponMap.set(r.couponId, entry)
     }
 
     const byCoupon = Array.from(byCouponMap.values())

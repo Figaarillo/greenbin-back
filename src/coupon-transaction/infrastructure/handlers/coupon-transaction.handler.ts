@@ -1,4 +1,5 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
+import { parseRangeStart, parseRangeEnd } from '../../../shared/utils/date-range.util'
 import FindCouponByIDUseCase from '../../../coupon/application/usecases/find-by-id.usecase'
 import type CouponRepository from '../../../coupon/domain/repositories/coupon.repository'
 import FindNeighborByIDUseCase from '../../../neighbor/application/usecases/find-by-id.usecase'
@@ -115,11 +116,9 @@ class CouponTransactionHandler {
       const { from, to } = req.query
 
       const getStatsUseCase = new GetRewardPartnerStatsUseCase(this.couponTransactionRepository)
-      const stats = await getStatsUseCase.exec(
-        rewardPartnerId,
-        from != null ? new Date(from) : undefined,
-        to != null ? new Date(to) : undefined
-      )
+      // Mismo bug que tenía statistics: `to=YYYY-MM-DD` se leía como medianoche
+      // y dejaba afuera todos los canjes del día en curso.
+      const stats = await getStatsUseCase.exec(rewardPartnerId, parseRangeStart(from), parseRangeEnd(to))
 
       HandleHTTPResponse.OK(rep, 'Reward partner stats retrieved successfully', stats)
     } catch (error: any) {

@@ -15,6 +15,9 @@ interface RewardPartnerStats {
   byCoupon: Array<{
     couponId: string
     title: string
+    /** Canjes totales del cupón (usados + sin usar + vencidos). */
+    total: number
+    /** Canjes que el vecino efectivamente presentó en el local. */
     redemptions: number
     uniqueNeighbors: number
     newNeighbors: number
