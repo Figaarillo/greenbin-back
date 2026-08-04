@@ -5,6 +5,7 @@ const UpdateWasteCategoryDTO = z.object({
   name: nameDTO.optional(),
   pointsPerWeight: pointsPerWeightDTO.optional(),
   description: descriptionDTO.optional(),
+  co2: z.number().nonnegative().optional(),
   isActive: z.boolean().optional()
 })
 
