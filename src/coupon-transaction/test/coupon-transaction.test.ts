@@ -153,7 +153,13 @@ describe('CouponTransaction — integration tests', () => {
       })
       expect(primero.statusCode).toBe(201)
 
-      const otroVecino = await createNeighborWithToken(app, entityId)
+      // NEIGHBOR_FIXTURE trae un email/dni fijos: sin overrides, este alta
+      // choca con el vecino que el beforeEach ya creó con esos mismos datos.
+      const otroVecino = await createNeighborWithToken(app, entityId, {
+        email: 'otro-vecino@test.com',
+        username: 'otrovecino',
+        dni: 30000002
+      })
       await acreditarPuntos(otroVecino.id)
 
       const segundo = await app.inject({
