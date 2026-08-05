@@ -6,13 +6,13 @@ import type EntityEntity from '../../../entity/domain/entities/entity.entity'
 
 const RESPONSIBLE_SEEDS = [
   {
-    firstname: 'Roberto',
-    lastname: 'Páez',
-    username: 'rpaez_etruria',
-    email: 'rpaez@muni-etruria.gob.ar',
+    firstname: 'Santiago',
+    lastname: 'Giordano',
+    username: 'santigiopo3',
+    email: 'santigiopo3@gmail.com',
     password: 'Resp2024!',
-    dni: 27654321,
-    phoneNumber: '3465-410001',
+    dni: 42337810,
+    phoneNumber: '2302637110',
     entityId: '',
     entityEmail: 'muniEtruria@gmail.com'
   },
