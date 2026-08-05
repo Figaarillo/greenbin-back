@@ -11,8 +11,15 @@ class CouponMikroORMRepository implements CouponRepository {
   async list(where: Record<string, any>, offset?: number, limit?: number): Promise<Nullable<CouponEntity[]>> {
     const em = this.getEntityManager()
 
-    if (limit == null) return await em.find(CouponEntity, where)
-    if (offset == null) return await em.find(CouponEntity, where, { limit })
+    // `parseInt` de un query param ausente da NaN, no undefined/null (ver
+    // getPaginationParams): sin este chequeo, un `limit` de NaN llegaba tal
+    // cual a Knex, que lo rechazaba en tiempo de consulta. El catálogo del
+    // vecino llama a este método sin paginar, así que lo pisaba siempre.
+    const hasLimit = limit != null && !Number.isNaN(limit)
+    const hasOffset = offset != null && !Number.isNaN(offset)
+
+    if (!hasLimit) return await em.find(CouponEntity, where)
+    if (!hasOffset) return await em.find(CouponEntity, where, { limit })
 
     return await em.find(CouponEntity, where, { limit, offset })
   }
