@@ -19,7 +19,7 @@ interface TransactionSeed {
 const TRANSACTION_SEEDS: TransactionSeed[] = [
   // axeleonardi — 6 transacciones (176 pts totales, 2 del mes en curso)
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'axeleonardi',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -53,7 +53,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     details: [{ categoryName: 'Madera', weight: 1 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'axeleonardi',
     greenPointName: 'ISGP',
     daysAgo: 0,
@@ -76,7 +76,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // jperez_et — 6 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'jperez_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -96,7 +96,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'jperez_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -130,7 +130,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // rcastro_et — 10 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'rcastro_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -168,7 +168,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'rcastro_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -182,7 +182,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'rcastro_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -199,7 +199,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'rcastro_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -215,7 +215,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // ngimenez_et — 5 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'ngimenez_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -242,7 +242,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'ngimenez_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -262,7 +262,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // frios_et — 12 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'frios_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -300,14 +300,14 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'frios_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'frios_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -331,7 +331,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'frios_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -367,7 +367,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // amoreno_et — 7 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'amoreno_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -377,7 +377,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'amoreno_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -412,7 +412,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'amoreno_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -428,7 +428,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // cvargas_et — 9 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'cvargas_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -459,7 +459,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'cvargas_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -483,7 +483,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'cvargas_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -506,7 +506,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // racosta_et — 11 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'racosta_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -526,7 +526,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'racosta_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -550,7 +550,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'racosta_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -578,7 +578,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'racosta_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -601,7 +601,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // lbenitez_et — 6 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'lbenitez_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -628,7 +628,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'lbenitez_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -655,7 +655,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // tibanez_et — 8 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'tibanez_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -682,14 +682,14 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'tibanez_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'tibanez_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -726,7 +726,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // sromero_et — 5 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'sromero_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -757,7 +757,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'sromero_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -773,7 +773,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // enavarro_et — 7 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'enavarro_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -783,7 +783,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'enavarro_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -825,7 +825,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'enavarro_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -834,7 +834,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // vpereyra_et — 10 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'vpereyra_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -879,14 +879,14 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'vpereyra_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'vpereyra_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -910,7 +910,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'vpereyra_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -919,7 +919,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // hquispe_et — 6 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'hquispe_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -957,7 +957,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'hquispe_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -973,7 +973,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // dfuentes_et — 9 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'dfuentes_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -1000,7 +1000,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'dfuentes_et',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
@@ -1021,7 +1021,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'dfuentes_et',
     greenPointName: 'ISGP',
     daysAgo: 49,
@@ -1177,7 +1177,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // emattalia — rpaez (5 transacciones, distintas fechas)
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'emattalia',
     greenPointName: 'ISGP',
     daysAgo: 42,
@@ -1187,14 +1187,14 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'emattalia',
     greenPointName: 'ISGP',
     daysAgo: 42,
     details: [{ categoryName: 'Electrónico', weight: 100 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'emattalia',
     greenPointName: 'ISGP',
     daysAgo: 13,
@@ -1204,7 +1204,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'emattalia',
     greenPointName: 'ISGP',
     daysAgo: 10,
@@ -1214,7 +1214,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'emattalia',
     greenPointName: 'Colegio Malvinas',
     daysAgo: 7,
