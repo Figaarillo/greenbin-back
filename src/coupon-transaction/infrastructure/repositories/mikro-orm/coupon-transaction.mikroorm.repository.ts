@@ -65,6 +65,19 @@ class CouponTransactionMikroORMRepository implements CouponTransactionRepository
     )
   }
 
+  async findHeldCouponIds(neighborId: string, couponIds: string[]): Promise<string[]> {
+    if (couponIds.length === 0) return []
+
+    const em = this.getEntityManager()
+    const rows = await em.find(CouponTransactionEntity, {
+      neighbor: neighborId,
+      coupon: { $in: couponIds },
+      status: 'ADQUIRIDO'
+    })
+
+    return rows.map(row => (row.coupon as unknown as { id: string }).id)
+  }
+
   async save(transaction: CouponTransactionEntity): Promise<Nullable<CouponTransactionEntity>> {
     const em = this.getEntityManager()
     await em.persist(transaction).flush()
