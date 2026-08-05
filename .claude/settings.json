@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(d=\"/home/wink/greenbin-back\" 2>/dev/null)",
+      "Bash(ls -la .claude/skills)",
+      "Bash(echo \"---\")",
+      "Bash(find . -maxdepth 2 -iname \"*.claude*\")",
+      "Bash(echo \"---root files---\")"
+    ]
+  }
+}

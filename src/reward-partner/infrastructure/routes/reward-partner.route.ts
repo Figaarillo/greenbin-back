@@ -46,6 +46,14 @@ class RewardPartnerRoute {
       }
     })
 
+    // Público a propósito: lo consume el formulario de alta antes de que el reward-partner
+    // tenga cuenta, para chequear en vivo si el CUIT existe en ARCA (ws_sr_constancia_inscripcion).
+    this.server.get('/api/reward-partner/validate-cuit/:cuit', {
+      handler: async (req: FastifyRequest<{ Params: { cuit: string } }>, rep) => {
+        await this.handler.validateCuit(req, rep)
+      }
+    })
+
     this.server.get('/api/reward-partner/:id', {
       preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.REWARD_PARTNER, Roles.NEIGHBOR),
       handler: async (req: FastifyRequest<{ Params: { id: string } }>, rep) => {

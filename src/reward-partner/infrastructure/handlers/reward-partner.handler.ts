@@ -6,6 +6,7 @@ import { Roles } from '../../../auth/domain/entities/role'
 import type IJWTStrategy from '../../../auth/domain/strategies/jwt.interface.strategy'
 import FindEntityByIDUseCase from '../../../entity/application/usecases/find-by-id.usecase'
 import type EntityRepository from '../../../entity/domain/repositories/entity.repository'
+import type AfipService from '../../../shared/infrastructure/services/afip.service'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { getURLParams, getPaginationParams } from '../../../shared/utils/http.request.util'
 import FindByEmailUseCase from '../../application/usecases/find-by-email.usecase'
@@ -16,6 +17,7 @@ import UpdateRewardPartnerUseCase from '../../application/usecases/update.usecas
 import type RewardPartnerLoginPayload from '../../domain/payloads/reward-partner.login.payload'
 import type RewardPartnerPayload from '../../domain/payloads/reward-partner.payload'
 import type RewardPartnerRepository from '../../domain/repositories/reward-partner.repository'
+import CheckCuitDTO from '../dtos/check-cuit.dto'
 import CheckIdDTO from '../dtos/check-id.dto'
 import LoginRewardPartnerDTO from '../dtos/login-reward-partner.dto'
 import RegisterRewardPartnerDTO from '../dtos/register-reward-partner.dto'
@@ -28,8 +30,20 @@ class RewardPartnerHandler {
   constructor(
     private readonly rewardPartnerRepository: RewardPartnerRepository,
     private readonly entityRepository: EntityRepository,
-    private readonly jwtStrategy: IJWTStrategy
+    private readonly jwtStrategy: IJWTStrategy,
+    private readonly afipService: AfipService
   ) {}
+
+  async validateCuit(req: FastifyRequest<{ Params: { cuit: string } }>, rep: FastifyReply): Promise<void> {
+    const { cuit } = req.params
+
+    const schemaValidator = new RewardPartnerSchemaValidator(CheckCuitDTO, { cuit })
+    schemaValidator.exec()
+
+    const exists = await this.afipService.cuitExists(cuit)
+
+    HandleHTTPResponse.OK(rep, 'CUIT checked successfully', { exists })
+  }
 
   async findById(req: FastifyRequest<{ Params: Record<string, string> }>, rep: FastifyReply): Promise<void> {
     const id = getURLParams(req, 'id')

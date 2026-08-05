@@ -28,6 +28,12 @@ interface Recaptcha {
   secretKey: string
 }
 
+interface AfipConfig {
+  accessToken: string
+  cuitRepresentada: string
+  environment: string
+}
+
 interface EmailConfig {
   user: string
   appPassword: string
@@ -70,6 +76,7 @@ interface Config {
   cors: CorsConfig
   admin: AdminConfig
   prodEntity: ProdEntityConfig
+  afip: AfipConfig
 }
 
 const serverConfig: ServerConfig = {
@@ -159,6 +166,12 @@ const prodEntityConfig: ProdEntityConfig = {
   longitude: env.get('PROD_ENTITY_LNG').default('-62.08').asFloat()
 }
 
+const afipConfig: AfipConfig = {
+  accessToken: env.get('AFIP_ACCESS_TOKEN').required().asString(),
+  cuitRepresentada: env.get('AFIP_CUIT_REPRESENTADA').required().asString(),
+  environment: env.get('AFIP_ENVIRONMENT').default('dev').asString()
+}
+
 const EnvVar: Config = {
   auth: authConfig,
   server: serverConfig,
@@ -169,7 +182,8 @@ const EnvVar: Config = {
   push: pushConfig,
   cors: corsConfig,
   admin: adminConfig,
-  prodEntity: prodEntityConfig
+  prodEntity: prodEntityConfig,
+  afip: afipConfig
 }
 
 export default EnvVar
