@@ -13,7 +13,7 @@ import type RedeemCouponPayload from '../../domain/payloads/redeem-coupon.payloa
 import type CouponTransactionRepository from '../../domain/repositories/coupon-transaction.repository'
 import CouponSchemaValidator from '../../../coupon/infrastructure/middlewares/zod-schema-validator.middleware'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
-import { getURLParams } from '../../../shared/utils/http.request.util'
+import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
 import FindCouponTransactionByIDUseCase from '../../application/usecases/find-by-id.usecase'
 import UseCouponUseCase from '../../application/usecases/use-coupon.usecase'
 import type UseCouponPayload from '../../domain/payloads/use-coupon.payload'
@@ -22,14 +22,44 @@ import ListByNeighborUseCase from '../../application/usecases/list-by-neighbor.u
 import ListByRewardPartnerUseCase from '../../application/usecases/list-by-reward-partner.usecase'
 import GetRewardPartnerStatsUseCase from '../../application/usecases/get-reward-partner-stats.usecase'
 import createNotificationDispatcher from '../../../notification/notification-dispatcher.factory'
+import ListAvailableCouponUseCase from '../../../coupon/application/usecases/list-available-coupon.usecase'
+import ListNeighborCatalogUseCase from '../../application/usecases/list-neighbor-catalog.usecase'
+import RedemptionPolicyResolver from '../../domain/policies/redemption-policy.resolver'
 
 class CouponTransactionHandler {
+  private readonly policyResolver: RedemptionPolicyResolver
+
   constructor(
     private readonly couponTransactionRepository: CouponTransactionRepository,
     private readonly couponRepository: CouponRepository,
     private readonly neighborRepository: NeighborRepository,
     private readonly rewardPartnerRepository: RewardPartnerRepository
-  ) {}
+  ) {
+    this.policyResolver = new RedemptionPolicyResolver(couponTransactionRepository)
+  }
+
+  async listNeighborCatalog(
+    req: FastifyRequest<{ Params: Record<string, string>; Querystring: Record<string, string> }>,
+    rep: FastifyReply
+  ): Promise<void> {
+    try {
+      const neighborId = getURLParams(req, 'neighborId')
+      // Mismo criterio de paginación que /api/coupon/available, que es el
+      // endpoint que este reemplaza para la pantalla del vecino.
+      const { offset, limit } = getPaginationParams(req)
+      const entityId = req.query.entityId
+
+      const listCatalog = new ListNeighborCatalogUseCase(
+        new ListAvailableCouponUseCase(this.couponRepository),
+        this.policyResolver
+      )
+      const catalog = await listCatalog.exec(neighborId, offset, limit, entityId)
+
+      HandleHTTPResponse.OK(rep, 'Neighbor catalog retrieved successfully', catalog)
+    } catch (error: any) {
+      rep.status(this.statusFor(error)).send({ message: error.message })
+    }
+  }
 
   async redeemCoupon(req: FastifyRequest<{ Body: RedeemCouponPayload }>, rep: FastifyReply): Promise<void> {
     try {
@@ -43,14 +73,14 @@ class CouponTransactionHandler {
         findNeighborById,
         findRewardPartnerById,
         subtractPoints,
-        createNotificationDispatcher()
+        createNotificationDispatcher(),
+        this.policyResolver
       )
       const redeemedCoupon = await redeemCouponUseCase.exec(req.body)
 
       HandleHTTPResponse.Created(rep, 'Coupon redeemed successfully', redeemedCoupon)
     } catch (error: any) {
-      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
-      rep.status(statusCode).send({ message: error.message })
+      rep.status(this.statusFor(error)).send({ message: error.message })
     }
   }
 
@@ -66,8 +96,7 @@ class CouponTransactionHandler {
 
       HandleHTTPResponse.OK(rep, 'Coupon transaction retrieved successfully', transaction)
     } catch (error: any) {
-      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
-      rep.status(statusCode).send({ message: error.message })
+      rep.status(this.statusFor(error)).send({ message: error.message })
     }
   }
 
@@ -84,8 +113,7 @@ class CouponTransactionHandler {
 
       HandleHTTPResponse.OK(rep, 'Coupon transactions retrieved successfully', transactions)
     } catch (error: any) {
-      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
-      rep.status(statusCode).send({ message: error.message })
+      rep.status(this.statusFor(error)).send({ message: error.message })
     }
   }
 
@@ -102,8 +130,7 @@ class CouponTransactionHandler {
 
       HandleHTTPResponse.OK(rep, 'Coupon transactions retrieved successfully', transactions)
     } catch (error: any) {
-      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
-      rep.status(statusCode).send({ message: error.message })
+      rep.status(this.statusFor(error)).send({ message: error.message })
     }
   }
 
@@ -122,9 +149,17 @@ class CouponTransactionHandler {
 
       HandleHTTPResponse.OK(rep, 'Reward partner stats retrieved successfully', stats)
     } catch (error: any) {
-      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
-      rep.status(statusCode).send({ message: error.message })
+      rep.status(this.statusFor(error)).send({ message: error.message })
     }
+  }
+
+  // Los errores de dominio traen `code` numérico; los del driver traen el código
+  // SQL como string ('23505' para unique violation). Pasarle ese string a
+  // rep.status() hace que Fastify tire FST_ERR_BAD_STATUS_CODE, y el error real
+  // termina enmascarado como un 500 opaco.
+  private statusFor(error: any): number {
+    if (typeof error.code === 'number') return error.code
+    return error.message?.includes('not found') === true ? 404 : 500
   }
 
   // offset/limit son genuinamente opcionales acá (a diferencia de
@@ -161,8 +196,7 @@ class CouponTransactionHandler {
         status: result.status
       })
     } catch (error: any) {
-      const statusCode = error.code || (error.message?.includes('not found') ? 404 : 500)
-      rep.status(statusCode).send({ message: error.message })
+      rep.status(this.statusFor(error)).send({ message: error.message })
     }
   }
 }

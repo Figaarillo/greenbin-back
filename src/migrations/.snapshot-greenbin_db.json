@@ -401,7 +401,7 @@
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "unique": true,
+          "unique": false,
           "length": null,
           "precision": null,
           "scale": null,
@@ -478,16 +478,6 @@
       "name": "coupon_transactions",
       "schema": "public",
       "indexes": [
-        {
-          "columnNames": [
-            "coupon_id"
-          ],
-          "composite": false,
-          "constraint": true,
-          "keyName": "coupon_transactions_coupon_id_unique",
-          "unique": true,
-          "primary": false
-        },
         {
           "columnNames": [
             "id"

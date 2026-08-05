@@ -5,7 +5,12 @@ import type FindRewardPartnerByIdUseCase from '../../../reward-partner/applicati
 import { Roles } from '../../../auth/domain/entities/role'
 import { NotificationCategory } from '../../../notification/domain/enums/notification-category.enum'
 import type NotificationDispatcher from '../../../notification/application/service/notification-dispatcher.service'
+import type CouponEntity from '../../../coupon/domain/entities/coupon.entity'
+import ErrorCouponNotFound from '../../../coupon/domain/errors/coupon-not-found.error'
 import CouponTransactionEntity from '../../domain/entities/coupon-transaction.entity'
+import ErrorCouponNoLongerAvailable from '../../domain/errors/coupon-no-longer-available.error'
+import ErrorNotEnoughPoints from '../../domain/errors/not-enough-points.error'
+import type RedemptionPolicyResolver from '../../domain/policies/redemption-policy.resolver'
 import type RedeemCouponPayload from '../../domain/payloads/redeem-coupon.payload'
 import type CouponTransactionRepository from '../../domain/repositories/coupon-transaction.repository'
 
@@ -16,29 +21,21 @@ class RedeemCouponUseCase {
     private readonly findNeighborById: FindNeighborByIDUseCase,
     private readonly findRewardPartnerById: FindRewardPartnerByIdUseCase,
     private readonly subtractPoints: SubtractNeighborPointsUseCase,
-    private readonly notificationDispatcher: NotificationDispatcher
+    private readonly notificationDispatcher: NotificationDispatcher,
+    private readonly policyResolver: RedemptionPolicyResolver
   ) {}
 
   async exec(payload: RedeemCouponPayload): Promise<CouponTransactionEntity> {
     const neighbor = await this.findNeighborById.exec(payload.neighborId)
-    const coupon = await this.findCouponById.exec(payload.couponId)
+    const coupon = await this.findRedeemableCoupon(payload.couponId)
     const rewardPartner = await this.findRewardPartnerById.exec(coupon.rewardPartner as unknown as string)
 
-    const alreadyOwned = await this.repository.find({
-      neighbor: payload.neighborId,
-      coupon: payload.couponId,
-      status: 'ADQUIRIDO'
-    })
-    if (alreadyOwned != null) {
-      throw new Error('Ya canjeaste este cupón. Usalo antes de volver a canjearlo')
-    }
+    // La regla de cuántas veces se puede canjear vive en la policy, no acá: es
+    // la misma que consulta el catálogo para pintar el cupón en gris.
+    await this.policyResolver.resolve(coupon).ensureCanRedeem(coupon, payload.neighborId)
 
     if (coupon.costInPoints > neighbor.points) {
-      throw new Error('You do not have enough points to redeem this coupon')
-    }
-
-    if (!coupon.isAvailable) {
-      throw new Error('Coupon is not available')
+      throw new ErrorNotEnoughPoints()
     }
 
     const redeemedDate = new Date()
@@ -100,6 +97,26 @@ class RedeemCouponUseCase {
     })
 
     return transaction
+  }
+
+  // El catálogo del vecino puede estar desactualizado: entre que se pintó la
+  // pantalla y el canje, el local pudo borrar el cupón (soft delete, y entonces
+  // el find ni lo ve) o marcarlo como no disponible. Los dos casos son la misma
+  // historia para el vecino, y ninguno es un error de servidor.
+  private async findRedeemableCoupon(couponId: string): Promise<CouponEntity> {
+    let coupon: CouponEntity
+    try {
+      coupon = await this.findCouponById.exec(couponId)
+    } catch (error) {
+      if (error instanceof ErrorCouponNotFound) throw new ErrorCouponNoLongerAvailable()
+      throw error
+    }
+
+    if (!coupon.isAvailable) {
+      throw new ErrorCouponNoLongerAvailable()
+    }
+
+    return coupon
   }
 }
 
