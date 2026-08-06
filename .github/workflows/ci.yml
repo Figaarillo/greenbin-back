@@ -117,4 +117,8 @@ jobs:
           # validacion de longitud de web-push pero no son secretos reales.
           VAPID_PUBLIC_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
           VAPID_PRIVATE_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          # Valores dummy para AFIP — requeridos por env-var.config.ts para
+          # que bootstrapRewardPartner no falle silenciosamente en CI.
+          AFIP_ACCESS_TOKEN: test_afip_token
+          AFIP_CUIT_REPRESENTADA: 20000000000
         run: pnpm run test
