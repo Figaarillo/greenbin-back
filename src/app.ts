@@ -84,7 +84,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapWasteCategory(app)
   bootstrapResponsible(app)
   bootstrapNeighbor(app)
-  bootstrapRewardPartner(app)
+  await bootstrapRewardPartner(app)
   bootstrapGreenPoint(app)
   bootstrapWaste(app)
   bootstrapWasteTransaction(app)

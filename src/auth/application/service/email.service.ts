@@ -1,22 +1,64 @@
 import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 import EnvVar from '../../../shared/config/env-var.config'
 
+interface MailPayload {
+  to: string
+  subject: string
+  html: string
+}
+
+// Railway (y la mayoria de los PaaS) bloquean el trafico SMTP saliente, asi que
+// nodemailer/Gmail funciona en local pero nunca en produccion. Resend envia por
+// API HTTP, sin ese problema. El provider se elige con EMAIL_PROVIDER: se manda
+// por nodemailer o por Resend, pero el resto de la clase (y quien la consume) no
+// necesita saberlo.
 class EmailService {
-  private readonly transporter: nodemailer.Transporter
+  private readonly transporter: nodemailer.Transporter | null
+  private readonly resend: Resend | null
 
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: EnvVar.email.user,
-        pass: EnvVar.email.appPassword
+    if (EnvVar.email.provider === 'resend') {
+      this.resend = new Resend(EnvVar.email.resendApiKey)
+      this.transporter = null
+    } else {
+      this.transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: EnvVar.email.user,
+          pass: EnvVar.email.appPassword
+        }
+      })
+      this.resend = null
+    }
+  }
+
+  private async send({ to, subject, html }: MailPayload): Promise<void> {
+    if (this.resend != null) {
+      const { error } = await this.resend.emails.send({
+        from: EnvVar.email.from,
+        to,
+        subject,
+        html
+      })
+
+      if (error != null) {
+        throw new Error(`Error al enviar el email via Resend: ${error.message}`)
       }
+
+      return
+    }
+
+    await this.transporter?.sendMail({
+      from: `"GreenBin" <${EnvVar.email.user}>`,
+      to,
+      subject,
+      html
     })
   }
 
   async sendPasswordResetOtp(to: string, otp: string): Promise<void> {
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.send({
       to,
       subject: 'Código para restablecer tu contraseña',
       html: `
@@ -35,8 +77,7 @@ class EmailService {
   }
 
   async sendRegistrationOtp(to: string, otp: string): Promise<void> {
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.send({
       to,
       subject: 'Verificá tu cuenta de GreenBin',
       html: `
@@ -70,8 +111,7 @@ class EmailService {
       })
       .join('')
 
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.send({
       to,
       subject: '¡Entrega de residuos registrada con éxito!',
       html: `
@@ -113,8 +153,7 @@ class EmailService {
   ): Promise<void> {
     const formattedDate = expirationDate.toLocaleDateString('es-AR')
 
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.send({
       to,
       subject: `¡Compraste "${couponTitle}"!`,
       html: `
@@ -136,8 +175,7 @@ class EmailService {
   }
 
   async sendCouponRedeemedConfirmation(to: string, neighborName: string, couponTitle: string): Promise<void> {
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.send({
       to,
       subject: `Canjeaste "${couponTitle}"`,
       html: `
@@ -161,8 +199,7 @@ class EmailService {
   ): Promise<void> {
     const formattedDate = expirationDate.toLocaleDateString('es-AR')
 
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.send({
       to,
       subject: `Tu cupón "${couponTitle}" está por vencer`,
       html: `
@@ -179,8 +216,7 @@ class EmailService {
   }
 
   async sendCouponCreatedConfirmation(to: string, partnerName: string, couponTitle: string): Promise<void> {
-    await this.transporter.sendMail({
-      from: `"GreenBin" <${EnvVar.email.user}>`,
+    await this.send({
       to,
       subject: `Tu cupón "${couponTitle}" ya está publicado`,
       html: `
