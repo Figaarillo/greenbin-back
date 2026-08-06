@@ -35,8 +35,11 @@ interface AfipConfig {
 }
 
 interface EmailConfig {
+  provider: 'nodemailer' | 'resend'
+  from: string
   user: string
   appPassword: string
+  resendApiKey: string
 }
 
 interface PushConfig {
@@ -124,10 +127,32 @@ const recaptchaConfig: Recaptcha = {
   secretKey: env.get('RECAPTCHA_SECRET_KEY').required().asString()
 }
 
-const emailConfig: EmailConfig = {
-  user: env.get('EMAIL_USER').required().asString(),
-  appPassword: env.get('EMAIL_APP_PASSWORD').required().asString()
+// Railway (y otros PaaS) bloquean el trafico SMTP saliente, asi que en produccion
+// hay que enviar por la API HTTP de Resend en vez de nodemailer/Gmail. El
+// provider default sigue siendo nodemailer para no romper dev/tests existentes;
+// cada set de credenciales solo se exige cuando su provider esta activo.
+function loadEmailConfig(): EmailConfig {
+  const provider = env.get('EMAIL_PROVIDER').default('nodemailer').asEnum(['nodemailer', 'resend'])
+
+  return {
+    provider,
+    from: env.get('EMAIL_FROM').default('GreenBin <onboarding@resend.dev>').asString(),
+    user:
+      provider === 'nodemailer'
+        ? env.get('EMAIL_USER').required().asString()
+        : env.get('EMAIL_USER').default('').asString(),
+    appPassword:
+      provider === 'nodemailer'
+        ? env.get('EMAIL_APP_PASSWORD').required().asString()
+        : env.get('EMAIL_APP_PASSWORD').default('').asString(),
+    resendApiKey:
+      provider === 'resend'
+        ? env.get('RESEND_API_KEY').required().asString()
+        : env.get('RESEND_API_KEY').default('').asString()
+  }
 }
+
+const emailConfig: EmailConfig = loadEmailConfig()
 
 const pushConfig: PushConfig = {
   publicKey: env.get('VAPID_PUBLIC_KEY').required().asString(),
