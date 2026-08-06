@@ -191,11 +191,28 @@ const prodEntityConfig: ProdEntityConfig = {
   longitude: env.get('PROD_ENTITY_LNG').default('-62.08').asFloat()
 }
 
-const afipConfig: AfipConfig = {
-  accessToken: env.get('AFIP_ACCESS_TOKEN').required().asString(),
-  cuitRepresentada: env.get('AFIP_CUIT_REPRESENTADA').required().asString(),
-  environment: env.get('AFIP_ENVIRONMENT').default('dev').asString()
+// AFIP credentials are only required in production/staging. In development and
+// test environments the service is not exercised against the real AFIP API, so
+// we fall back to empty strings to prevent the module from throwing when the
+// vars are absent (which would leave EnvVar.afip as undefined under Vitest's
+// module evaluation and silently break the reward-partner route registration).
+function loadAfipConfig(): AfipConfig {
+  if (serverConfig.nodeEnv === 'production' || serverConfig.nodeEnv === 'staging') {
+    return {
+      accessToken: env.get('AFIP_ACCESS_TOKEN').required().asString(),
+      cuitRepresentada: env.get('AFIP_CUIT_REPRESENTADA').required().asString(),
+      environment: env.get('AFIP_ENVIRONMENT').default('production').asString()
+    }
+  }
+
+  return {
+    accessToken: env.get('AFIP_ACCESS_TOKEN').default('').asString(),
+    cuitRepresentada: env.get('AFIP_CUIT_REPRESENTADA').default('').asString(),
+    environment: env.get('AFIP_ENVIRONMENT').default('dev').asString()
+  }
 }
+
+const afipConfig: AfipConfig = loadAfipConfig()
 
 const EnvVar: Config = {
   auth: authConfig,
