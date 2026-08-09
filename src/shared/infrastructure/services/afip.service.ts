@@ -37,7 +37,8 @@ class AfipService {
     })
 
     if (!response.ok) {
-      throw new Error(`AFIP auth failed with status ${response.status}`)
+      const body = await response.text().catch(() => '')
+      throw new Error(`AFIP auth failed with status ${response.status}: ${body}`)
     }
 
     return (await response.json()) as AfipAuth
@@ -63,17 +64,29 @@ class AfipService {
       })
     })
 
-    // ARCA responde 422 + "No existe persona con ese Id" como fault SOAP cuando el CUIT
-    // no está en el padrón — es un resultado válido (no existe), no una falla del servicio.
-    if (response.status === 422) {
-      const body = await response.json().catch(() => null)
-      if (typeof body?.message === 'string' && body.message.includes('No existe persona')) {
-        return false
-      }
-    }
-
     if (!response.ok) {
-      throw new Error(`AFIP taxpayer lookup failed with status ${response.status}`)
+      // El body solo se puede leer una vez -- lo leemos como texto primero y
+      // recién después intentamos parsearlo, para no pisarnos el stream entre
+      // el chequeo del 422 y el throw genérico de abajo.
+      const rawBody = await response.text().catch(() => '')
+
+      // ARCA responde 422 + "No existe persona con ese Id" como fault SOAP cuando el CUIT
+      // no está en el padrón — es un resultado válido (no existe), no una falla del servicio.
+      if (response.status === 422) {
+        const body = (() => {
+          try {
+            return JSON.parse(rawBody)
+          } catch {
+            return null
+          }
+        })()
+
+        if (typeof body?.message === 'string' && body.message.includes('No existe persona')) {
+          return false
+        }
+      }
+
+      throw new Error(`AFIP taxpayer lookup failed with status ${response.status}: ${rawBody}`)
     }
 
     const data = await response.json()
