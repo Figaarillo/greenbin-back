@@ -17,11 +17,11 @@ interface TransactionSeed {
 }
 
 const TRANSACTION_SEEDS: TransactionSeed[] = [
-  // malvarez_et — 8 transacciones
+  // axeleonardi — 6 transacciones (176 pts totales, 2 del mes en curso)
   {
-    responsibleUsername: 'rpaez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    responsibleUsername: 'santigiopo3',
+    neighborUsername: 'axeleonardi',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -30,69 +30,55 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   },
   {
     responsibleUsername: 'gsuarez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    neighborUsername: 'axeleonardi',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
-      { categoryName: 'Metal', weight: 2 },
-      { categoryName: 'Vidrio', weight: 1.5 }
+      { categoryName: 'Metal', weight: 1 },
+      { categoryName: 'Vidrio', weight: 1 }
     ]
   },
   {
     responsibleUsername: 'fmendez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    neighborUsername: 'axeleonardi',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'gsuarez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
-    daysAgo: 49,
-    details: [
-      { categoryName: 'Metal', weight: 1.2 },
-      { categoryName: 'Plástico', weight: 3 },
-      { categoryName: 'Vidrio', weight: 0.8 }
-    ]
-  },
-  {
-    responsibleUsername: 'rpaez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'Punto Verde Acceso Norte',
-    daysAgo: 49,
-    details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
-  },
-  {
     responsibleUsername: 'fmendez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    neighborUsername: 'axeleonardi',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
-    details: [{ categoryName: 'Madera', weight: 0.8 }]
+    details: [{ categoryName: 'Madera', weight: 1 }]
   },
   {
-    responsibleUsername: 'gsuarez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'Punto Verde Acceso Norte',
-    daysAgo: 49,
+    responsibleUsername: 'santigiopo3',
+    neighborUsername: 'axeleonardi',
+    greenPointName: 'ISGP',
+    daysAgo: 0,
     details: [
-      { categoryName: 'Papel y Cartón', weight: 3.5 },
-      { categoryName: 'Plástico', weight: 0.5 }
+      { categoryName: 'Plástico', weight: 2 },
+      { categoryName: 'Papel y Cartón', weight: 1 }
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
-    neighborUsername: 'malvarez_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
-    daysAgo: 49,
-    details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
+    responsibleUsername: 'gsuarez_etruria',
+    neighborUsername: 'axeleonardi',
+    greenPointName: 'Colegio Malvinas',
+    daysAgo: 0,
+    details: [
+      { categoryName: 'Aceites y Lubricantes', weight: 3 },
+      { categoryName: 'Vidrio', weight: 1 },
+      { categoryName: 'Plástico', weight: 1 }
+    ]
   },
 
   // jperez_et — 6 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'jperez_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -102,7 +88,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'jperez_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -110,23 +96,23 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'jperez_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'jperez_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'jperez_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -137,16 +123,16 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'jperez_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
 
   // rcastro_et — 10 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'rcastro_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -156,14 +142,14 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'rcastro_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'rcastro_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -173,7 +159,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'rcastro_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -182,30 +168,30 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'rcastro_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'rcastro_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'rcastro_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'rcastro_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 3.5 },
@@ -213,25 +199,25 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'rcastro_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Electrónico', weight: 2.2 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'rcastro_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }]
   },
 
   // ngimenez_et — 5 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'ngimenez_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -241,7 +227,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'ngimenez_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -251,21 +237,21 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'ngimenez_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'ngimenez_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'ngimenez_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -276,9 +262,9 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // frios_et — 12 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -288,7 +274,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -298,7 +284,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -309,35 +295,35 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.8 },
@@ -345,16 +331,16 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Electrónico', weight: 2.2 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 3.5 },
@@ -364,14 +350,14 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'frios_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Orgánico', weight: 4 },
@@ -381,9 +367,9 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // amoreno_et — 7 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'amoreno_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -391,16 +377,16 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'amoreno_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'amoreno_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -410,7 +396,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'amoreno_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -421,30 +407,30 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'amoreno_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'amoreno_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'amoreno_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
 
   // cvargas_et — 9 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'cvargas_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -454,7 +440,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'cvargas_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -464,7 +450,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'cvargas_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -473,23 +459,23 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'cvargas_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'cvargas_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'cvargas_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 3.5 },
@@ -497,32 +483,32 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'cvargas_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'cvargas_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'cvargas_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }]
   },
 
   // racosta_et — 11 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -532,7 +518,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -540,23 +526,23 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Electrónico', weight: 2.2 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.8 },
@@ -564,16 +550,16 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -584,7 +570,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 3.5 },
@@ -592,32 +578,32 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'racosta_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
 
   // lbenitez_et — 6 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'lbenitez_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -627,7 +613,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'lbenitez_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -637,28 +623,28 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'lbenitez_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'lbenitez_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'lbenitez_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'lbenitez_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -669,9 +655,9 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // tibanez_et — 8 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'tibanez_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -681,7 +667,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'tibanez_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -691,28 +677,28 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'tibanez_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'tibanez_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'tibanez_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'tibanez_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 3.5 },
@@ -722,14 +708,14 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'tibanez_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'tibanez_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -740,9 +726,9 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
 
   // sromero_et — 5 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'sromero_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -752,7 +738,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'sromero_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -762,7 +748,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'sromero_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -771,25 +757,25 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'sromero_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'sromero_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
 
   // enavarro_et — 7 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'enavarro_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -797,16 +783,16 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'enavarro_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'enavarro_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -816,21 +802,21 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'enavarro_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'enavarro_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'enavarro_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -839,18 +825,18 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'enavarro_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
   },
 
   // vpereyra_et — 10 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'vpereyra_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -860,7 +846,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'vpereyra_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -870,21 +856,21 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'vpereyra_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'vpereyra_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'vpereyra_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -893,30 +879,30 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'vpereyra_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'vpereyra_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'vpereyra_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'vpereyra_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 3.5 },
@@ -924,18 +910,18 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'vpereyra_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Electrónico', weight: 2.2 }]
   },
 
   // hquispe_et — 6 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'hquispe_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -945,14 +931,14 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'hquispe_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'hquispe_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -962,7 +948,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'hquispe_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -971,25 +957,25 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'hquispe_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'hquispe_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
 
   // dfuentes_et — 9 transacciones
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'dfuentes_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -999,7 +985,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'dfuentes_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -1009,42 +995,42 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'dfuentes_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Textiles', weight: 2 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'dfuentes_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Pilas y Baterías', weight: 2.5 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'dfuentes_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Escombros y Construcción', weight: 0.5 }]
   },
   {
     responsibleUsername: 'fmendez_etruria',
     neighborUsername: 'dfuentes_et',
-    greenPointName: 'Punto Verde Escuela Municipal',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [{ categoryName: 'Madera', weight: 0.8 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'dfuentes_et',
-    greenPointName: 'Punto Verde Barrio Los Olivos',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [{ categoryName: 'Aceites y Lubricantes', weight: 1.2 }]
   },
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'dfuentes_et',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 49,
     details: [
       { categoryName: 'Papel y Cartón', weight: 3.5 },
@@ -1054,7 +1040,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'gsuarez_etruria',
     neighborUsername: 'dfuentes_et',
-    greenPointName: 'Punto Verde Plaza San Martín',
+    greenPointName: 'ISGP',
     daysAgo: 49,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -1067,7 +1053,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Papel y Cartón', weight: 1.5 },
@@ -1077,7 +1063,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Metal', weight: 0.8 },
@@ -1087,7 +1073,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Orgánico', weight: 2.5 },
@@ -1097,7 +1083,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Papel y Cartón', weight: 4 },
@@ -1107,7 +1093,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Plástico', weight: 1.8 },
@@ -1117,7 +1103,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Metal', weight: 1.2 },
@@ -1127,14 +1113,14 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [{ categoryName: 'Orgánico', weight: 3 }]
   },
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Metal', weight: 1.5 },
@@ -1144,7 +1130,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Orgánico', weight: 1.8 },
@@ -1154,7 +1140,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Orgánico', weight: 2.8 },
@@ -1164,7 +1150,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Papel y Cartón', weight: 2 },
@@ -1174,7 +1160,7 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [
       { categoryName: 'Metal', weight: 2 },
@@ -1184,16 +1170,16 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
   {
     responsibleUsername: 'jgonzalez',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 43,
     details: [{ categoryName: 'Plástico', weight: 3 }]
   },
 
   // emattalia — rpaez (5 transacciones, distintas fechas)
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 42,
     details: [
       { categoryName: 'Orgánico', weight: 5 },
@@ -1201,16 +1187,16 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 42,
     details: [{ categoryName: 'Electrónico', weight: 100 }]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 13,
     details: [
       { categoryName: 'Papel y Cartón', weight: 2 },
@@ -1218,9 +1204,9 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Etruria Centro',
+    greenPointName: 'ISGP',
     daysAgo: 10,
     details: [
       { categoryName: 'Electrónico', weight: 5 },
@@ -1228,9 +1214,9 @@ const TRANSACTION_SEEDS: TransactionSeed[] = [
     ]
   },
   {
-    responsibleUsername: 'rpaez_etruria',
+    responsibleUsername: 'santigiopo3',
     neighborUsername: 'emattalia',
-    greenPointName: 'Punto Verde Acceso Norte',
+    greenPointName: 'Colegio Malvinas',
     daysAgo: 7,
     details: [
       { categoryName: 'Madera', weight: 3 },

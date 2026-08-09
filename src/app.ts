@@ -12,6 +12,7 @@ import initMikroORM, { type Services } from './db'
 import bootstrapEntity from './entity/entity.bootstrap'
 import bootstrapGreenPoint from './green-point/green-point.bootstrap'
 import bootstrapNeighbor from './neighbor/neighbor.bootstrap'
+import bootstrapNotification from './notification/notification.bootstrap'
 import bootstrapResponsible from './responsible/responsible.bootstrap'
 import bootstrapRewardPartner from './reward-partner/reward-partner.bootstrap'
 import EnvVar from './shared/config/env-var.config'
@@ -24,6 +25,8 @@ import bootstrapWasteTransaction from './waste-transaction/waste-transaction.boo
 import bootstrapWaste from './waste/waste.bootstrap'
 import bootstrapStatistics from './statistics/statistics.bootstrap'
 import bootstrapPasswordReset from './auth/password-reset.bootstrap'
+import bootstrapRegisterVerification from './auth/register-verification.bootstrap'
+import bootstrapUnifiedLogin from './auth/unified-login.bootstrap'
 import bootstrapSuperadmin from './superadmin/superadmin.bootstrap'
 import errorMiddleware from './shared/infrastructure/middlewares/error.middleware'
 import runSeeders from './shared/database/seeders/database.seeder'
@@ -37,7 +40,7 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
     await db.orm.getMigrator().up()
   }
 
-  if (EnvVar.server.nodeEnv === 'development') {
+  if (EnvVar.server.nodeEnv === 'development' || EnvVar.server.nodeEnv === 'staging') {
     await runSeeders(db.em)
   }
 
@@ -81,15 +84,18 @@ async function bootstrapApp(port: number, options?: Options): Promise<{ app: Fas
   bootstrapWasteCategory(app)
   bootstrapResponsible(app)
   bootstrapNeighbor(app)
-  bootstrapRewardPartner(app)
+  await bootstrapRewardPartner(app)
   bootstrapGreenPoint(app)
   bootstrapWaste(app)
   bootstrapWasteTransaction(app)
   bootstrapWasteTransactionDetail(app)
   bootstrapCoupon(app)
   bootstrapCouponTransaction(app)
+  bootstrapNotification(app)
   bootstrapStatistics(app)
   bootstrapPasswordReset(app)
+  bootstrapRegisterVerification(app)
+  bootstrapUnifiedLogin(app)
   await bootstrapSuperadmin(app)
 
   app.setErrorHandler(errorMiddleware)

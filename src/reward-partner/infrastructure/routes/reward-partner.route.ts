@@ -30,16 +30,27 @@ class RewardPartnerRoute {
       }
     })
     this.server.get('/api/reward-partner', {
-      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.REWARD_PARTNER),
+      preHandler: this.server.protect(Roles.ENTITY, Roles.RESPONSIBLE, Roles.REWARD_PARTNER, Roles.NEIGHBOR),
       handler: async (req: FastifyRequest<{ Querystring: Record<string, string> }>, rep) => {
         await this.handler.list(req, rep)
       }
     })
+    // Público (sin auth) a propósito: alta de local adherido desde el selector
+    // "no tengo cuenta" (unified-login spec, REMOVED Requirements > Entity-authenticated
+    // guard on public reward-partner registration). Sigue gateado por OTP de email +
+    // validación de CUIT (AFIP) en RewardPartnerHandler.register, no por un guard de rol.
     this.server.post('/api/reward-partner', {
       schema: registerSwaggerSchema,
-      preHandler: this.server.auth([this.server.protect(Roles.ENTITY)]),
       handler: async (req, rep) => {
         await this.handler.register(req, rep)
+      }
+    })
+
+    // Público a propósito: lo consume el formulario de alta antes de que el reward-partner
+    // tenga cuenta, para chequear en vivo si el CUIT existe en ARCA (ws_sr_constancia_inscripcion).
+    this.server.get('/api/reward-partner/validate-cuit/:cuit', {
+      handler: async (req: FastifyRequest<{ Params: { cuit: string } }>, rep) => {
+        await this.handler.validateCuit(req, rep)
       }
     })
 

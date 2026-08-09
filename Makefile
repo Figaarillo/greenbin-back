@@ -1,4 +1,4 @@
-.PHONY: docker.run docker.run.db docker.run.test docker.build docker.stop docker.clean docker.restart.server run run.dev test test.unit test.e2e test.e2e.entity test.e2e.waste-category test.e2e.neighbor test.e2e.responsible test.e2e.reward-partner test.e2e.green-point test.e2e.coupon test.e2e.waste-transaction test.e2e.coupon-transaction migrations migrations.up migrations.create migrations.delete migrations.initial seed dev.setup pgadmin pgadmin.stop reset
+.PHONY: docker.run docker.run.db docker.run.test docker.build docker.stop docker.clean docker.restart.server run run.dev test test.unit test.e2e test.e2e.entity test.e2e.waste-category test.e2e.neighbor test.e2e.responsible test.e2e.reward-partner test.e2e.green-point test.e2e.coupon test.e2e.waste-transaction test.e2e.coupon-transaction test.e2e.auth migrations migrations.up migrations.create migrations.delete migrations.initial seed dev.setup pgadmin pgadmin.stop reset
 
 # ############ VARIABLES ############ #
 DB_HOST=localhost
@@ -135,6 +135,12 @@ test.e2e.reward-partner: docker.run.test
 	@echo " │  RUNNING E2E TESTS FOR REWARD-PARTNER  │ "
 	@echo " ╰────────────────────────────────────────╯ "
 	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/reward-partner/test/reward-partner.test.ts --config src/vitest.config.ts
+
+test.e2e.auth: docker.run.test
+	@echo " ╭────────────────────────────────────────╮ "
+	@echo " │       RUNNING E2E TESTS FOR AUTH       │ "
+	@echo " ╰────────────────────────────────────────╯ "
+	DATABASE_HOST=$(DB_HOST) pnpm vitest run src/auth/test --config src/vitest.config.ts
 
 test.e2e.green-point: docker.run.test
 	@echo " ╭────────────────────────────────────────╮ "

@@ -5,14 +5,14 @@ import type EntityEntity from '../../../entity/domain/entities/entity.entity'
 
 const NEIGHBOR_SEEDS = [
   {
-    firstname: 'Martina',
-    lastname: 'Álvarez',
-    username: 'malvarez_et',
-    email: 'malvarez.etruria@gmail.com',
+    firstname: 'Axel',
+    lastname: 'Leonardi',
+    username: 'axeleonardi',
+    email: 'axel.leonardi.22@gmail.com',
     password: 'Vecino2024!',
-    dni: 44100001,
-    phoneNumber: '3465-500001',
-    birthdate: new Date('1995-03-12'),
+    dni: 41034534,
+    phoneNumber: '3535648757',
+    birthdate: new Date('1998-10-22'),
     entityEmail: 'muniEtruria@gmail.com'
   },
   {

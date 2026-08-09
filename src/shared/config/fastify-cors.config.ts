@@ -1,7 +1,18 @@
 import { type OriginFunction } from '@fastify/cors'
 import EnvVar from './env-var.config'
 
-const allowedOrigins: string[] = EnvVar.cors.allowedOrigins
+// Tolerates CORS_ALLOWED_ORIGINS entries configured with a scheme/trailing slash
+// (e.g. "https://greenbin.up.railway.app/") by reducing everything to the bare hostname.
+function toHostname(value: string): string {
+  const trimmed = value.trim()
+  try {
+    return new URL(trimmed).hostname
+  } catch {
+    return trimmed
+  }
+}
+
+const allowedOrigins: string[] = EnvVar.cors.allowedOrigins.map(toHostname)
 
 // Requests with no Origin header (curl, server-to-server, same-origin) are only trusted outside production.
 const origin: OriginFunction = (origin, cb) => {
@@ -26,9 +37,7 @@ const origin: OriginFunction = (origin, cb) => {
 
 export const FastifyCorsConfig = {
   origin,
-  // methods: ['...'], default: GET,HEAD,PUT,PATCH,POST,DELETE
   allowedHeaders: ['Content-Type', 'Authorization'],
-  // exposedHeaders: ['X-My-Custom-Header'],
   credentials: true,
   maxAge: 86400 // 24 hours
 }

@@ -47,6 +47,10 @@ class GreenPointEntity extends BaseGreenPoint {
     if (payload.email != null && payload.email !== '') this.email = payload.email
     if (payload.phoneNumber != null && payload.phoneNumber !== '') this.phoneNumber = payload.phoneNumber
     if (payload.description != null && payload.description !== '') this.description = payload.description
+    // La dirección y las coordenadas se ignoraban: el formulario de edición las
+    // enviaba y el PUT respondía 200 sin guardarlas.
+    if (payload.address != null && payload.address !== '') this.address = payload.address
+    if (payload.coordinates != null) this.coordinates = payload.coordinates
   }
 }
 

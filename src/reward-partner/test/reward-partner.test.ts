@@ -5,6 +5,7 @@ import {
   createEntityWithToken,
   createRewardPartner,
   createRewardPartnerWithToken,
+  requestRegisterOtp,
   REWARD_PARTNER_FIXTURE
 } from '../../shared/test/test-helpers'
 
@@ -29,6 +30,7 @@ describe('RewardPartner — integration tests', () => {
 
   describe('POST /api/reward-partner', () => {
     it('crea un local adherido vinculado a una entidad existente', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'nuevopart@test.com', 'reward-partner')
       const res = await app.inject({
         method: 'POST',
         url: '/api/reward-partner',
@@ -40,7 +42,9 @@ describe('RewardPartner — integration tests', () => {
           name: 'Nuevo Local',
           entityId,
           cuit: '20123456789',
-          coordinates: { latitude: -32.41, longitude: -63.24 }
+          coordinates: { latitude: -32.41, longitude: -63.24 },
+          registerToken,
+          otp
         }
       })
       expect(res.statusCode).toBe(201)
@@ -49,16 +53,52 @@ describe('RewardPartner — integration tests', () => {
       expect(body.data).toHaveProperty('accessToken')
     })
 
-    it('devuelve 401 sin token', async () => {
+    // El guard `protect(Roles.ENTITY)` fue removido a propósito: el alta de local adherido
+    // es autoservicio público desde el selector "no tengo cuenta" (unified-login spec,
+    // REMOVED Requirements > Entity-authenticated guard on public reward-partner
+    // registration). Sigue gateado por OTP de email + validación de CUIT (AFIP), no por auth.
+    it('permite el registro público sin token cuando el OTP es válido', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'publicpart@test.com', 'reward-partner')
       const res = await app.inject({
         method: 'POST',
         url: '/api/reward-partner',
-        body: { ...REWARD_PARTNER_FIXTURE, entityId }
+        body: {
+          ...REWARD_PARTNER_FIXTURE,
+          username: 'publicpart',
+          email: 'publicpart@test.com',
+          name: 'Local Público',
+          entityId,
+          cuit: '20456789123',
+          coordinates: { latitude: -32.44, longitude: -63.27 },
+          registerToken,
+          otp
+        }
       })
-      expect(res.statusCode).toBe(401)
+      expect(res.statusCode).toBe(201)
+      expect(res.json().data.id).toBeTruthy()
+    })
+
+    it('sin token igual exige un OTP válido: no es un alta totalmente abierta', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/reward-partner',
+        body: {
+          ...REWARD_PARTNER_FIXTURE,
+          username: 'noOtpPart',
+          email: 'noOtpPart@test.com',
+          name: 'Sin OTP',
+          entityId,
+          cuit: '20567891234',
+          coordinates: { latitude: -32.45, longitude: -63.28 },
+          registerToken: 'token.invalido.manipulado',
+          otp: '000000'
+        }
+      })
+      expect(res.statusCode).toBe(400)
     })
 
     it('devuelve 404 con entityId inexistente', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'noentpart@test.com', 'reward-partner')
       const res = await app.inject({
         method: 'POST',
         url: '/api/reward-partner',
@@ -70,7 +110,9 @@ describe('RewardPartner — integration tests', () => {
           name: 'No Ent Local',
           entityId: '00000000-0000-0000-0000-000000000000',
           cuit: '20234567891',
-          coordinates: { latitude: -32.415, longitude: -63.245 }
+          coordinates: { latitude: -32.415, longitude: -63.245 },
+          registerToken,
+          otp
         }
       })
       expect(res.statusCode).toBe(404)
@@ -89,6 +131,7 @@ describe('RewardPartner — integration tests', () => {
         },
         entityToken
       )
+      const { registerToken, otp } = await requestRegisterOtp(app, 'duppart2@test.com', 'reward-partner')
       const res = await app.inject({
         method: 'POST',
         url: '/api/reward-partner',
@@ -100,13 +143,16 @@ describe('RewardPartner — integration tests', () => {
           name: 'Dup Local 2',
           entityId,
           cuit: '20345678912',
-          coordinates: { latitude: -32.425, longitude: -63.255 }
+          coordinates: { latitude: -32.425, longitude: -63.255 },
+          registerToken,
+          otp
         }
       })
       expect(res.statusCode).toBe(409)
     })
 
     it('devuelve 400 con CUIT con formato inválido', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'cuitpart@test.com', 'reward-partner')
       const res = await app.inject({
         method: 'POST',
         url: '/api/reward-partner',
@@ -118,7 +164,9 @@ describe('RewardPartner — integration tests', () => {
           name: 'Cuit Local',
           entityId,
           cuit: '123',
-          coordinates: { latitude: -32.43, longitude: -63.26 }
+          coordinates: { latitude: -32.43, longitude: -63.26 },
+          registerToken,
+          otp
         }
       })
       expect(res.statusCode).toBe(400)

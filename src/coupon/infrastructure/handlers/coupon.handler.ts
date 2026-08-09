@@ -1,9 +1,13 @@
 import { type FastifyReply, type FastifyRequest } from 'fastify'
 import FindRewardPartnerByIdUseCase from '../../../reward-partner/application/usecases/find-by-id.usecase'
 import type RewardPartnerRepository from '../../../reward-partner/domain/repositories/reward-partner.repository'
+import ListNeighborsUseCase from '../../../neighbor/application/usecases/list.usecase'
+import type NeighborRepository from '../../../neighbor/domain/repositories/neighbor.repository'
 import CheckIdDTO from '../../../shared/infrastructure/dto-types/check-id.dto'
 import HandleHTTPResponse from '../../../shared/utils/http.reply.util'
 import { getPaginationParams, getURLParams } from '../../../shared/utils/http.request.util'
+import { Roles } from '../../../auth/domain/entities/role'
+import type { AuthUser } from '../../../auth/domain/entities/auth-user'
 import DeleteCouponUseCase from '../../application/usecases/delete.usecase'
 import FindCouponWithPopulateUseCase from '../../application/usecases/find-and-populate.usecase'
 import FindCouponByIDUseCase from '../../application/usecases/find-by-id.usecase'
@@ -13,16 +17,19 @@ import UpdateCouponUseCase from '../../application/usecases/update.usecase'
 import type CouponPayload from '../../domain/payloads/coupon.payload'
 import type CouponUpdatePayload from '../../domain/payloads/coupon.update.payload'
 import type CouponRepository from '../../domain/repositories/coupon.repository'
+import ErrorCouponOwnershipMismatch from '../../domain/errors/coupon-ownership-mismatch.error'
 import CouponQueryParams from '../dtos/query-params.dto'
 import RegisterCouponDTO from '../dtos/register-coupon.dto'
 import UpdateCouponDTO from '../dtos/update-coupon.dto'
 import CouponSchemaValidator from '../middlewares/zod-schema-validator.middleware'
 import ListAvailableCouponUseCase from '../../application/usecases/list-available-coupon.usecase'
+import createNotificationDispatcher from '../../../notification/notification-dispatcher.factory'
 
 class CouponHandler {
   constructor(
     private readonly couponRepository: CouponRepository,
-    private readonly rewardPartnerRepository: RewardPartnerRepository
+    private readonly rewardPartnerRepository: RewardPartnerRepository,
+    private readonly neighborRepository: NeighborRepository
   ) {}
 
   async list(req: FastifyRequest<{ Querystring: Record<string, string> }>, rep: FastifyReply): Promise<void> {
@@ -69,8 +76,20 @@ class CouponHandler {
     const validateRegisterCouponsSchema = new CouponSchemaValidator(RegisterCouponDTO, req.body)
     validateRegisterCouponsSchema.exec()
 
+    // Un reward-partner solo puede crear cupones a su propio nombre; no puede
+    // atribuirle un cupón a otro local pasando un rewardPartnerId ajeno.
+    if (req.user.role === Roles.REWARD_PARTNER && req.body.rewardPartnerId !== req.user.sub) {
+      throw new ErrorCouponOwnershipMismatch()
+    }
+
     const findRewardPartner = new FindRewardPartnerByIdUseCase(this.rewardPartnerRepository)
-    const registerCoupon = new RegisterCouponUseCase(this.couponRepository, findRewardPartner)
+    const listNeighbors = new ListNeighborsUseCase(this.neighborRepository)
+    const registerCoupon = new RegisterCouponUseCase(
+      this.couponRepository,
+      findRewardPartner,
+      createNotificationDispatcher(),
+      listNeighbors
+    )
     const coupon = await registerCoupon.exec(req.body)
 
     HandleHTTPResponse.Created(rep, 'Coupon registered successfully', coupon)
@@ -88,6 +107,8 @@ class CouponHandler {
     const schemaValidator = new CouponSchemaValidator(UpdateCouponDTO, req.body)
     schemaValidator.exec()
 
+    await this.assertOwnership(id, req.user)
+
     const updateCoupon = new UpdateCouponUseCase(this.couponRepository)
     await updateCoupon.exec(id, req.body)
 
@@ -100,10 +121,25 @@ class CouponHandler {
     const schemaValidator = new CouponSchemaValidator(CheckIdDTO, { id })
     schemaValidator.exec()
 
+    await this.assertOwnership(id, req.user)
+
     const deleteCoupon = new DeleteCouponUseCase(this.couponRepository)
     await deleteCoupon.exec(id)
 
     HandleHTTPResponse.OK(rep, 'Coupon deleted successfully', { id })
+  }
+
+  // Entidad y Responsable mantienen su acceso amplio (sin cambios); solo a
+  // reward-partner se lo restringe a sus propios cupones.
+  private async assertOwnership(id: string, user: AuthUser): Promise<void> {
+    if (user.role !== Roles.REWARD_PARTNER) return
+
+    const findCoupon = new FindCouponByIDUseCase(this.couponRepository)
+    const coupon = await findCoupon.exec(id)
+
+    if (coupon.rewardPartner.id !== user.sub) {
+      throw new ErrorCouponOwnershipMismatch()
+    }
   }
 }
 

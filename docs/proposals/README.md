@@ -16,6 +16,10 @@ Este directorio contiene propuestas detalladas de features para evolucionar Gree
 | 05  | [Mejoras de Seguridad en Auth](./05-seguridad-auth.md)            | Alta                 | Bajo (1 sprint)     | ─             |
 | 06  | [Filtro Geográfico de Reward Partners](./06-filtro-geografico.md) | Media                | Bajo (1 sprint)     | ─             |
 | 07  | [Timeline de Actividad del Vecino](./07-timeline-vecino.md)       | Alta                 | Bajo (1 sprint)     | ─             |
+| 08  | [Economía y Respaldo de Puntos](./08-economia-puntos.md)          | Alta                 | Medio-Alto (2-3 sprints) | ─         |
+| 09  | [Reserva de Turnos en GreenPoints](./09-reserva-turnos.md)        | Media                | Medio (1-2 sprints) | Propuesta #03 |
+| 10  | [Herramientas para el Local](./10-herramientas-local.md)          | Media                | Medio (1-2 sprints) | Propuesta #01 |
+| 11  | [Herramientas para la Entidad](./11-herramientas-entidad.md)      | Alta                 | Medio-Alto (2-3 sprints) | Propuesta #01 |
 
 ## Plan de Integración Sugerido
 

@@ -34,7 +34,10 @@ class CategoryMikroORMRepository implements WasteCategoryRepository {
   async update(id: string, payload: WasteCategoryPayload): Promise<Nullable<WasteCategoryEntity>> {
     const em = this.getEntityManager()
 
-    const category = await em.findOne(WasteCategoryEntity, { id })
+    // El filtro `active` de BaseEntity está activo por defecto: sin desactivarlo,
+    // una categoría deshabilitada deja de encontrarse y no se la puede volver a
+    // habilitar nunca más.
+    const category = await em.findOne(WasteCategoryEntity, { id }, { filters: { active: false } })
     if (category == null) return null
 
     category.update(payload)

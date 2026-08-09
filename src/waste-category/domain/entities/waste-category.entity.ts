@@ -37,6 +37,9 @@ class WasteCategoryEntity extends BaseEntity {
     if (payload.name != null && payload.name !== '') this.name = payload.name
     if (payload.pointsPerWeight != null) this.pointsPerWeight = payload.pointsPerWeight
     if (payload.description != null && payload.description !== '') this.description = payload.description
+    if (payload.co2 != null) this.co2 = payload.co2
+    // Sin esto el PUT de habilitar/deshabilitar respondía 200 y no cambiaba nada.
+    if (payload.isActive != null) this.isActive = payload.isActive
   }
 }
 

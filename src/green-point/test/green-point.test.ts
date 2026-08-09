@@ -124,6 +124,43 @@ describe('GreenPoint — integration tests', () => {
       expect(res.statusCode).toBe(200)
     })
 
+    it('el cambio de dirección persiste', async () => {
+      const gp = await createGreenPoint(app, entityId, {}, token)
+      const res = await app.inject({
+        method: 'PUT',
+        url: `/api/green-point/${gp.id}`,
+        headers: { authorization: `Bearer ${token}` },
+        body: { address: 'Belgrano 742' }
+      })
+      expect(res.statusCode).toBe(200)
+
+      const leido = await app.inject({
+        method: 'GET',
+        url: `/api/green-point/${gp.id}`,
+        headers: { authorization: `Bearer ${token}` }
+      })
+      expect(leido.json().data.address).toBe('Belgrano 742')
+    })
+
+    it('el cambio de coordenadas persiste y mueve el punto en el mapa', async () => {
+      const gp = await createGreenPoint(app, entityId, {}, token)
+      const coordinates = { latitude: -32.4123, longitude: -63.2456 }
+      const res = await app.inject({
+        method: 'PUT',
+        url: `/api/green-point/${gp.id}`,
+        headers: { authorization: `Bearer ${token}` },
+        body: { coordinates }
+      })
+      expect(res.statusCode).toBe(200)
+
+      const leido = await app.inject({
+        method: 'GET',
+        url: `/api/green-point/${gp.id}`,
+        headers: { authorization: `Bearer ${token}` }
+      })
+      expect(leido.json().data.coordinates).toEqual(coordinates)
+    })
+
     it('devuelve 404 al actualizar id inexistente', async () => {
       const res = await app.inject({
         method: 'PUT',

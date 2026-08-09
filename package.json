@@ -38,6 +38,7 @@
     "@types/node": "20.10.5",
     "@types/nodemailer": "8.0.0",
     "@types/uuid": "9.0.7",
+    "@types/web-push": "^3.6.4",
     "@typescript-eslint/eslint-plugin": "6.14.0",
     "@vitest/coverage-v8": "2.0.5",
     "@vitest/ui": "2.0.5",
@@ -75,8 +76,10 @@
     "jsonwebtoken": "9.0.2",
     "nodemailer": "8.0.5",
     "reflect-metadata": "0.2.2",
+    "resend": "^6.18.1",
     "rimraf": "5.0.5",
     "uuid": "9.0.1",
+    "web-push": "^3.6.7",
     "zod": "3.22.4"
   },
   "packageManager": "pnpm@11.7.0",

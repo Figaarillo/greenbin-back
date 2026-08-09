@@ -1,4 +1,11 @@
+import { RequestContext } from '@mikro-orm/core'
 import { type FastifyInstance } from 'fastify'
+import jwt from 'jsonwebtoken'
+import { Roles } from '../../auth/domain/entities/role'
+import EntityMikroORMRepository from '../../entity/infrastructure/repositories/mikro-orm/entity.mikroorm.repository'
+import ResponsibleEntity from '../../responsible/domain/entities/responsible.entity'
+import ResponsibleMikroORMRepository from '../../responsible/infrastructure/repositories/mikro-orm/responsible.mikroorm.repository'
+import { orm } from './test.setup'
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -57,6 +64,16 @@ export const RESPONSIBLE_FIXTURE = {
   phoneNumber: '3534100001'
 }
 
+export const ADMIN_FIXTURE = {
+  firstname: 'Super',
+  lastname: 'Admin',
+  username: 'superadmintest',
+  email: 'admin@test.com',
+  password: 'Test123@#.',
+  dni: 90000001,
+  phoneNumber: '000-000001'
+}
+
 export const REWARD_PARTNER_FIXTURE = {
   name: 'Supermercado Test',
   username: 'supertest',
@@ -91,6 +108,24 @@ export const COUPON_FIXTURE = {
 
 function authHeaders(token?: string): Record<string, string> {
   return token != null && token.length > 0 ? { authorization: `Bearer ${token}` } : {}
+}
+
+// Pide un OTP de registro y lo extrae del JWT devuelto (nodemailer está mockeado
+// en test.setup, así que no se envía correo real). Permite testear el alta que
+// ahora exige verificación por mail.
+export async function requestRegisterOtp(
+  app: FastifyInstance,
+  email: string,
+  userType: 'neighbor' | 'reward-partner'
+): Promise<{ registerToken: string; otp: string }> {
+  const res = await app.inject({
+    method: 'POST',
+    url: '/api/auth/register/request-otp',
+    body: { email, userType }
+  })
+  const { registerToken } = res.json().data as { registerToken: string }
+  const payload = jwt.decode(registerToken) as { otp: string }
+  return { registerToken, otp: payload.otp }
 }
 
 export async function createEntity(app: FastifyInstance, overrides = {}): Promise<Record<string, string>> {
@@ -131,10 +166,12 @@ export async function createNeighbor(
   entityId: string,
   overrides = {}
 ): Promise<Record<string, string>> {
+  const body = { ...NEIGHBOR_FIXTURE, entityId, ...overrides }
+  const { registerToken, otp } = await requestRegisterOtp(app, body.email, 'neighbor')
   const res = await app.inject({
     method: 'POST',
     url: '/api/neighbor',
-    body: { ...NEIGHBOR_FIXTURE, entityId, ...overrides }
+    body: { ...body, registerToken, otp }
   })
   return res.json().data
 }
@@ -172,11 +209,13 @@ export async function createRewardPartner(
   overrides = {},
   token?: string
 ): Promise<Record<string, string>> {
+  const body = { ...REWARD_PARTNER_FIXTURE, entityId, ...overrides }
+  const { registerToken, otp } = await requestRegisterOtp(app, body.email, 'reward-partner')
   const res = await app.inject({
     method: 'POST',
     url: '/api/reward-partner',
     headers: authHeaders(token),
-    body: { ...REWARD_PARTNER_FIXTURE, entityId, ...overrides }
+    body: { ...body, registerToken, otp }
   })
   if (res.statusCode >= 400) {
     throw new Error(`Failed to create reward partner: ${res.statusCode} - ${res.body}`)
@@ -272,4 +311,43 @@ export async function createResponsibleWithToken(
   const created = await createResponsible(app, entityId, overrides, creatorToken)
   const token = await loginResponsible(app, fixture.email, fixture.password)
   return { id: created.id, token }
+}
+
+// Admin is NOT a separate table — it's a ResponsibleEntity row with role=ADMIN
+// (see production.seeder.ts). There is no public register endpoint that sets that role
+// (POST /api/responsible always creates role=RESPONSIBLE), so tests seed it directly via
+// MikroORM, mirroring the production seeder.
+export async function createAdmin(
+  entityId: string,
+  overrides: Partial<typeof ADMIN_FIXTURE> = {}
+): Promise<{ id: string; email: string; password: string }> {
+  const fixture = { ...ADMIN_FIXTURE, ...overrides }
+
+  return await RequestContext.create(orm.em.fork(), async () => {
+    const entityRepo = new EntityMikroORMRepository()
+    const responsibleRepo = new ResponsibleMikroORMRepository()
+
+    const entity = await entityRepo.find({ id: entityId })
+    if (entity == null) {
+      throw new Error(`Failed to create admin: entity ${entityId} not found`)
+    }
+
+    const admin = new ResponsibleEntity(
+      {
+        firstname: fixture.firstname,
+        lastname: fixture.lastname,
+        username: fixture.username,
+        email: fixture.email,
+        password: fixture.password,
+        dni: fixture.dni,
+        phoneNumber: fixture.phoneNumber,
+        entityId
+      },
+      entity
+    )
+    admin.role = Roles.ADMIN
+    await responsibleRepo.save(admin)
+
+    return { id: admin.id, email: fixture.email, password: fixture.password }
+  })
 }

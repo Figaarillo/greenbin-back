@@ -8,6 +8,7 @@ import {
   createWasteCategory,
   createResponsible,
   createGreenPoint,
+  requestRegisterOtp,
   NEIGHBOR_FIXTURE
 } from '../../shared/test/test-helpers'
 
@@ -26,10 +27,19 @@ describe('Neighbor — integration tests', () => {
 
   describe('POST /api/neighbor', () => {
     it('crea un vecino vinculado a una entidad existente', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'nuevo@test.com', 'neighbor')
       const res = await app.inject({
         method: 'POST',
         url: '/api/neighbor',
-        body: { ...NEIGHBOR_FIXTURE, username: 'nuevo', email: 'nuevo@test.com', dni: 30000099, entityId }
+        body: {
+          ...NEIGHBOR_FIXTURE,
+          username: 'nuevo',
+          email: 'nuevo@test.com',
+          dni: 30000099,
+          entityId,
+          registerToken,
+          otp
+        }
       })
       expect(res.statusCode).toBe(201)
       const body = res.json()
@@ -38,6 +48,7 @@ describe('Neighbor — integration tests', () => {
     })
 
     it('devuelve 404 con entityId inexistente', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'nuevo2@test.com', 'neighbor')
       const res = await app.inject({
         method: 'POST',
         url: '/api/neighbor',
@@ -46,31 +57,35 @@ describe('Neighbor — integration tests', () => {
           username: 'nuevo2',
           email: 'nuevo2@test.com',
           dni: 30000098,
-          entityId: '00000000-0000-0000-0000-000000000000'
+          entityId: '00000000-0000-0000-0000-000000000000',
+          registerToken,
+          otp
         }
       })
       expect(res.statusCode).toBe(404)
     })
 
     it('devuelve 409 con username duplicado', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'otro@test.com', 'neighbor')
       const res = await app.inject({
         method: 'POST',
         url: '/api/neighbor',
-        body: { ...NEIGHBOR_FIXTURE, email: 'otro@test.com', entityId }
+        body: { ...NEIGHBOR_FIXTURE, email: 'otro@test.com', entityId, registerToken, otp }
       })
       expect(res.statusCode).toBe(409)
     })
 
-    it('devuelve 409 con email duplicado', async () => {
+    it('no permite pedir OTP de registro con email ya registrado', async () => {
       const res = await app.inject({
         method: 'POST',
-        url: '/api/neighbor',
-        body: { ...NEIGHBOR_FIXTURE, username: 'otrousuario', entityId }
+        url: '/api/auth/register/request-otp',
+        body: { email: NEIGHBOR_FIXTURE.email, userType: 'neighbor' }
       })
-      expect(res.statusCode).toBe(409)
+      expect(res.statusCode).toBe(400)
     })
 
     it('devuelve 400 con fecha de nacimiento inválida', async () => {
+      const { registerToken, otp } = await requestRegisterOtp(app, 'nuevo3@test.com', 'neighbor')
       const res = await app.inject({
         method: 'POST',
         url: '/api/neighbor',
@@ -80,7 +95,9 @@ describe('Neighbor — integration tests', () => {
           email: 'nuevo3@test.com',
           dni: 30000097,
           birthdate: '1990-05-14',
-          entityId
+          entityId,
+          registerToken,
+          otp
         }
       })
       expect(res.statusCode).toBe(400)

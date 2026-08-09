@@ -149,6 +149,63 @@ describe('WasteCategory — integration tests', () => {
       expect(res.json().data.pointsPerWeight).toBe(20)
     })
 
+    it('deshabilitar la categoría con isActive:false persiste', async () => {
+      const category = await createWasteCategory(app, {}, token)
+      const res = await app.inject({
+        method: 'PUT',
+        url: `/api/waste-category/${category.id}`,
+        headers: { authorization: `Bearer ${token}` },
+        body: { isActive: false }
+      })
+      expect(res.statusCode).toBe(200)
+
+      const list = await app.inject({
+        method: 'GET',
+        url: '/api/waste-category?offset=0&limit=100&includeInactive=true',
+        headers: { authorization: `Bearer ${token}` }
+      })
+      const guardada = list.json().data.find((c: { id: string }) => c.id === category.id)
+      expect(guardada.isActive).toBe(false)
+    })
+
+    it('volver a habilitarla con isActive:true persiste', async () => {
+      const category = await createWasteCategory(app, {}, token)
+      const put = async (isActive: boolean): Promise<void> => {
+        await app.inject({
+          method: 'PUT',
+          url: `/api/waste-category/${category.id}`,
+          headers: { authorization: `Bearer ${token}` },
+          body: { isActive }
+        })
+      }
+      await put(false)
+      await put(true)
+
+      const list = await app.inject({
+        method: 'GET',
+        url: '/api/waste-category?offset=0&limit=100&includeInactive=true',
+        headers: { authorization: `Bearer ${token}` }
+      })
+      const guardada = list.json().data.find((c: { id: string }) => c.id === category.id)
+      expect(guardada.isActive).toBe(true)
+    })
+
+    it('el cambio de co2 persiste', async () => {
+      const category = await createWasteCategory(app, {}, token)
+      await app.inject({
+        method: 'PUT',
+        url: `/api/waste-category/${category.id}`,
+        headers: { authorization: `Bearer ${token}` },
+        body: { co2: 3.5 }
+      })
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/waste-category/${category.id}`,
+        headers: { authorization: `Bearer ${token}` }
+      })
+      expect(res.json().data.co2).toBeCloseTo(3.5, 2)
+    })
+
     it('devuelve 404 al actualizar un id inexistente', async () => {
       const res = await app.inject({
         method: 'PUT',

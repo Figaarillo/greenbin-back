@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { Entity, ManyToOne, OneToOne, Property } from '@mikro-orm/postgresql'
+import { Entity, ManyToOne, Property } from '@mikro-orm/postgresql'
 import CouponEntity from '../../../coupon/domain/entities/coupon.entity'
 import NeighborEntity from '../../../neighbor/domain/entities/neighbor.entity'
 import RewardPartnerEntity from '../../../reward-partner/domain/entities/reward-partner.entity'
@@ -22,10 +22,19 @@ class CouponTransactionEntity extends BaseEntity {
   @Property()
   expirationDate: Date
 
+  // Se setea la primera vez que se notifica al vecino que este cupón está por
+  // vencer, para que el job diario no lo vuelva a notificar en la próxima
+  // corrida (idempotencia, no hay otra forma de saber "ya avisé esto").
+  @Property({ nullable: true })
+  expirationNotifiedAt?: Date
+
   @Property()
   costInPoints: number
 
-  @OneToOne()
+  // ManyToOne, no OneToOne: un cupón es una plantilla del local que muchos
+  // vecinos canjean. Con @OneToOne, MikroORM generaba UNIQUE (coupon_id) y el
+  // cupón quedaba agotado para siempre después del primer canje de la app.
+  @ManyToOne()
   coupon: CouponEntity
 
   @ManyToOne()

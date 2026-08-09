@@ -113,4 +113,12 @@ jobs:
           ADMIN_EMAIL: admin@example.com
           ADMIN_PASSWORD: test_password
           CORS_ALLOWED_ORIGINS: localhost
+          # Claves dummy (65/32 bytes en cero, formato base64url) — pasan la
+          # validacion de longitud de web-push pero no son secretos reales.
+          VAPID_PUBLIC_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          VAPID_PRIVATE_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          # Valores dummy para AFIP — requeridos por env-var.config.ts para
+          # que bootstrapRewardPartner no falle silenciosamente en CI.
+          AFIP_ACCESS_TOKEN: test_afip_token
+          AFIP_CUIT_REPRESENTADA: 20000000000
         run: pnpm run test

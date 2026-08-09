@@ -6,7 +6,7 @@ dotenv.config()
 interface ServerConfig {
   port: number
   host: string
-  nodeEnv: 'development' | 'production' | 'test'
+  nodeEnv: 'development' | 'production' | 'test' | 'staging'
 }
 
 interface DatabaseConfig {
@@ -28,9 +28,24 @@ interface Recaptcha {
   secretKey: string
 }
 
+interface AfipConfig {
+  accessToken: string
+  cuitRepresentada: string
+  environment: string
+}
+
 interface EmailConfig {
+  provider: 'nodemailer' | 'resend'
+  from: string
   user: string
   appPassword: string
+  resendApiKey: string
+}
+
+interface PushConfig {
+  publicKey: string
+  privateKey: string
+  contactEmail: string
 }
 
 interface CorsConfig {
@@ -60,15 +75,17 @@ interface Config {
   testDatabase: DatabaseConfig
   recaptcha: Recaptcha
   email: EmailConfig
+  push: PushConfig
   cors: CorsConfig
   admin: AdminConfig
   prodEntity: ProdEntityConfig
+  afip: AfipConfig
 }
 
 const serverConfig: ServerConfig = {
   port: env.get('SERVER_PORT').required().default(8080).asPortNumber(),
   host: env.get('SERVER_HOST').required().asString(),
-  nodeEnv: env.get('NODE_ENV').required().asEnum(['development', 'production', 'test'])
+  nodeEnv: env.get('NODE_ENV').required().asEnum(['development', 'production', 'test', 'staging'])
 }
 
 const databaseConfig: DatabaseConfig = {
@@ -84,7 +101,7 @@ const databaseConfig: DatabaseConfig = {
 // would crash a perfectly valid prod boot. Outside production we keep them
 // required to fail fast when a local/test env is misconfigured.
 function loadTestDatabaseConfig(): DatabaseConfig {
-  if (serverConfig.nodeEnv === 'production') {
+  if (serverConfig.nodeEnv === 'production' || serverConfig.nodeEnv === 'staging') {
     return { name: '', user: '', password: '', host: '', port: 0 }
   }
 
@@ -110,9 +127,37 @@ const recaptchaConfig: Recaptcha = {
   secretKey: env.get('RECAPTCHA_SECRET_KEY').required().asString()
 }
 
-const emailConfig: EmailConfig = {
-  user: env.get('EMAIL_USER').required().asString(),
-  appPassword: env.get('EMAIL_APP_PASSWORD').required().asString()
+// Railway (y otros PaaS) bloquean el trafico SMTP saliente, asi que en produccion
+// hay que enviar por la API HTTP de Resend en vez de nodemailer/Gmail. El
+// provider default sigue siendo nodemailer para no romper dev/tests existentes;
+// cada set de credenciales solo se exige cuando su provider esta activo.
+function loadEmailConfig(): EmailConfig {
+  const provider = env.get('EMAIL_PROVIDER').default('nodemailer').asEnum(['nodemailer', 'resend'])
+
+  return {
+    provider,
+    from: env.get('EMAIL_FROM').default('GreenBin <onboarding@resend.dev>').asString(),
+    user:
+      provider === 'nodemailer'
+        ? env.get('EMAIL_USER').required().asString()
+        : env.get('EMAIL_USER').default('').asString(),
+    appPassword:
+      provider === 'nodemailer'
+        ? env.get('EMAIL_APP_PASSWORD').required().asString()
+        : env.get('EMAIL_APP_PASSWORD').default('').asString(),
+    resendApiKey:
+      provider === 'resend'
+        ? env.get('RESEND_API_KEY').required().asString()
+        : env.get('RESEND_API_KEY').default('').asString()
+  }
+}
+
+const emailConfig: EmailConfig = loadEmailConfig()
+
+const pushConfig: PushConfig = {
+  publicKey: env.get('VAPID_PUBLIC_KEY').required().asString(),
+  privateKey: env.get('VAPID_PRIVATE_KEY').required().asString(),
+  contactEmail: env.get('VAPID_CONTACT_EMAIL').default(emailConfig.user).asString()
 }
 
 // In production, CORS origins MUST be provided explicitly (no wildcard, no localhost defaults):
@@ -146,6 +191,29 @@ const prodEntityConfig: ProdEntityConfig = {
   longitude: env.get('PROD_ENTITY_LNG').default('-62.08').asFloat()
 }
 
+// AFIP credentials are only required in production/staging. In development and
+// test environments the service is not exercised against the real AFIP API, so
+// we fall back to empty strings to prevent the module from throwing when the
+// vars are absent (which would leave EnvVar.afip as undefined under Vitest's
+// module evaluation and silently break the reward-partner route registration).
+function loadAfipConfig(): AfipConfig {
+  if (serverConfig.nodeEnv === 'production' || serverConfig.nodeEnv === 'staging') {
+    return {
+      accessToken: env.get('AFIP_ACCESS_TOKEN').required().asString(),
+      cuitRepresentada: env.get('AFIP_CUIT_REPRESENTADA').required().asString(),
+      environment: env.get('AFIP_ENVIRONMENT').default('production').asString()
+    }
+  }
+
+  return {
+    accessToken: env.get('AFIP_ACCESS_TOKEN').default('').asString(),
+    cuitRepresentada: env.get('AFIP_CUIT_REPRESENTADA').default('').asString(),
+    environment: env.get('AFIP_ENVIRONMENT').default('dev').asString()
+  }
+}
+
+const afipConfig: AfipConfig = loadAfipConfig()
+
 const EnvVar: Config = {
   auth: authConfig,
   server: serverConfig,
@@ -153,9 +221,11 @@ const EnvVar: Config = {
   testDatabase: testDatabaseConfig,
   recaptcha: recaptchaConfig,
   email: emailConfig,
+  push: pushConfig,
   cors: corsConfig,
   admin: adminConfig,
-  prodEntity: prodEntityConfig
+  prodEntity: prodEntityConfig,
+  afip: afipConfig
 }
 
 export default EnvVar
